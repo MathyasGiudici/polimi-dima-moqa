@@ -1,0 +1,50 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "chart.js": "^2.9.3",
+    "expo": "^36.0.0",
+    "native-base": "^2.13.8",
+    "nativescript": "^6.4.0",
+    "nativescript-vue": "^2.4.0",
+    "prop-types": "^15.7.2",
+    "react": "16.9.0",
+    "react-dom": "16.9.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.1.tar.gz",
+    "react-native-chart-kit": "^2.6.1",
+    "react-native-gesture-handler": "~1.5.0",
+    "react-native-maps": "0.26.1",
+    "react-native-paper": "^2.16.0",
+    "react-native-reanimated": "~1.4.0",
+    "react-native-screens": "2.0.0-alpha.12",
+    "react-native-scrollable-tab-view": "^1.0.0",
+    "react-native-svg": "9.13.3",
+    "react-native-tabs": "^1.0.9",
+    "react-native-vector-icons": "^6.6.0",
+    "react-native-viewpager": "^0.2.13",
+    "react-native-web": "^0.11.7",
+    "react-navigation": "^3.13.0",
+    "react-navigation-tabs": "1.2.0",
+    "vue-chartjs": "^3.5.0",
+    "vue-native-core": "0.1.2",
+    "vue-native-helper": "0.1.2",
+    "vue-native-router": "^0.1.1",
+    "vuex": "^3.1.2",
+    "vuex-persist": "^2.2.0"
+  },
+  "assetBundlePatterns": [
+    "**/*"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "babel-preset-expo": "^8.0.0",
+    "vue-native-scripts": "0.1.2"
+  },
+  "private": true
+}
