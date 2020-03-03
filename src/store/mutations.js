@@ -28,3 +28,7 @@ export function increment(state){
 export function decrement(state){
   state.count--
 }
+
+export function blob(state){
+  state.blob.test = 'here'
+}

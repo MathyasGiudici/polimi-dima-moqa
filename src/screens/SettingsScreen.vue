@@ -1,9 +1,14 @@
 <template>
-    <scroll-view :content-container-style="{contentContainer: {paddingVertical: 20}}">
+    <scroll-view class="mainContainer" :content-container-style="{contentContainer: {paddingVertical: 20}}">
+      <view class="paddingElement"></view>
+
       <touchable-opacity class="listElement" v-for="option in options" :key="option.route" :on-press="() => {changeScreen(option.route)}" >
         <text class="textListElement">{{option.title}}</text>
         <icon name="chevron-right" size="35" color="lightgrey"/>
       </touchable-opacity>
+
+      <view class="paddingElement"></view>
+
       <touchable-opacity class="listElement" :on-press="resetParameters">
         <text class="textListElement">Reset Parameters</text>
       </touchable-opacity>
@@ -63,6 +68,10 @@ export default{
 </script>
 
 <style>
+.mainContainer {
+  background-color: rgb(242,242,247);
+}
+
 .listElement {
   flex: 1;
   flexDirection: row;
@@ -70,12 +79,19 @@ export default{
   justify-content: space-between;
   width: 100%;
   height: 50;
+  background-color: white;
   borderStyle: solid;
+  borderTopWidth: .3;
+  borderTopColor: lightgrey;
   borderBottomWidth: .3;
   borderBottomColor: lightgrey;
   padding-left: 15;
   padding-right: 5;
 }
+.paddingElement {
+  height: 40;
+}
+
 .textListElement {
   font-size: 17;
 }

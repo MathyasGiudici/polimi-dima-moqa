@@ -6,8 +6,10 @@ const storageKey = '@MySuperStore';
 // Function to store the state in the application local storage in the phone
 export async function storeData(obj){
   try {
+    var copiedObj = JSON.parse(JSON.stringify(obj));
+    delete copiedObj.blob;
     // Saving
-    await AsyncStorage.setItem(storageKey, JSON.stringify(obj));
+    await AsyncStorage.setItem(storageKey, JSON.stringify(copiedObj));
     // DEBUG PURPOSE
     await AsyncStorage.getItem(storageKey).then((result) => {console.log("CURRENT AsyncStorage:", result);});
   } catch (error) {

@@ -6,6 +6,7 @@
     </view>
     <view class="container">
       <text class="bigBlue">Vuex Test: {{localCounter}} | {{storeCounter}}</text>
+      <text >Vuex Test: {{blobTester}}</text>
       <button title="Increment" @press="increment"></button>
       <button title="Decrement" @press="decrement"></button>
       <text>-------------</text>
@@ -25,12 +26,14 @@ export default {
       return {
         localCounter: 0,
         storeCounter: store.state.count,
+        blobTester: store.state.blob.test,
       };
   },
   methods:{
     increment: function(){
       this.localCounter++;
-      store.commit('increment')
+      store.commit('increment');
+      store.commit('blob');
     },
     decrement: function(){
       this.localCounter--;
@@ -48,9 +51,11 @@ export default {
   },
   mounted: function(){
     this.storeCounter = store.state.count;
+    this.blobTester = store.state.blob.test;
   },
   updated: function(){
     this.storeCounter = store.state.count;
+    this.blobTester = store.state.blob.test;
   }
 };
 
