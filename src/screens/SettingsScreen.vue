@@ -1,26 +1,61 @@
 <template>
-  <view class="container">
-    <view class="container2">
-      <text class="heading">Settings</text>
-    <!-- </view>
-    <view class="container2"> -->
-    <text>This is the App Settings screen</text>
-    </view>
-    <view class="container2">
-      <button title="Press me" @press="goToDetails"></button>
-    </view>
-  </view>
+    <scroll-view :content-container-style="{contentContainer: {paddingVertical: 20}}">
+      <touchable-opacity class="listElement" v-for="option in options" :key="option.route" :on-press="() => {changeScreen(option.route)}" >
+        <text class="textListElement">{{option.title}}</text>
+        <icon name="chevron-right" size="35" color="lightgrey"/>
+      </touchable-opacity>
+      <touchable-opacity class="listElement" :on-press="resetParameters">
+        <text class="textListElement">Reset Parameters</text>
+      </touchable-opacity>
+    </scroll-view>
+</template>
+
 </template>
 
 <script>
+// Utils for icon
+import * as React from 'react';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+
+import store from '../store';
+import {getDefaultState} from '../store/state';
 
 export default{
   props: {
     navigation: { type: Object }
   },
+  components: {
+    Icon
+  },
+  data: function(){
+    return {
+      options : [
+        {
+          title: 'Wi-fi Selection',
+          route: 'WIFIParameters'
+        },
+        {
+          title: 'Server Conncetion',
+          route: 'ServerParameters'
+        },
+        {
+          title: 'RTK Connection',
+          route: 'RTKParameters'
+        },
+        {
+          title: 'ARPA Parameters',
+          route: 'ARPAParameters',
+        }],
+    };
+  },
   methods:{
-    goToDetails: function() {
+    changeScreen: function(route) {
+      console.log(route);
       this.navigation.navigate("Details");
+    },
+    resetParameters: function(){
+      store.commit("DELETE");
+      store.commit("REPLACE", getDefaultState());
     }
   }
 }
@@ -28,23 +63,20 @@ export default{
 </script>
 
 <style>
-.container {
-  align-items: center;
-  justify-content: center;
+.listElement {
   flex: 1;
-}
-
-.container2 {
+  flexDirection: row;
   align-items: center;
-  justify-content: center;
-  padding: 5;
+  justify-content: space-between;
+  width: 100%;
+  height: 50;
+  borderStyle: solid;
+  borderBottomWidth: .3;
+  borderBottomColor: lightgrey;
+  padding-left: 15;
+  padding-right: 5;
 }
-
-
-.heading {
-  font-size: 30px;
-  font-weight: bold;
-  color: green;
-  margin: 20px;
+.textListElement {
+  font-size: 17;
 }
 </style>

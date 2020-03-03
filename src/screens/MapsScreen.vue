@@ -1,6 +1,6 @@
 <template>
   <view  class="container">
-    <view style="flex:.8;">
+    <view style="flex:.92;">
       <map-view class="container"
           :initial-region="coordinates">
           <Circle
@@ -12,8 +12,8 @@
             strokeWidth="2"/>
           </map-view>
     </view>
-    <view style="flex:.2;">
-      <text>Details will be here</text>
+    <view class="widgetArea" style="flex:.08;">
+      <button title="Settings" :on-press="showDetails" />
     </view>
   </view>
 </template>
@@ -21,6 +21,12 @@
 <script>
 import MapView, {Circle} from "react-native-maps";
 export default {
+    props: {
+      navigation: { type: Object }
+    },
+    components: {
+      MapView, Circle
+    },
     data: function() {
     return {
       coordinates: {
@@ -39,13 +45,19 @@ export default {
       },
     };
   },
-   components: {
-    MapView, Circle
+  methods: {
+    showDetails: function(){
+      this.navigation.navigate('MapsParametersScreen')
+    }
   }
 };
 </script>
 <style>
 .container {
   flex: 1;
+}
+.widgetArea{
+  align-content: center;
+  justify-content: center;
 }
 </style>

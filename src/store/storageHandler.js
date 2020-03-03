@@ -9,7 +9,7 @@ export async function storeData(obj){
     // Saving
     await AsyncStorage.setItem(storageKey, JSON.stringify(obj));
     // DEBUG PURPOSE
-    await AsyncStorage.getItem(storageKey).then((result) => {console.log("result:", result);});
+    await AsyncStorage.getItem(storageKey).then((result) => {console.log("CURRENT AsyncStorage:", result);});
   } catch (error) {
     // Error saving data
   }

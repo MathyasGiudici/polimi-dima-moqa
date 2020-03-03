@@ -3,7 +3,7 @@ import * as storageHandler from './storageHandler'
 
 // Local state functions
 export function RESTORE (state){
-  console.log("here", JSON.stringify(storageHandler.retrieveData()));
+  storageHandler.retrieveData();
 }
 
 export function SAVE (state){
@@ -15,7 +15,7 @@ export function DELETE(state){
 }
 
 export function REPLACE(state, obj){
-  Object.keys(state).forEach((item, i) => {
+  Object.keys(obj).forEach((item, i) => {
     state[item] = obj[item];
   });
 }
