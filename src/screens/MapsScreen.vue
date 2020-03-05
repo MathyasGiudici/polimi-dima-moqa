@@ -1,31 +1,25 @@
 <template>
-  <view  class="container">
-    <view style="flex:.92;">
-      <map-view class="container"
-          :initial-region="coordinates">
-          <Circle
-            :center="circle.center"
-            :radius="circle.radius"
-            fillColor="rgba(255, 0, 0, .5)"
-            strokeColor="rgba(0,0,0,.2)"
-            zIndex="2"
-            strokeWidth="2"/>
-          </map-view>
-    </view>
-    <view class="widgetArea" style="flex:.08;">
-      <button title="Settings" :on-press="showDetails" />
-    </view>
-  </view>
+  <map-view class="maps" :initial-region="coordinates" >
+      <Circle :center="circle.center" :radius="circle.radius"
+        fillColor="rgba(255, 0, 0, .5)" strokeColor="rgba(0,0,0,.2)"
+        zIndex="2" strokeWidth="2"/>
+        <touchable-opacity class="buttonArea" :on-press="showDetails">
+          <text class="buttonText">Filter</text>
+        </touchable-opacity>
+  </map-view>
 </template>
 
 <script>
 import MapView, {Circle} from "react-native-maps";
+import * as React from 'react';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+
 export default {
     props: {
       navigation: { type: Object }
     },
     components: {
-      MapView, Circle
+      MapView, Circle, Icon
     },
     data: function() {
     return {
@@ -56,8 +50,26 @@ export default {
 .container {
   flex: 1;
 }
-.widgetArea{
-  align-content: center;
-  justify-content: center;
+.maps{
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
 }
+
+.buttonArea{
+  margin-bottom: 20;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 60;
+  border-radius: 20;
+  background-color: rgba(100,100,100,.5);
+}
+.buttonText{
+  position: absolute;
+  color: white;
+  font-size: 20;
+  font-weight: bold;
+}
+
 </style>
