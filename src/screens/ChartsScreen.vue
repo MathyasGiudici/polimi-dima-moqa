@@ -1,17 +1,14 @@
 <template>
-    <view class="container">
-    <!-- <scroll-view :content-container-style="{contentContainer: {
+    <scroll-view :content-container-style="{contentContainer: {
         paddingVertical: 20,
-    }}"> -->
-      <modal :isVisible="modalVisible">
-        <parameters-screen></parameters-screen>
-      </modal>
-
-      <line-chart :data="data" :width="width" :height="height"
+    }}">
+      <view class="container">
+        <!-- <text> {{ graphStyle }} </text> -->
+        <line-chart :data="data" :width="width" :height="height"
         :chartConfig="chartConfig" bezier :style="graphStyle"/>
-      <button title="press me" :on-press="()=>{modalVisible=!modalVisible}" />
-    <!-- </scroll-view> -->
-    </view>
+      </view>
+    <button title="Filter Data" :on-press="showDetails" />
+    </scroll-view>
 </template>
 
 <script>
@@ -25,9 +22,6 @@ import {
 
 import {Dimensions} from 'react-native';
 
-import Modal from "react-native-modal";
-import ParametersScreen from "./params/ParametersScreen.vue";
-
 import {getChartConfigs, data} from '../utils/ChartsConstants';
 
 export default {
@@ -35,7 +29,7 @@ export default {
       navigation: { type: Object }
     },
     components: {
-      LineChart, Modal, ParametersScreen
+      LineChart
     },
     data: function() {
       return {
@@ -46,14 +40,13 @@ export default {
         graphStyle: {
           marginVertical: 8,
           ...getChartConfigs()[0].style
-        },
-        modalVisible: false,
+        }
       };
   },
 
   methods: {
     showDetails: function(){
-      this.navigation.navigate('ParametersScreen')
+      this.navigation.navigate('ChartsParametersScreen')
     }
   }
 };

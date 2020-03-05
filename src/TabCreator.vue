@@ -23,8 +23,8 @@ import MapsScreen from "./screens/MapsScreen.vue";
 import ChartsScreen from "./screens/ChartsScreen.vue";
 import SettingsScreen from "./screens/SettingsScreen.vue";
 
-import ParametersScreen from "./screens/params/ParametersScreen.vue";
-
+import MapsParametersScreen from "./screens/params/MapsParametersScreen.vue";
+import ChartsParametersScreen from "./screens/params/ChartsParametersScreen.vue";
 // Settings screens
 import DetailsScreen from "./screens/settings/DetailsScreen.vue";
 
@@ -50,8 +50,8 @@ const BottomTabs = createBottomTabNavigator(
               title : 'Maps',
             }
           },
-          ParametersScreen: {
-            screen: ParametersScreen,
+          MapsParametersScreen: {
+            screen: MapsParametersScreen,
             navigationOptions: {
               title: "Maps Parameters",
             },
@@ -63,33 +63,26 @@ const BottomTabs = createBottomTabNavigator(
         },
     },
     Chart: {
-      screen: ChartsScreen,
-      navigationOptions: {
-        tabBarLabel: 'Chart',
-        tabBarIcon: ({tintColor}) => <Icon name="chart-arc" color={tintColor} size={25}/>
-      },
+      screen: createStackNavigator(
+        {
+          Home: {
+            screen: ChartsScreen,
+            navigationOptions: {
+              title : 'Chart',
+            }
+          },
+          ChartsParametersScreen: {
+            screen: ChartsParametersScreen,
+            navigationOptions: {
+              title: "Chart Parameters",
+            },
+          },
+        }),
+        navigationOptions: {
+          tabBarLabel: 'Chart',
+          tabBarIcon: ({tintColor}) => <Icon name="chart-arc" color={tintColor} size={25}/>
+        },
     },
-    // {
-    //   screen: createStackNavigator(
-    //     {
-    //       Home: {
-    //         screen: ChartsScreen,
-    //         navigationOptions: {
-    //           title : 'Chart',
-    //         }
-    //       },
-    //       ParametersScreen: {
-    //         screen: ParametersScreen,
-    //         navigationOptions: {
-    //           title: "Chart Parameters",
-    //         },
-    //       },
-    //     }),
-    //     navigationOptions: {
-    //       tabBarLabel: 'Chart',
-    //       tabBarIcon: ({tintColor}) => <Icon name="chart-arc" color={tintColor} size={25}/>
-    //     },
-    // },
     Settings: {
       screen: createStackNavigator(
         {
