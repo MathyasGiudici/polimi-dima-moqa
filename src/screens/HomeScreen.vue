@@ -1,5 +1,6 @@
 <template>
   <view class="container">
+    <status-bar bar-style="dark-content" />
     <view class="container">
       <text class="heading">Home Apple</text>
       <text>This is the App Details screen</text>

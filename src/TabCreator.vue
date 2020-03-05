@@ -23,7 +23,7 @@ import MapsScreen from "./screens/MapsScreen.vue";
 import ChartsScreen from "./screens/ChartsScreen.vue";
 import SettingsScreen from "./screens/SettingsScreen.vue";
 
-import MapsParametersScreen from "./screens/maps/MapsParametersScreen.vue";
+import ParametersScreen from "./screens/params/ParametersScreen.vue";
 
 // Settings screens
 import DetailsScreen from "./screens/settings/DetailsScreen.vue";
@@ -50,8 +50,8 @@ const BottomTabs = createBottomTabNavigator(
               title : 'Maps',
             }
           },
-          MapsParametersScreen: {
-            screen: MapsParametersScreen,
+          ParametersScreen: {
+            screen: ParametersScreen,
             navigationOptions: {
               title: "Maps Parameters",
             },
@@ -67,8 +67,29 @@ const BottomTabs = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: 'Chart',
         tabBarIcon: ({tintColor}) => <Icon name="chart-arc" color={tintColor} size={25}/>
-      }
+      },
     },
+    // {
+    //   screen: createStackNavigator(
+    //     {
+    //       Home: {
+    //         screen: ChartsScreen,
+    //         navigationOptions: {
+    //           title : 'Chart',
+    //         }
+    //       },
+    //       ParametersScreen: {
+    //         screen: ParametersScreen,
+    //         navigationOptions: {
+    //           title: "Chart Parameters",
+    //         },
+    //       },
+    //     }),
+    //     navigationOptions: {
+    //       tabBarLabel: 'Chart',
+    //       tabBarIcon: ({tintColor}) => <Icon name="chart-arc" color={tintColor} size={25}/>
+    //     },
+    // },
     Settings: {
       screen: createStackNavigator(
         {

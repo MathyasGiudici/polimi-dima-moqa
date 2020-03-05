@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     showDetails: function(){
-      this.navigation.navigate('MapsParametersScreen')
+      this.navigation.navigate('ParametersScreen')
     }
   }
 };
@@ -50,6 +50,7 @@ export default {
 .container {
   flex: 1;
 }
+
 .maps{
   flex: 1;
   justify-content: flex-end;
@@ -57,19 +58,22 @@ export default {
 }
 
 .buttonArea{
-  margin-bottom: 20;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  bottom: 20;
   width: 50%;
   height: 60;
   border-radius: 20;
   background-color: rgba(100,100,100,.5);
 }
+
 .buttonText{
   position: absolute;
+  width: 100%;
+  bottom: 20;
   color: white;
   font-size: 20;
   font-weight: bold;
+  text-align: center;
 }
 
 </style>

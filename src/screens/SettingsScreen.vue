@@ -9,9 +9,9 @@
 
       <view class="paddingElement"></view>
 
-      <touchable-opacity class="listElement" :on-press="resetParameters">
-        <text class="textListElement">Reset Parameters</text>
-      </touchable-opacity>
+      <view class="listElement" >
+        <button title="Reset Parameters" :on-press="resetParameters" />
+      </view>
     </scroll-view>
 </template>
 
@@ -85,7 +85,7 @@ export default{
   borderTopColor: lightgrey;
   borderBottomWidth: .3;
   borderBottomColor: lightgrey;
-  padding-left: 15;
+  padding-left: 5;
   padding-right: 5;
 }
 .paddingElement {
@@ -93,6 +93,7 @@ export default{
 }
 
 .textListElement {
+  padding-left: 10;
   font-size: 17;
 }
 </style>
