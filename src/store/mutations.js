@@ -21,7 +21,7 @@ export function REPLACE(state, obj){
 }
 
 // STATE "REAL" MUTATIONS
-export function changeWifiParameters(state, {host, port}){
-  state.settings.wifi.ip = host;
-  state.settings.wifi.port = port;
+export function changeSettingParameter(state, {targetParameter, host, port}){
+  state.settings[targetParameter].ip = host;
+  state.settings[targetParameter].port = port;
 }

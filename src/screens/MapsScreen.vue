@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     showDetails: function(){
-      this.navigation.navigate('MapsParametersScreen')
+      this.navigation.navigate('ParametersScreen')
     }
   }
 };

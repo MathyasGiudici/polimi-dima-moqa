@@ -2,7 +2,7 @@
     <scroll-view class="mainContainer" :content-container-style="{contentContainer: {paddingVertical: 20}}">
       <view class="paddingElement"></view>
 
-      <touchable-opacity class="listElement" v-for="option in options" :key="option.route" :on-press="() => {changeScreen(option.route)}" >
+      <touchable-opacity class="listElement" v-for="option in options" :key="option.prop" :on-press="() => {changeScreen(option)}" >
         <text class="textListElement">{{option.title}}</text>
         <icon name="chevron-right" size="35" color="lightgrey"/>
       </touchable-opacity>
@@ -27,7 +27,7 @@ import {getDefaultState} from '../store/state';
 
 export default{
   props: {
-    navigation: { type: Object }
+    navigation: { type: Object },
   },
   components: {
     Icon
@@ -36,29 +36,30 @@ export default{
     return {
       options : [
         {
-          title: 'Wi-Fi Selection',
-          route: 'WIFIParameters'
+          title: 'Wi-Fi Connection',
+          route: 'GeneralParameters',
+          prop: 'wifi'
         },
         {
-          title: 'Server Conncetion',
-          route: 'Details'
-          // route: 'ServerParameters'
+          title: 'Server Connection',
+          route: 'Details',
+          prop: 'server'
         },
         {
           title: 'RTK Connection',
-          route: 'Details'
-          // route: 'RTKParameters'
+          route: 'GeneralParameters',
+          prop: 'rtk'
         },
         {
-          title: 'ARPA Parameters',
-          route: 'Details'
-          // route: 'ARPAParameters',
-        }],
+          title: 'ARPA Connection',
+          route: 'Details',
+          prop: 'arpa'
+        }]
     };
   },
   methods:{
-    changeScreen: function(route) {
-      this.navigation.navigate(route);
+    changeScreen: function(option) {
+      this.navigation.navigate(option.route,{ option: option, });
     },
     resetParameters: function(){
       store.commit("DELETE");
@@ -66,14 +67,12 @@ export default{
     }
   }
 }
-
 </script>
 
 <style>
 .mainContainer {
   background-color: rgb(242,242,247);
 }
-
 .listElement {
   flex: 1;
   flexDirection: row;
@@ -93,7 +92,6 @@ export default{
 .paddingElement {
   height: 40;
 }
-
 .textListElement {
   padding-left: 10;
   font-size: 17;

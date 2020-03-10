@@ -46,7 +46,7 @@ export default {
 
   methods: {
     showDetails: function(){
-      this.navigation.navigate('ChartsParametersScreen')
+      this.navigation.navigate('ParametersScreen')
     }
   }
 };

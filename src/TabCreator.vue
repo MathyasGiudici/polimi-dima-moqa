@@ -23,11 +23,10 @@ import MapsScreen from "./screens/MapsScreen.vue";
 import ChartsScreen from "./screens/ChartsScreen.vue";
 import SettingsScreen from "./screens/SettingsScreen.vue";
 
-import MapsParametersScreen from "./screens/params/MapsParametersScreen.vue";
-import ChartsParametersScreen from "./screens/params/ChartsParametersScreen.vue";
+import ParametersScreen from "./screens/params/ParametersScreen.vue";
 
 // Settings screens
-import WIFIParameters from "./screens/settings/WIFIParameters.vue";
+import GeneralParameters from "./screens/settings/GeneralParameters.vue";
 import DetailsScreen from "./screens/settings/DetailsScreen.vue";
 
 
@@ -51,8 +50,8 @@ const BottomTabs = createBottomTabNavigator(
               title : 'Maps',
             }
           },
-          MapsParametersScreen: {
-            screen: MapsParametersScreen,
+          ParametersScreen: {
+            screen: ParametersScreen,
             navigationOptions: {
               title: "Maps Parameters",
             },
@@ -72,8 +71,8 @@ const BottomTabs = createBottomTabNavigator(
               title : 'Chart',
             }
           },
-          ChartsParametersScreen: {
-            screen: ChartsParametersScreen,
+          ParametersScreen: {
+            screen: ParametersScreen,
             navigationOptions: {
               title: "Chart Parameters",
             },
@@ -99,10 +98,12 @@ const BottomTabs = createBottomTabNavigator(
               title: "More Details",
             },
           },
-          WIFIParameters: {
-            screen: WIFIParameters,
-            navigationOptions: {
-              title: "Wi-Fi Selection",
+          GeneralParameters: {
+            screen: GeneralParameters,
+            navigationOptions: ({navigation}) => {
+              return {
+                title: `${navigation.state.params.option.title}`,
+              };
             },
           },
         }),

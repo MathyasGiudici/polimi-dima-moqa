@@ -10,7 +10,7 @@
     <!-- IP Address -->
     <view class="listElement">
       <text class="textListTitleElement">IP Address</text>
-      <text-input class="textListElement" placeholder="localhost" v-model="host" :onChangeText="hostChange" />
+      <text-input class="textListElement" placeholder="htpp://localhost" v-model="host" :onChangeText="hostChange" />
     </view>
 
     <!-- Port -->
@@ -31,6 +31,14 @@
       <text class="textListTitleElement">Connection Status</text>
       <view class="circle" :style="connectionStatusStyle"></view>
     </view>
+
+    <view class="paddingElement"></view>
+
+    <!-- Description -->
+    <view class="subComponent" v-if="showMessage">
+      <text class="textSubComponent">{{responseMessage}}</text>
+    </view>
+
   </scroll-view>
 </template>
 
@@ -39,17 +47,24 @@ import store from '../../store';
 import {getHandler} from '../../utils/Network';
 
 export default {
+  props: {
+    navigation: { type: Object },
+  },
   data: function(){
     return {
       isLoading: false,
-      host: store.state.settings.wifi.ip,
-      port: store.state.settings.wifi.port,
+      host: store.state.settings[this.navigation.state.params.option.prop].ip,
+      port: store.state.settings[this.navigation.state.params.option.prop].port,
       changingConnection: false,
       connectionStatusStyle: {
         backgroundColor: 'darkorange'
       },
-
+      showMessage: false,
+      responseMessage: '',
     };
+  },
+  mounted: function(){
+    this.checkConnection();
   },
   methods: {
     hostChange: function(text){
@@ -78,12 +93,14 @@ export default {
             break;
           default:
             this.connectionStatusStyle = { backgroundColor: 'green' };
+            this.showMessage = true;
+            this.responseMessage = value;
         }
       });
     },
     changeConnection: function(){
       this.changingConnection=false;
-      store.commit('changeWifiParameters', {host: this.host, port: this.port});
+      store.commit('changeSettingParameter', {targetParameter: this.navigation.state.params.option.prop, host: this.host, port: this.port});
       store.commit('SAVE');
       this.checkConnection();
     }
@@ -135,4 +152,26 @@ export default {
    width: 30;
    border-radius: 15;
 }
+.subComponent{
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: white;
+  borderStyle: solid;
+  borderTopWidth: .3;
+  borderTopColor: lightgrey;
+  borderBottomWidth: .3;
+  borderBottomColor: lightgrey;
+  padding-top: 20;
+  padding-bottom: 20;
+  padding-left: 5;
+  padding-right: 5;
+}
+.textSubComponent{
+  padding-left: 5;
+  padding-right: 5;
+  font-size: 15;
+  text-align: left;
+}
+
 </style>
