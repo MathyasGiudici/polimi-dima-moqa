@@ -21,14 +21,7 @@ export function REPLACE(state, obj){
 }
 
 // STATE "REAL" MUTATIONS
-export function increment(state){
-  state.count++
-}
-
-export function decrement(state){
-  state.count--
-}
-
-export function blob(state){
-  state.blob.test = 'here'
+export function changeWifiParameters(state, {host, port}){
+  state.settings.wifi.ip = host;
+  state.settings.wifi.port = port;
 }

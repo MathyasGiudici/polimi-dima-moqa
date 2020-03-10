@@ -35,14 +35,15 @@
 </template>
 
 <script>
+import store from '../../store';
 import {getHandler} from '../../utils/Network';
 
 export default {
   data: function(){
     return {
       isLoading: false,
-      host: 'http://192.168.1.173',
-      port: '3000',
+      host: store.state.settings.wifi.ip,
+      port: store.state.settings.wifi.port,
       changingConnection: false,
       connectionStatusStyle: {
         backgroundColor: 'darkorange'
@@ -82,6 +83,8 @@ export default {
     },
     changeConnection: function(){
       this.changingConnection=false;
+      store.commit('changeWifiParameters', {host: this.host, port: this.port});
+      store.commit('SAVE');
       this.checkConnection();
     }
   }

@@ -1,9 +1,13 @@
 // Default state object
 export function getDefaultState() {
   return {
-    count : 0,
+    settings: {
+      wifi: {
+        ip: 'http://192.168.1.173',
+        port: '3000'
+      },
+    },
     blob : {
-      test: 'test'
     }
   };
 };
