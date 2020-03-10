@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     showDetails: function(){
-      this.navigation.navigate('ParametersScreen')
+      this.navigation.navigate('FilterParametersScreen',{ option: 'maps',});
     }
   }
 };

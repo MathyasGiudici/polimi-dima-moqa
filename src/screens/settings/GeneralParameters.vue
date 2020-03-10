@@ -173,5 +173,4 @@ export default {
   font-size: 15;
   text-align: left;
 }
-
 </style>

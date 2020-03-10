@@ -23,7 +23,7 @@ import MapsScreen from "./screens/MapsScreen.vue";
 import ChartsScreen from "./screens/ChartsScreen.vue";
 import SettingsScreen from "./screens/SettingsScreen.vue";
 
-import ParametersScreen from "./screens/params/ParametersScreen.vue";
+import FilterParametersScreen from "./screens/params/FilterParametersScreen.vue";
 
 // Settings screens
 import GeneralParameters from "./screens/settings/GeneralParameters.vue";
@@ -50,8 +50,8 @@ const BottomTabs = createBottomTabNavigator(
               title : 'Maps',
             }
           },
-          ParametersScreen: {
-            screen: ParametersScreen,
+          FilterParametersScreen: {
+            screen: FilterParametersScreen,
             navigationOptions: {
               title: "Maps Parameters",
             },
@@ -71,8 +71,8 @@ const BottomTabs = createBottomTabNavigator(
               title : 'Chart',
             }
           },
-          ParametersScreen: {
-            screen: ParametersScreen,
+          FilterParametersScreen: {
+            screen: FilterParametersScreen,
             navigationOptions: {
               title: "Chart Parameters",
             },

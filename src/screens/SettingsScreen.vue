@@ -38,22 +38,22 @@ export default{
         {
           title: 'Wi-Fi Connection',
           route: 'GeneralParameters',
-          prop: 'wifi'
+          prop:  'wifi'
         },
         {
           title: 'Server Connection',
           route: 'Details',
-          prop: 'server'
+          prop:  'server'
         },
         {
           title: 'RTK Connection',
           route: 'GeneralParameters',
-          prop: 'rtk'
+          prop:  'rtk'
         },
         {
           title: 'ARPA Connection',
           route: 'Details',
-          prop: 'arpa'
+          prop:  'arpa'
         }]
     };
   },

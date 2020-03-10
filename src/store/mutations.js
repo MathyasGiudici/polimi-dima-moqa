@@ -21,6 +21,13 @@ export function REPLACE(state, obj){
 }
 
 // STATE "REAL" MUTATIONS
+export function changeFilterParameters(state, {targetFilter, newParameters}){
+  state.filter[targetFilter].pinnedMeasures = newParameters.pinnedMeasures;
+  state.filter[targetFilter].startDate = newParameters.startDate;
+  state.filter[targetFilter].endDate = newParameters.endDate ;
+  state.filter[targetFilter].arpaEnabled = newParameters.arpaEnabled;
+}
+
 export function changeSettingParameter(state, {targetParameter, host, port}){
   state.settings[targetParameter].ip = host;
   state.settings[targetParameter].port = port;

@@ -33,7 +33,7 @@
     <touchable-opacity class="listElement">
       <text class="textListTitleElement">ARPA data</text>
       <view class="toggle">
-        <switch :on-value-change = "()=>{arpaEnabled=!arpaEnabled;}" :value = "arpaEnabled"/>
+        <switch :on-value-change = "changeArpaValue" :value = "arpaEnabled"/>
       </view>
     </touchable-opacity>
 
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import store from '../../store';
 // Utils for icon
 import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -53,55 +54,76 @@ var yesterday = new Date(); // Today!
 yesterday.setDate(today.getDate() - 1); // Yesterday!
 
 export default {
-components: { Icon, DateTimePicker },
-data: function(){
-  return {
-    //Parameters related to measures
-    pinnedMeasures: ["Temperature"],
-    measures: ["Temperature","Pressure", "Humidity", "PM10"],
-    // Parameters related to date pickers
-    isStartDateVisible: false,
-    startDate: dateObjectCreator(yesterday),
-    isEndDateVisible: false,
-    endDate: dateObjectCreator(today),
-    //Arpa parameter
-    arpaEnabled : true,
-  };
-},
-methods: {
-  measuredPinned: function(mea){
-    if(this.pinnedMeasures.includes(mea) && this.pinnedMeasures.length > 1)
-      this.pinnedMeasures.splice(this.pinnedMeasures.indexOf(mea),1);
-    else
-      this.pinnedMeasures.push(mea);
+  props: {
+    navigation: { type: Object },
   },
-  setStartDate: function(event,date){
-    this.startDate = dateObjectCreator(date);
+  components: { Icon, DateTimePicker },
+  data: function(){
+    return {
+      //Parameters related to measures
+      pinnedMeasures: store.state.filter[this.navigation.state.params.option].pinnedMeasures,
+      measures: ["Temperature","Pressure", "Humidity", "PM10"],
+      // Parameters related to date pickers
+      isStartDateVisible: false,
+      startDate: store.state.filter[this.navigation.state.params.option].startDate,
+      isEndDateVisible: false,
+      endDate: store.state.filter[this.navigation.state.params.option].endDate,
+      //Arpa parameter
+      arpaEnabled : store.state.filter[this.navigation.state.params.option].arpaEnabled,
+    };
   },
-  setEndDate: function(event,date){
-    this.endDate = dateObjectCreator(date);
-  },
-  checkDateConsistency: function(){
-    if(this.startDate.date > today){
-      this.startDate = dateObjectCreator(yesterday);
-      alert('Start date could not be in the future!');
-      return;
-    }
+  methods: {
+    measuredPinned: function(mea){
+      if(this.pinnedMeasures.includes(mea) && this.pinnedMeasures.length > 1)
+        this.pinnedMeasures.splice(this.pinnedMeasures.indexOf(mea),1);
+      else
+        this.pinnedMeasures.push(mea);
 
-    if(this.endDate.date > today){
-      this.endDate = dateObjectCreator(today);
-      alert('End date could not be in the future!');
-      return;
-    }
+      this.saveFilter();
+    },
+    setStartDate: function(event,date){
+      this.startDate = dateObjectCreator(date);
+    },
+    setEndDate: function(event,date){
+      this.endDate = dateObjectCreator(date);
+    },
+    checkDateConsistency: function(){
+      if(this.startDate.date > today){
+        this.startDate = dateObjectCreator(yesterday);
+        alert('Start date could not be in the future!');
+        return;
+      }
 
-    if(this.startDate.date > this.endDate.date){
-      this.startDate = dateObjectCreator(yesterday);
-      this.endDate = dateObjectCreator(today);
-      alert('Start date could not be greater than end date!');
-      return;
+      if(this.endDate.date > today){
+        this.endDate = dateObjectCreator(today);
+        alert('End date could not be in the future!');
+        return;
+      }
+
+      if(this.startDate.date > this.endDate.date){
+        this.startDate = dateObjectCreator(yesterday);
+        this.endDate = dateObjectCreator(today);
+        alert('Start date could not be greater than end date!');
+        return;
+      }
+
+      this.saveFilter();
+    },
+    changeArpaValue: function(){
+      this.arpaEnabled = !this.arpaEnabled;
+      this.saveFilter();
+    },
+    saveFilter: function(){
+      store.commit('changeFilterParameters', {targetFilter: this.navigation.state.params.option,
+        newParameters:{
+          pinnedMeasures: this.pinnedMeasures,
+          startDate: this.startDate,
+          endDate: this.endDate,
+          arpaEnabled : this.arpaEnabled,
+        }});
+      store.commit('SAVE');
     }
   }
-}
 };
 </script>
 
