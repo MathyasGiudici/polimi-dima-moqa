@@ -3,9 +3,11 @@
       <Circle :center="circle.center" :radius="circle.radius"
         fillColor="rgba(255, 0, 0, .5)" strokeColor="rgba(0,0,0,.2)"
         zIndex="2" strokeWidth="2"/>
-        <touchable-opacity class="buttonArea" :on-press="showDetails">
-          <text class="buttonText">Filter</text>
-        </touchable-opacity>
+        <view class="buttonContainer">
+          <touchable-opacity class="bubbleBotton" :on-press="showDetails">
+            <text class="buttonText">Filter</text>
+          </touchable-opacity>
+        </view>
   </map-view>
 </template>
 
@@ -57,22 +59,24 @@ export default {
   align-items: center;
 }
 
-.buttonArea{
-  position: absolute;
-  bottom: 20;
-  width: 50%;
-  height: 60;
+.buttonContainer{
+  flex-direction: row;
+  margin-vertical: 20;
+  background-color: transparent;
+}
+
+.bubbleBotton{
+  background-color: rgba(255,255,255,0.7);
+  padding-horizontal: 18;
+  padding-vertical: 12;
   border-radius: 20;
-  background-color: rgba(100,100,100,.5);
+  width: 100;
+  align-items: center;
+  justify-content: center;
+  margin-horizontal: 5;
 }
 
 .buttonText{
-  position: absolute;
-  width: 100%;
-  bottom: 20;
-  color: white;
-  font-size: 20;
-  font-weight: bold;
   text-align: center;
 }
 

@@ -36,27 +36,29 @@ export default{
     return {
       options : [
         {
-          title: 'Wi-fi Selection',
+          title: 'Wi-Fi Selection',
           route: 'WIFIParameters'
         },
         {
           title: 'Server Conncetion',
-          route: 'ServerParameters'
+          route: 'Details'
+          // route: 'ServerParameters'
         },
         {
           title: 'RTK Connection',
-          route: 'RTKParameters'
+          route: 'Details'
+          // route: 'RTKParameters'
         },
         {
           title: 'ARPA Parameters',
-          route: 'ARPAParameters',
+          route: 'Details'
+          // route: 'ARPAParameters',
         }],
     };
   },
   methods:{
     changeScreen: function(route) {
-      console.log(route);
-      this.navigation.navigate("Details");
+      this.navigation.navigate(route);
     },
     resetParameters: function(){
       store.commit("DELETE");

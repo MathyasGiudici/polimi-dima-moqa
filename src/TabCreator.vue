@@ -25,9 +25,10 @@ import SettingsScreen from "./screens/SettingsScreen.vue";
 
 import MapsParametersScreen from "./screens/params/MapsParametersScreen.vue";
 import ChartsParametersScreen from "./screens/params/ChartsParametersScreen.vue";
-// Settings screens
-import DetailsScreen from "./screens/settings/DetailsScreen.vue";
 
+// Settings screens
+import WIFIParameters from "./screens/settings/WIFIParameters.vue";
+import DetailsScreen from "./screens/settings/DetailsScreen.vue";
 
 
 // Navigator
@@ -96,6 +97,12 @@ const BottomTabs = createBottomTabNavigator(
             screen: DetailsScreen,
             navigationOptions: {
               title: "More Details",
+            },
+          },
+          WIFIParameters: {
+            screen: WIFIParameters,
+            navigationOptions: {
+              title: "Wi-Fi Selection",
             },
           },
         }),
