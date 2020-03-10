@@ -4,28 +4,19 @@
     <view class="loading" v-if="isLoading" >
         <activity-indicator size="large" color="#lightgrey" />
     </view>
-    <!-- Space -->
+    <!-- Initial padding -->
     <view class="paddingElement"></view>
 
     <!-- IP Address -->
     <view class="listElement">
-      <text class="textListTitleElement">IP Address</text>
+      <text class="textListTitleElement">Monitoring Station URL</text>
       <text-input class="textListElement" placeholder="htpp://localhost" v-model="host" :onChangeText="hostChange" />
-    </view>
-
-    <!-- Port -->
-    <view class="listElement">
-      <text class="textListTitleElement">Port</text>
-      <text-input class="textListElement" placeholder="3000" v-model="port" :onChangeText="portChange" />
     </view>
 
     <!-- Confirm Button -->
     <view class="listElement" style="justifyContent: space-around" v-if="changingConnection">
       <button title="Make changes" :on-press="changeConnection" />
     </view>
-
-    <!-- Space -->
-    <view class="paddingElement"></view>
 
     <!-- Connection Status -->
     <view class="listElement">
@@ -40,7 +31,7 @@
       <text class="textSubComponent">{{responseMessage}}</text>
     </view>
 
-    <!-- Space -->
+    <!-- Initial padding -->
     <view class="paddingElement"></view>
 
   </scroll-view>
@@ -57,8 +48,7 @@ export default {
   data: function(){
     return {
       isLoading: false,
-      host: store.state.settings[this.navigation.state.params.option.prop].ip,
-      port: store.state.settings[this.navigation.state.params.option.prop].port,
+      host: 'http://dati.comune.milano.it/dataset/d6960c75-0a02-4fda-a85f-3b1c4aa725d6/resource/635c6508-b335-48b1-b3c8-d43e78ad3380/download/qaria_stazione.geojson',
       changingConnection: false,
       connectionStatusStyle: {
         backgroundColor: 'darkorange'
@@ -68,22 +58,18 @@ export default {
     };
   },
   mounted: function(){
-    this.checkConnection();
+    //this.checkConnection();
   },
   methods: {
     hostChange: function(text){
       this.changingConnection = true;
       this.host = text;
     },
-    portChange: function(text){
-      this.changingConnection = true;
-      this.port = text;
-    },
     checkConnection: function(){
       this.changingConnection = false;
       this.isLoading = true;
 
-      getHandler(this.host, this.port, 'text').then((value) => {
+      getHandler(this.host,'', 'json').then((value) => {
         // Stop loading motion
         this.isLoading = false;
 
@@ -104,8 +90,6 @@ export default {
     },
     changeConnection: function(){
       this.changingConnection=false;
-      store.commit('changeSettingParameter', {targetParameter: this.navigation.state.params.option.prop, host: this.host, port: this.port});
-      store.commit('SAVE');
       this.checkConnection();
     }
   }

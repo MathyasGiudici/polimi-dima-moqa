@@ -2,13 +2,16 @@
     <scroll-view class="mainContainer" :content-container-style="{contentContainer: {paddingVertical: 20}}">
       <view class="paddingElement"></view>
 
+      <!-- List of possible Settings -->
       <touchable-opacity class="listElement" v-for="option in options" :key="option.prop" :on-press="() => {changeScreen(option)}" >
         <text class="textListElement">{{option.title}}</text>
         <icon name="chevron-right" size="35" color="lightgrey"/>
       </touchable-opacity>
 
+      <!-- Space -->
       <view class="paddingElement"></view>
 
+      <!-- Reset Button -->
       <view class="listElement" >
         <button title="Reset Parameters" :on-press="resetParameters" />
       </view>
@@ -52,14 +55,14 @@ export default{
         },
         {
           title: 'ARPA Connection',
-          route: 'Details',
+          route: 'ARPAParameters',
           prop:  'arpa'
         }]
     };
   },
   methods:{
     changeScreen: function(option) {
-      this.navigation.navigate(option.route,{ option: option, });
+      this.navigation.navigate(option.route,{ option: option });
     },
     resetParameters: function(){
       store.commit("DELETE");

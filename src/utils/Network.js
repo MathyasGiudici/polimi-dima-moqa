@@ -1,3 +1,11 @@
+// Creation of the url:port
+const createAddress = (url,port) => {
+  if (port != '')
+    return url + ":" + port;
+  else
+    return url;
+}
+
 // Timer for the Promise.race
 const timerPromise = () => {
   return new Promise(function(resolve, reject) {
@@ -6,7 +14,7 @@ const timerPromise = () => {
 
 // Function to apply a GET from web
 export async function getHandler(url, port, responseType) {
-  return Promise.race([timerPromise(), fetch(url + ":" + port).then((response) =>{
+  return Promise.race([timerPromise(), fetch(createAddress(url,port)).then((response) =>{
     var toReturn;
     switch (responseType) {
       case 'text':
@@ -26,7 +34,7 @@ export async function getHandler(url, port, responseType) {
         toReturn = 'Connection problems';
         break;
       case 'json':
-        toReturn = {message: 'Connection problems'};
+        toReturn = 'Connection problems';
         break;
       default:
         toReturn = 'Connection problems';
@@ -37,7 +45,7 @@ export async function getHandler(url, port, responseType) {
 
 // Function to apply a POST to the web
 export function postHandler(url, port, contentType, body) {
-  return Promise.race([timerPromise(), fetch(url + ":" + port, {
+  return Promise.race([timerPromise(), fetch(createAddress(url,port), {
     method: "post",
     headers: new Headers({
       "Content-Type": contentType
