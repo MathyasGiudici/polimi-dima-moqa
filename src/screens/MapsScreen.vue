@@ -3,8 +3,11 @@
       <Circle :center="circle.center" :radius="circle.radius"
         fillColor="rgba(255, 0, 0, .5)" strokeColor="rgba(0,0,0,.2)"
         zIndex="2" strokeWidth="2"/>
+
+        <!-- Filter Button -->
         <view class="buttonContainer">
           <touchable-opacity class="bubbleBotton" :on-press="showDetails">
+            <icon name="filter-outline" color="white" size="25"/>
             <text class="buttonText">Filter</text>
           </touchable-opacity>
         </view>
@@ -26,15 +29,15 @@ export default {
     data: function() {
     return {
       coordinates: {
-        latitude: 37.78825,
-        longitude: -122.4324,
+        latitude: 45.474098205566399,
+        longitude: 9.2347803115844709,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
       circle: {
         center: {
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: 45.474098205566399,
+          longitude: 9.2347803115844709,
         },
         radius: 1000,
 
@@ -66,18 +69,20 @@ export default {
 }
 
 .bubbleBotton{
-  background-color: rgba(255,255,255,0.7);
-  padding-horizontal: 18;
-  padding-vertical: 12;
+  flex-direction: row;
+  background-color: rgba(0,122,255,1);
+  padding-horizontal: 15;
+  padding-vertical: 15;
   border-radius: 20;
-  width: 100;
+  width: 160;
   align-items: center;
   justify-content: center;
-  margin-horizontal: 5;
 }
 
 .buttonText{
   text-align: center;
+  font-size: 20;
+  color: white;
 }
 
 </style>

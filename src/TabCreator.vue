@@ -14,7 +14,7 @@ import {
 
 // Utils for icon
 import * as React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 // Basic 4 screens
