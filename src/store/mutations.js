@@ -32,3 +32,15 @@ export function changeSettingParameter(state, {targetParameter, host, port}){
   state.settings[targetParameter].ip = host;
   state.settings[targetParameter].port = port;
 }
+
+export function changeArpaStationsUrl(state, {targetMeasure, url}){
+  state.settings.arpa[targetMeasure].stationsUrl = url;
+}
+
+export function changeArpaPickedStations(state, {targetMeasure, picked}){
+  state.settings.arpa[targetMeasure].pinnedStations = picked;
+}
+
+export function changeArpaDataUrl(state, {targetMeasure, url}){
+  state.settings.arpa[targetMeasure].dataUrl = url;
+}

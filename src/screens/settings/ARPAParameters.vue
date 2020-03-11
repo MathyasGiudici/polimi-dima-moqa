@@ -1,43 +1,78 @@
 <template>
-  <scroll-view class="mainContainer" :content-container-style="{contentContainer: {paddingVertical: 20}}" :onScrollEndDrag="checkConnection">
+  <scroll-view class="mainContainer" :content-container-style="{contentContainer: {paddingVertical: 20}}" :onScrollEndDrag="()=>{checkStationConnection();checkDataConnection();}">
     <!-- Loading -->
     <view class="loading" v-if="isLoading" >
         <activity-indicator size="large" color="#lightgrey" />
     </view>
-    <!-- Initial padding -->
+    <!-- Space -->
     <view class="paddingElement"></view>
 
-    <!-- IP Address -->
+    <!-- Stations Address -->
     <view class="listElement">
-      <text class="textListTitleElement">Monitoring Station URL</text>
-      <text-input class="textListElement" placeholder="htpp://localhost" v-model="host" :onChangeText="hostChange" />
+      <text class="textListTitleElement">Station URL</text>
+      <text-input class="textListElement" placeholder="htpp://localhost" v-model="stationsUrl" :onChangeText="stationsUrlSetter" />
     </view>
 
-    <!-- Confirm Button -->
-    <view class="listElement" style="justifyContent: space-around" v-if="changingConnection">
-      <button title="Make changes" :on-press="changeConnection" />
+    <!-- Stations Confirm Button -->
+    <view class="listElement" style="justifyContent: space-around" v-if="changingStations">
+      <button title="Make changes" :on-press="stationsUrlChange" />
     </view>
 
-    <!-- Connection Status -->
+    <!-- Stations Connection Status -->
     <view class="listElement">
-      <text class="textListTitleElement">Connection Status</text>
-      <view class="circle" :style="connectionStatusStyle"></view>
+      <text class="textListTitleElement">Station Status</text>
+      <view class="circle" :style="stationsUrlStatusStyle"></view>
     </view>
 
+    <!-- Space -->
     <view class="paddingElement"></view>
 
-    <!-- Description -->
-    <view class="subComponent" v-if="showMessage">
-      <text class="textSubComponent">{{responseMessage}}</text>
+    <!-- Pick Stations -->
+    <touchable-opacity class="listElement" :on-press="pickStations" v-if="stationsAvailable">
+      <text class="textListLightTitleElement">Pick Stations</text>
+      <icon name="chevron-right" size="35" color="lightgrey"/>
+    </touchable-opacity>
+
+    <!-- Space -->
+    <view class="paddingElement"></view>
+
+    <!-- Data Address -->
+    <view class="listElement">
+      <text class="textListTitleElement">Data URL</text>
+      <text-input class="textListElement" placeholder="htpp://localhost" v-model="dataUrl" :onChangeText="dataUrlSetter" />
     </view>
 
-    <!-- Initial padding -->
+    <!-- Data Confirm Button -->
+    <view class="listElement" style="justifyContent: space-around" v-if="changingData">
+      <button title="Make changes" :on-press="dataUrlChange" />
+    </view>
+
+    <!-- Data Connection Status -->
+    <view class="listElement">
+      <text class="textListTitleElement">Data Status</text>
+      <view class="circle" :style="dataStatusStyle"></view>
+    </view>
+
+    <!-- Space -->
+    <view class="paddingElement"></view>
+
+    <!-- Warning -->
+    <view class="subComponent">
+      <text class="textSubComponent">The urls that can currently be entered are related to the OpenData
+        of the Municipality of Milan as there is no single format for the OpenData</text>
+    </view>
+
+    <!-- Space -->
     <view class="paddingElement"></view>
 
   </scroll-view>
 </template>
 
 <script>
+// Utils for icon
+import * as React from 'react';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import store from '../../store';
 import {getHandler} from '../../utils/Network';
 
@@ -45,52 +80,99 @@ export default {
   props: {
     navigation: { type: Object },
   },
+  components: {
+    Icon
+  },
   data: function(){
     return {
       isLoading: false,
-      host: 'http://dati.comune.milano.it/dataset/d6960c75-0a02-4fda-a85f-3b1c4aa725d6/resource/635c6508-b335-48b1-b3c8-d43e78ad3380/download/qaria_stazione.geojson',
-      changingConnection: false,
-      connectionStatusStyle: {
+      stationsUrl: store.state.settings.arpa[this.navigation.state.params.option.prop].stationsUrl,
+      changingStations: false,
+      stationsUrlStatusStyle: {
         backgroundColor: 'darkorange'
       },
-      showMessage: false,
-      responseMessage: '',
+      stationsAvailable: false,
+      stations: null,
+      dataUrl: store.state.settings.arpa[this.navigation.state.params.option.prop].dataUrl,
+      changingData: false,
+      dataStatusStyle: {
+        backgroundColor: 'darkorange'
+      },
     };
   },
   mounted: function(){
-    //this.checkConnection();
+    this.checkStationConnection();
+    this.checkDataConnection();
   },
   methods: {
-    hostChange: function(text){
-      this.changingConnection = true;
-      this.host = text;
+    stationsUrlSetter: function(text){
+      this.changingStations = true;
+      this.stationsUrl = text;
     },
-    checkConnection: function(){
-      this.changingConnection = false;
+    dataUrlSetter: function(text){
+      this.changingData = true;
+      this.dataUrl = text;
+    },
+    checkStationConnection: function(){
       this.isLoading = true;
 
-      getHandler(this.host,'', 'json').then((value) => {
+      getHandler(this.stationsUrl,'', 'json').then((value) => {
         // Stop loading motion
         this.isLoading = false;
 
         // Exploit result
         switch (value) {
           case 'End Race':
-            this.connectionStatusStyle = { backgroundColor: 'darkorange' };
+            this.stationsUrlStatusStyle = { backgroundColor: 'darkorange' };
             break;
           case 'Connection problems':
-            this.connectionStatusStyle = { backgroundColor: 'red' };
+            this.stationsUrlStatusStyle = { backgroundColor: 'red' };
             break;
           default:
-            this.connectionStatusStyle = { backgroundColor: 'green' };
-            this.showMessage = true;
-            this.responseMessage = value;
+            this.stationsUrlStatusStyle = { backgroundColor: 'green' };
+            this.stationsAvailable = true;
+            this.stations = value.features;
         }
       });
     },
-    changeConnection: function(){
-      this.changingConnection=false;
-      this.checkConnection();
+    checkDataConnection: function(){
+      this.isLoading = true;
+
+      getHandler(this.dataUrl,'', 'json').then((value) => {
+        // Stop loading motion
+        this.isLoading = false;
+
+        // Exploit result
+        switch (value) {
+          case 'End Race':
+            this.dataStatusStyle = { backgroundColor: 'darkorange' };
+            break;
+          case 'Connection problems':
+            this.dataStatusStyle = { backgroundColor: 'red' };
+            break;
+          default:
+            this.dataStatusStyle = { backgroundColor: 'green' };
+        }
+      });
+    },
+    stationsUrlChange: function(){
+      this.changingStations = false;
+      this.stationsAvailable = false;
+      store.commit('changeArpaStationsUrl', { targetMeasure: this.navigation.state.params.option.prop,
+        url: this.stationsUrl });
+      store.commit('SAVE');
+      this.checkStationConnection();
+    },
+    dataUrlChange: function(){
+      this.changingData = false;
+      store.commit('changeArpaDataUrl', { targetMeasure: this.navigation.state.params.option.prop,
+        url: this.dataUrl });
+      store.commit('SAVE');
+      this.checkDataConnection();
+    },
+    pickStations: function(){
+      this.navigation.navigate("StationsPicker",{ option: this.navigation.state.params.option,
+        stations: this.stations });
     }
   }
 };
@@ -128,6 +210,10 @@ export default {
   padding-left: 10;
   font-size: 17;
   font-weight: 600;
+}
+.textListLightTitleElement {
+  padding-left: 10;
+  font-size: 17;
 }
 .textListElement {
   padding-right: 5;

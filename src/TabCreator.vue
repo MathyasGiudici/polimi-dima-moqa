@@ -28,6 +28,7 @@ import FilterParametersScreen from "./screens/params/FilterParametersScreen.vue"
 // Settings screens
 import GeneralParameters from "./screens/settings/GeneralParameters.vue";
 import ARPAParameters from "./screens/settings/ARPAParameters.vue";
+import StationsPicker from "./screens/settings/StationsPicker.vue";
 
 import DetailsScreen from "./screens/settings/DetailsScreen.vue";
 
@@ -113,6 +114,14 @@ const BottomTabs = createBottomTabNavigator(
             navigationOptions: ({navigation}) => {
               return {
                 title: `${navigation.state.params.option.title}`,
+              };
+            },
+          },
+          StationsPicker: {
+            screen: StationsPicker,
+            navigationOptions: ({navigation}) => {
+              return {
+                title: "Stations Picker",
               };
             },
           },

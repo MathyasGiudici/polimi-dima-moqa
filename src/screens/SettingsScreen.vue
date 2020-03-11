@@ -23,7 +23,7 @@
 <script>
 // Utils for icon
 import * as React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import store from '../store';
 import {getDefaultState} from '../store/state';
@@ -54,9 +54,14 @@ export default{
           prop:  'rtk'
         },
         {
-          title: 'ARPA Connection',
+          title: 'ARPA Weather Data Connection',
           route: 'ARPAParameters',
-          prop:  'arpa'
+          prop:  'weather'
+        },
+        {
+          title: 'ARPA Air Quality Data Connection',
+          route: 'ARPAParameters',
+          prop:  'air'
         }]
     };
   },
