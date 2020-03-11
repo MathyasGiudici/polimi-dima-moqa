@@ -4,9 +4,10 @@
     <view class="paddingElement"></view>
 
     <!-- Station picker -->
-    <touchable-opacity class="listElement" v-for="station in stations" :key="station.properties.id" :on-press="() => {pinHandler(station.properties.id)}">
-      <text class="textListTitleElement" style="font-weight: normal;">{{station.properties.nome}}</text>
-      <icon class="toggle" name="check" size="35" color="black" v-if="pinned.includes(station.properties.id)"/>
+    <touchable-opacity class="listElement" v-for="station in stations" :key="stations.indexOf(station)" :on-press="() => {pinHandler(stations.indexOf(station))}">
+      <text class="textListTitleElement" style="font-weight: normal;" v-if="prop=='air'">{{station.properties.nome}}</text>
+      <text class="textListTitleElement" style="font-weight: normal;" v-if="prop=='weather'">{{station.properties.NomeStazione}} ({{station.properties.Tipologia}})</text>
+      <icon class="toggle" name="check" size="35" color="black" v-if="pinned.includes(stations.indexOf(station))"/>
     </touchable-opacity>
 
     <!-- Space -->
@@ -29,6 +30,7 @@ export default {
   data: function(){
     return {
       //Parameters related to measures
+      prop: this.navigation.state.params.option.prop,
       pinned: store.state.settings.arpa[this.navigation.state.params.option.prop].pinnedStations,
       stations: this.navigation.state.params.stations,
     };

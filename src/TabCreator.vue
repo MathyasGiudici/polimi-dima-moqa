@@ -30,8 +30,6 @@ import GeneralParameters from "./screens/settings/GeneralParameters.vue";
 import ARPAParameters from "./screens/settings/ARPAParameters.vue";
 import StationsPicker from "./screens/settings/StationsPicker.vue";
 
-import DetailsScreen from "./screens/settings/DetailsScreen.vue";
-
 
 // Navigator
 const BottomTabs = createBottomTabNavigator(
@@ -94,12 +92,6 @@ const BottomTabs = createBottomTabNavigator(
             navigationOptions: {
               title : 'Settings',
             }
-          },
-          Details: {
-            screen: DetailsScreen,
-            navigationOptions: {
-              title: "More Details",
-            },
           },
           GeneralParameters: {
             screen: GeneralParameters,

@@ -45,7 +45,7 @@ export default{
         },
         {
           title: 'Server Connection',
-          route: 'Details',
+          route: 'GeneralParameters',
           prop:  'server'
         },
         {
