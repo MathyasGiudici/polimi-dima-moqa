@@ -56,7 +56,7 @@ import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Charts constants
-import {getChartConfigs, testDataSet} from '../utils/ChartsConstants';
+import {getChartConfigs} from '../utils/ChartsConstants';
 import * as utils from '../utils/ChartsUtils';
 
 import store from '../store';
@@ -75,7 +75,7 @@ export default {
         chartWidth : Dimensions.get('window').width - 25,
         chartHeight : 250,
         chartConfig: getChartConfigs(),
-        chartData: testDataSet,
+        chartData: utils.getChartData(store.state.filter.charts),
         // Parameters
         tableHead: ["Quartiles", store.state.filter.charts.pinnedMeasure, "ARPA" ],
         tableData: [
@@ -87,6 +87,9 @@ export default {
   },
   beforeMount: function(){
     loadData();
+  },
+  mounted: function(){
+
   },
   methods: {
     showDetails: function(){

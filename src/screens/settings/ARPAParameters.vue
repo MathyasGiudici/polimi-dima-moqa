@@ -59,7 +59,7 @@
     <!-- Warning -->
     <view class="subComponent">
       <text class="textSubComponent">The urls that can currently be entered are related to the OpenData
-        of the Municipality of Milan as there is no single format for the OpenData</text>
+        of Regione Lombardia (https://www.dati.lombardia.it/) as there is no single format for the OpenData </text>
     </view>
 
     <!-- Space -->
@@ -75,6 +75,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import store from '../../store';
 import {getHandler} from '../../utils/Network';
+import {getMilanStations} from '../../utils/DataUtils';
 
 export default {
   props: {
@@ -131,7 +132,7 @@ export default {
           default:
             this.stationsUrlStatusStyle = { backgroundColor: 'green' };
             this.stationsAvailable = true;
-            this.stations = value.features;
+            this.stations = getMilanStations(value);
         }
       });
     },

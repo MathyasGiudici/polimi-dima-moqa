@@ -5,8 +5,10 @@
 
     <!-- Station picker -->
     <touchable-opacity class="listElement" v-for="station in stations" :key="stations.indexOf(station)" :on-press="() => {pinHandler(stations.indexOf(station))}">
-      <text class="textListTitleElement" style="font-weight: normal;" v-if="prop=='air'">{{station.properties.nome}}</text>
-      <text class="textListTitleElement" style="font-weight: normal;" v-if="prop=='weather'">{{station.properties.NomeStazione}} ({{station.properties.Tipologia}})</text>
+      <view class="textListContainer">
+        <text class="textListTitleElement" style="font-weight: normal;" >{{station.properties.nomestazione}}</text>
+        <text class="textListSubtitleElement" style="font-weight: normal;" >{{station.properties.nometiposensore}}</text>
+      </view>
       <icon class="toggle" name="check" size="35" color="black" v-if="pinned.includes(stations.indexOf(station))"/>
     </touchable-opacity>
 
@@ -30,7 +32,6 @@ export default {
   data: function(){
     return {
       //Parameters related to measures
-      prop: this.navigation.state.params.option.prop,
       pinned: store.state.settings.arpa[this.navigation.state.params.option.prop].pinnedStations,
       stations: this.navigation.state.params.stations,
     };
@@ -63,7 +64,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 50;
+  height: 60;
   background-color: white;
   borderStyle: solid;
   borderTopWidth: .3;
@@ -76,15 +77,21 @@ export default {
 .paddingElement {
   height: 40;
 }
+.textListContainer{
+  flex-direction: column;
+}
 .textListTitleElement {
   padding-left: 10;
   font-size: 17;
   font-weight: 600;
 }
-.textListElement {
-  padding-right: 5;
-  font-size: 17;
+.textListSubtitleElement {
+  padding-left: 10;
+  font-size: 15;
+  font-weight: normal;
+  color: grey;
 }
+
 .toggle {
   padding-right: 5;
 }

@@ -13,6 +13,7 @@ export function dateObjectCreator(date){
 
 import store from '../store';
 import {getHandler} from './Network';
+import {getMilanStations} from './DataUtils';
 // Function to load the data of weather and air quality
 export function loadData(){
   if(store.state.blob.arduinoData == null){
@@ -28,9 +29,7 @@ export function loadData(){
         case 'Connection problems':
           break;
         default:
-          store.commit('blobMutation',
-            {key:'arpa_weatherStations',
-             value: value.features });
+          store.commit('blobMutation', {key:'arpa_weatherStations', value: getMilanStations(value) });
       }
     });
   }
@@ -44,9 +43,7 @@ export function loadData(){
         case 'Connection problems':
           break;
         default:
-          store.commit('blobMutation',
-            {key:'arpa_weatherData',
-             value: value.features });
+          store.commit('blobMutation', {key:'arpa_weatherData', value: value });
       }
     });
   }
@@ -60,9 +57,7 @@ export function loadData(){
         case 'Connection problems':
           break;
         default:
-          store.commit('blobMutation',
-            {key:'arpa_airStations',
-             value: value.features });
+          store.commit('blobMutation', {key:'arpa_airStations', value: getMilanStations(value) });
       }
     });
   }
@@ -76,9 +71,7 @@ export function loadData(){
         case 'Connection problems':
           break;
         default:
-          store.commit('blobMutation',
-            {key:'arpa_airData',
-             value: value.features });
+          store.commit('blobMutation', {key:'arpa_airData', value: value });
       }
     });
   }
