@@ -72,6 +72,7 @@ export default{
     resetParameters: function(){
       store.commit("DELETE");
       store.commit("REPLACE", getDefaultState());
+      alert("Initial state restored");
     }
   }
 }

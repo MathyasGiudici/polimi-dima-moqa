@@ -46,7 +46,10 @@ export default {
   },
   methods: {
     showDetails: function(){
-      this.navigation.navigate('FilterParametersScreen',{ option: 'maps',});
+      this.navigation.navigate('FilterParametersScreen',{ option: 'maps', onGoBack: () => this.refresh(),});
+    },
+    refresh: function(){
+      // Callback from navigator
     }
   }
 };

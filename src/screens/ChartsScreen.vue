@@ -1,24 +1,33 @@
 <template>
     <scroll-view :content-container-style="{contentContainer: {paddingVertical: 20}}">
-
       <!-- Space -->
       <view class="paddingElement"></view>
 
       <!-- Graph -->
       <view class="container">
-        <line-chart :data="data" :width="width" :height="height"
-        :chartConfig="chartConfig" bezier :style="graphStyle"/>
+        <line-chart :data="chartData" :width="chartWidth" :height="chartHeight"
+          :chartConfig="chartConfig" bezier/>
       </view>
 
-      <view class="container">
-        <text>Keys of the graph</text>
-      </view
+      <!-- Keys of the Graph -->
+      <view class="textContainer">
+        <icon name="circle" color="grey" size="20"/>
+        <text style="font-size: 17;"> Arduino Data</text>
+      </view>
+      <view class="textContainer">
+        <icon name="circle" color="red" size="20"/>
+        <text style="font-size: 17;"> ARPA Data </text>
+      </view>
+
+      <!-- Space -->
+      <view class="paddingElement"></view>
 
       <!-- Table -->
       <view class="container">
-        <Table :borderStyle="{borderWidth: 2, borderColor: '#c8e1ff'}" >
-          <Row :data="tableHead" :style="styleHead" :textStyle="styleText"/>
-          <Rows :data="tableData" :textStyle="styleText"/>
+        <Table :borderStyle="{borderWidth: 1, borderColor: 'lightgrey'}" >
+          <Row :data="tableHead" :style="{ height: 40, backgroundColor: 'lightgrey',}"
+          :textStyle="{ margin: 6, fontSize: 17 }"/>
+          <Rows :data="tableData" :textStyle="{ margin: 6, fontSize: 17 }"/>
         </Table>
       </view>
 
@@ -31,13 +40,14 @@
           <icon name="filter-outline" color="white" size="25"/>
           <text class="buttonText">Filter</text>
         </touchable-opacity>
-      </view
+      </view>
+
     </scroll-view>
 </template>
 
 <script>
-// Datat visualization utils
-import { LineChart, BarChart, PieChart, ProgressChart, ContributonGraph } from 'react-native-chart-kit';
+// Datat visualization utils from react-native
+import { LineChart } from 'react-native-chart-kit';
 import { Table, Row, Rows } from 'react-native-table-component';
 import {Dimensions} from 'react-native';
 
@@ -46,7 +56,10 @@ import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Charts constants
-import {getChartConfigs, data} from '../utils/ChartsConstants';
+import {getChartConfigs, testDataSet} from '../utils/ChartsConstants';
+import * as utils from '../utils/ChartsUtils';
+
+import store from '../store';
 
 export default {
     props: {
@@ -57,29 +70,26 @@ export default {
     },
     data: function() {
       return {
-        data: data,
-        width : Dimensions.get('window').width - 25,
-        height : 250,
-        chartConfig: getChartConfigs()[0],
-        graphStyle: {
-          marginVertical: 8,
-          ...getChartConfigs()[0].style
-        },
-        tableHead: ['Head', 'Head2', 'Head3', 'Head4'],
+        // Parameters related to graph
+        chartWidth : Dimensions.get('window').width - 25,
+        chartHeight : 250,
+        chartConfig: getChartConfigs(),
+        chartData: testDataSet,
+        // Parameters
+        tableHead: ["Quartiles", store.state.filter.charts.pinnedMeasure ],
         tableData: [
-          ['1', '2', '3', '4'],
-          ['a', 'b', 'c', 'd'],
-          ['1', '2', '3', '456\n789'],
-          ['a', 'b', 'c', 'd']
+          ['1st Quartile', "-"],
+          ['2nd Quartile', "-"],
+          ['3rd Quartile', "-"],
         ],
-        styleHead: { height: 40, backgroundColor: '#f1f8ff' },
-        styleText: { margin: 6 }
       };
   },
-
   methods: {
     showDetails: function(){
-      this.navigation.navigate('FilterParametersScreen',{ option: 'charts',});
+      this.navigation.navigate('FilterParametersScreen',{ option: 'charts', onGoBack: () => this.refresh(),});
+    },
+    refresh: function(){
+      this.tableHead = ["Percentile", store.state.filter.charts.pinnedMeasure ];
     }
   }
 };
@@ -90,6 +100,10 @@ export default {
 .container {
   margin: 10;
 }
+.textContainer {
+  flex-direction: row;
+  justify-content: center;
+}
 .paddingElement {
   height: 20;
 }
@@ -99,7 +113,6 @@ export default {
   margin-vertical: 20;
   background-color: transparent;
 }
-
 .bubbleBotton{
   flex-direction: row;
   background-color: rgba(0,122,255,1);
@@ -110,7 +123,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 .buttonText{
   text-align: center;
   font-size: 20;

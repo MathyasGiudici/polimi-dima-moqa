@@ -22,7 +22,7 @@ export function REPLACE(state, obj){
 
 // STATE "REAL" MUTATIONS
 export function changeFilterParameters(state, {targetFilter, newParameters}){
-  state.filter[targetFilter].pinnedMeasures = newParameters.pinnedMeasures;
+  state.filter[targetFilter].pinnedMeasure = newParameters.pinnedMeasure;
   state.filter[targetFilter].startDate = newParameters.startDate;
   state.filter[targetFilter].endDate = newParameters.endDate ;
   state.filter[targetFilter].arpaEnabled = newParameters.arpaEnabled;

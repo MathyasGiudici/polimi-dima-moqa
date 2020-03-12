@@ -6,7 +6,7 @@
     <!-- Measure picker -->
     <touchable-opacity class="listElement" v-for="mea in measures" :key="mea" :on-press="() => {measuredPinned(mea)}">
       <text class="textListTitleElement" style="font-weight: normal;">{{mea}}</text>
-      <icon class="toggle" name="check" size="35" color="black" v-if="pinnedMeasures.includes(mea)"/>
+      <icon class="toggle" name="check" size="35" color="black" v-if="pinnedMeasure == mea "/>
     </touchable-opacity>
 
     <view class="paddingElement"></view>
@@ -61,7 +61,7 @@ export default {
   data: function(){
     return {
       //Parameters related to measures
-      pinnedMeasures: store.state.filter[this.navigation.state.params.option].pinnedMeasures,
+      pinnedMeasure: store.state.filter[this.navigation.state.params.option].pinnedMeasure,
       measures: ["Temperature","Pressure", "Humidity", "PM10"],
       // Parameters related to date pickers
       isStartDateVisible: false,
@@ -74,10 +74,7 @@ export default {
   },
   methods: {
     measuredPinned: function(mea){
-      if(this.pinnedMeasures.includes(mea) && this.pinnedMeasures.length > 1)
-        this.pinnedMeasures.splice(this.pinnedMeasures.indexOf(mea),1);
-      else
-        this.pinnedMeasures.push(mea);
+      this.pinnedMeasure = mea;
 
       this.saveFilter();
     },
@@ -116,12 +113,13 @@ export default {
     saveFilter: function(){
       store.commit('changeFilterParameters', {targetFilter: this.navigation.state.params.option,
         newParameters:{
-          pinnedMeasures: this.pinnedMeasures,
+          pinnedMeasure: this.pinnedMeasure,
           startDate: this.startDate,
           endDate: this.endDate,
           arpaEnabled : this.arpaEnabled,
         }});
       store.commit('SAVE');
+      this.navigation.state.params.onGoBack();
     }
   }
 };
