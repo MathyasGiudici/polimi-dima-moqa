@@ -160,6 +160,8 @@ export default {
       this.stationsAvailable = false;
       store.commit('changeArpaStationsUrl', { targetMeasure: this.navigation.state.params.option.prop,
         url: this.stationsUrl });
+      store.commit('blobMutation',
+          {key:'arpa_'+ this.navigation.state.params.option.prop +'Stations', value: null });
       store.commit('SAVE');
       this.checkStationConnection();
     },
@@ -167,6 +169,8 @@ export default {
       this.changingData = false;
       store.commit('changeArpaDataUrl', { targetMeasure: this.navigation.state.params.option.prop,
         url: this.dataUrl });
+      store.commit('blobMutation',
+        {key:'arpa_'+ this.navigation.state.params.option.prop +'Data', value: null });
       store.commit('SAVE');
       this.checkDataConnection();
     },

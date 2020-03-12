@@ -44,3 +44,7 @@ export function changeArpaPickedStations(state, {targetMeasure, picked}){
 export function changeArpaDataUrl(state, {targetMeasure, url}){
   state.settings.arpa[targetMeasure].dataUrl = url;
 }
+
+export function blobMutation(state, {key, value}){
+  state.blob[key] = value;
+}

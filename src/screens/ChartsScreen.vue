@@ -60,6 +60,7 @@ import {getChartConfigs, testDataSet} from '../utils/ChartsConstants';
 import * as utils from '../utils/ChartsUtils';
 
 import store from '../store';
+import {loadData} from '../utils/Utils';
 
 export default {
     props: {
@@ -76,20 +77,23 @@ export default {
         chartConfig: getChartConfigs(),
         chartData: testDataSet,
         // Parameters
-        tableHead: ["Quartiles", store.state.filter.charts.pinnedMeasure ],
+        tableHead: ["Quartiles", store.state.filter.charts.pinnedMeasure, "ARPA" ],
         tableData: [
-          ['1st Quartile', "-"],
-          ['2nd Quartile', "-"],
-          ['3rd Quartile', "-"],
+          ['1st Quartile', "-", "-"],
+          ['2nd Quartile', "-", "-"],
+          ['3rd Quartile', "-", "-"],
         ],
       };
+  },
+  beforeMount: function(){
+    loadData();
   },
   methods: {
     showDetails: function(){
       this.navigation.navigate('FilterParametersScreen',{ option: 'charts', onGoBack: () => this.refresh(),});
     },
     refresh: function(){
-      this.tableHead = ["Percentile", store.state.filter.charts.pinnedMeasure ];
+      this.tableHead = ["Quartiles", store.state.filter.charts.pinnedMeasure, "ARPA" ];
     }
   }
 };

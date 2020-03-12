@@ -105,6 +105,9 @@ export default {
     changeConnection: function(){
       this.changingConnection=false;
       store.commit('changeSettingParameter', {targetParameter: this.navigation.state.params.option.prop, host: this.host, port: this.port});
+      if(this.navigation.state.params.option.prop == 'server'){
+        store.commit('blobMutation', {key: 'arduinoData', value: null });
+      }
       store.commit('SAVE');
       this.checkConnection();
     }

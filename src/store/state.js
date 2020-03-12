@@ -49,7 +49,11 @@ export function getDefaultState() {
       },
     },
     blob : {
-
+      arduinoData: null,
+      arpa_weatherStations: null,
+      arpa_weatherData: null,
+      arpa_airStations: null,
+      arpa_airData: null,
     }
   };
 };
