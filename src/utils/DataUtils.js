@@ -25,3 +25,60 @@ export function getMilanStations(responseObject){
 
   return returned;
 }
+
+import {getHandler} from './Network';
+// Given a set of indexes (targets) return the stations
+export function stationsFilter(stations,targets){
+  var toReturn = [];
+
+  stations.forEach((item, i) => {
+    if(targets.includes(i)){
+      toReturn.push(item);
+    }
+  });
+
+  // console.log("stations size",toReturn.length);
+  return toReturn;
+}
+
+// Given a set of stations returns the data of their sensor (only valid)
+export async function dataFilter(url,stations,startDate,endDate){
+  // Mapping station to sensor
+  var sensors = stations.map(station => station.properties.idsensore);
+
+  let promise =  new Promise(function(resolve, reject) {
+    var data = [];
+    sensors.forEach((item, i) => {
+      getHandler(url+'?idsensore='+item,'', 'json').then((value) => {
+        // Exploit result
+        switch (value) {
+          case 'End Race':
+            break;
+          case 'Connection problems':
+            break;
+          default:
+            data = data.concat(value);
+            if(i == (sensors.length-1)){
+              resolve(data);
+            }
+        }
+      });
+    });
+  });
+
+  var data = await promise;
+
+  var toReturn = [];
+
+  // Looping on date
+  data.forEach((item,i) => {
+    // Checking validity of the datum and the date
+    var date = new Date(item.data);
+    if((item.stato == 'VA') && (startDate.date.getTime() <= date.getTime()) && (date.getTime() <= endDate.date.getTime())) {
+        toReturn.push(item);
+    }
+  });
+
+  // console.log("data size",toReturn.length);
+  return toReturn;
+}

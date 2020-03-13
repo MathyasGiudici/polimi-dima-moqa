@@ -60,7 +60,6 @@ import {getChartConfigs} from '../utils/ChartsConstants';
 import * as utils from '../utils/ChartsUtils';
 
 import store from '../store';
-import {loadData} from '../utils/Utils';
 
 export default {
     props: {
@@ -84,12 +83,6 @@ export default {
           ['3rd Quartile', "-", "-"],
         ],
       };
-  },
-  beforeMount: function(){
-    loadData();
-  },
-  mounted: function(){
-
   },
   methods: {
     showDetails: function(){

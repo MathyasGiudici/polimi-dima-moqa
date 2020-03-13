@@ -1,7 +1,6 @@
 // Date Generator
-var today = new Date();
-var yesterday = new Date(); // Today!
-yesterday.setDate(today.getDate() - 1); // Yesterday!
+var testDate = new Date('2020-03-11T00:00:00');
+var dayBefore = new Date('2020-03-10T00:00:00'); // Today!
 
 import { dateObjectCreator } from '../utils/Utils';
 
@@ -11,14 +10,14 @@ export function getDefaultState() {
     filter: {
       maps: {
         pinnedMeasure: "Temperature",
-        startDate: dateObjectCreator(yesterday),
-        endDate: dateObjectCreator(today),
+        startDate: dateObjectCreator(dayBefore),
+        endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
       },
       charts: {
         pinnedMeasure: "Temperature",
-        startDate: dateObjectCreator(yesterday),
-        endDate: dateObjectCreator(today),
+        startDate: dateObjectCreator(dayBefore),
+        endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
       }
     },
@@ -51,9 +50,9 @@ export function getDefaultState() {
     blob : {
       arduinoData: null,
       arpa_weatherStations: null,
-      arpa_weatherData: null,
+      //arpa_weatherData: null,
       arpa_airStations: null,
-      arpa_airData: null,
+      //arpa_airData: null,
     }
   };
 };

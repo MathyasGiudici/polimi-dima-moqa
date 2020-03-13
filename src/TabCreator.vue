@@ -129,11 +129,13 @@ const BottomTabs = createBottomTabNavigator(
 const AppNavigator = createAppContainer(BottomTabs);
 
 import store from './store';
+import {loadData} from './utils/Utils';
 
 export default {
   components: { AppNavigator },
   beforeCreate: function(){
     store.commit("RESTORE");
+    loadData();
   }
 }
 </script>

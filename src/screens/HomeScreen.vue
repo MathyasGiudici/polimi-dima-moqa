@@ -4,6 +4,7 @@
     <view class="container">
       <text class="heading">Home Apple</text>
       <text>This is the App Details screen</text>
+      <button title="TEST data function" @press="test"></button>
     </view>
     <!-- <view class="container">
       <text class="bigBlue">Vuex Test: {{localCounter}} | {{storeCounter}}</text>
@@ -17,6 +18,19 @@
   </view>
 </template>
 
+<script>
+
+import {getArpaPM10Data} from '../utils/ChartsUtils';
+
+export default {
+  methods:{
+    test: function(){
+      getArpaPM10Data();
+    }
+  }
+}
+
+</script>
 
 <style>
 .container {
