@@ -79,6 +79,15 @@ export async function dataFilter(url,stations,startDate,endDate){
     }
   });
 
+  // Auto sort by Date
+  toReturn.sort(function(a, b){
+    a_date = new Date(a.data);
+    b_date = new Date(b.data);
+    if(a_date.getTime() < b_date.getTime()) { return -1; }
+    if(a_date.getTime() > b_date.getTime()) { return 1; }
+    return 0;
+  });
+
   // console.log("data size",toReturn.length);
   return toReturn;
 }

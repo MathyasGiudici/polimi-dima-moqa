@@ -30,8 +30,8 @@ export function getChartConfigs(){
       backgroundGradientFrom: "#fff",
       backgroundGradientTo: "#fff",
       decimalPlaces: 2, // optional, defaults to 2dp
-      color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-      labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+      color: (opacity = 1) => `rgba(0, 0, 139, ${opacity})`,
+      labelColor: (opacity = 1) => `rgba(0, 0, 139, ${opacity})`,
       style: {
         borderRadius: 16
       },

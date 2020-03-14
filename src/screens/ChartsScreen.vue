@@ -1,5 +1,12 @@
 <template>
-    <scroll-view :content-container-style="{contentContainer: {paddingVertical: 20}}">
+    <scroll-view :content-container-style="{contentContainer: {paddingVertical: 20}}" :onScrollEndDrag="refresh">
+
+      <!-- Loading -->
+      <view class="loading" v-if="isLoading" >
+        <view class="paddingElement"></view>
+          <activity-indicator size="large" color="#lightgrey" />
+      </view>
+
       <!-- Space -->
       <view class="paddingElement"></view>
 
@@ -8,7 +15,6 @@
         <line-chart :data="chartData" :width="chartWidth" :height="chartHeight"
           :chartConfig="chartConfig" bezier/>
       </view>
-
       <!-- Keys of the Graph -->
       <view class="textContainer">
         <icon name="circle" color="grey" size="20"/>
@@ -47,7 +53,7 @@
 
 <script>
 // Datat visualization utils from react-native
-import { LineChart } from 'react-native-chart-kit';
+import { LineChart, StackedBarChart } from 'react-native-chart-kit';
 import { Table, Row, Rows } from 'react-native-table-component';
 import {Dimensions} from 'react-native';
 
@@ -56,7 +62,7 @@ import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Charts constants
-import {getChartConfigs} from '../utils/ChartsConstants';
+import {getChartConfigs, testDataSet} from '../utils/ChartsConstants';
 import * as utils from '../utils/ChartsUtils';
 
 import store from '../store';
@@ -66,15 +72,16 @@ export default {
       navigation: { type: Object }
     },
     components: {
-      LineChart, Table, Row, Rows, Icon
+      LineChart, Table, Row, Rows, Icon, StackedBarChart
     },
     data: function() {
       return {
+        isLoading: false,
         // Parameters related to graph
         chartWidth : Dimensions.get('window').width - 25,
         chartHeight : 250,
         chartConfig: getChartConfigs(),
-        chartData: utils.getChartData(store.state.filter.charts),
+        chartData: testDataSet,
         // Parameters
         tableHead: ["Quartiles", store.state.filter.charts.pinnedMeasure, "ARPA" ],
         tableData: [
@@ -84,12 +91,38 @@ export default {
         ],
       };
   },
+  beforeMount: async function(){
+    this.refresh();
+  },
   methods: {
     showDetails: function(){
       this.navigation.navigate('FilterParametersScreen',{ option: 'charts', onGoBack: () => this.refresh(),});
     },
-    refresh: function(){
+    refresh: async function(){
+      this.isLoading = true;
+      // New chart data
+      let generalPromise = new Promise(function(resolve,reject){
+        resolve(utils.getChartData(store.state.filter.charts.pinnedMeasure));
+      });
+
+      let array = await generalPromise;
+      // Data for the chart
+      this.chartData = array[0];
+
+      // Header of quartiles table
       this.tableHead = ["Quartiles", store.state.filter.charts.pinnedMeasure, "ARPA" ];
+
+      // Data of quartiles table
+      // Arduino
+      array[1].forEach((item, i) => {
+        this.tableData[i][1] = item.toString();
+      });
+      // ARPA
+      array[2].forEach((item, i) => {
+        this.tableData[i][2] = item.toString();
+      });
+
+      this.isLoading = false;
     }
   }
 };

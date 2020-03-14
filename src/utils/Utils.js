@@ -11,6 +11,12 @@ export function dateObjectCreator(date){
   return obj;
 };
 
+export function minimalDate(date){
+  let d = date.date;
+  var toRet = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+  return toRet;
+}
+
 import store from '../store';
 import {getHandler} from './Network';
 import {getMilanStations} from './DataUtils';

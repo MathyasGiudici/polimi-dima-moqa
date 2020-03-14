@@ -62,7 +62,7 @@ export default {
     return {
       //Parameters related to measures
       pinnedMeasure: store.state.filter[this.navigation.state.params.option].pinnedMeasure,
-      measures: ["Temperature","Pressure", "Humidity", "PM10"],
+      measures: ["Temperature","Pressure", "Humidity", "CO2", "PM10"],
       // Parameters related to date pickers
       isStartDateVisible: false,
       startDate: store.state.filter[this.navigation.state.params.option].startDate,

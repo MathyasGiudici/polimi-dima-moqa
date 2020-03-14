@@ -15,7 +15,7 @@ export function getDefaultState() {
         arpaEnabled : true,
       },
       charts: {
-        pinnedMeasure: "Temperature",
+        pinnedMeasure: "PM10",
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
