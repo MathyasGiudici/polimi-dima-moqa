@@ -15,7 +15,7 @@ export async function getChartData(pinnedMeasure){
       let toReturn = testDataSet;
       switch (pinnedMeasure) {
         case 'Temperature':
-          toReturn = testDataSet;
+          toReturn = getArpaTemperatureData();
           break;
         case 'Pressure':
           toReturn = testDataSet;
@@ -44,6 +44,34 @@ export async function getChartData(pinnedMeasure){
   else {
     return chartData;
   }
+}
+
+// Get PM10 data from ARPA dataset
+async function getArpaTemperatureData(){
+  var stations = null;
+  var dataBlob = null;
+
+  let generalPromise = new Promise(function(resolve,reject){
+    resolve(stationsFilter(store.state.blob.arpa_weatherStations,
+      store.state.settings.arpa.weather.pinnedStations));
+  })
+  .then((result)=>{
+    // Setting result
+    stations = result;
+    return new Promise(function(resolve,reject){
+      resolve(dataFilter(store.state.settings.arpa.weather.dataUrl, stations,
+        store.state.filter.charts.startDate, store.state.filter.charts.endDate));
+    });
+  })
+  .then((result)=>{
+    // Setting data
+    dataBlob = result;
+  });
+
+  await generalPromise;
+
+  //Setting data for the graph
+  return prepareToChart(null,dataBlob);
 }
 
 // Get PM10 data from ARPA dataset

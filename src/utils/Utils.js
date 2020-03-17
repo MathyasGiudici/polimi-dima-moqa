@@ -13,7 +13,8 @@ export function dateObjectCreator(date){
 
 export function minimalDate(date){
   let d = date.date;
-  var toRet = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+  var toRet = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() +
+    " " + ("0" + d.getHours()).slice(-2)  + ":" + ("0" + d.getMinutes()).slice(-2) ;
   return toRet;
 }
 

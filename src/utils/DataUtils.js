@@ -38,6 +38,7 @@ export function stationsFilter(stations,targets){
   });
 
   // console.log("stations size",toReturn.length);
+  // console.log("stations",toReturn);
   return toReturn;
 }
 
@@ -46,6 +47,7 @@ export async function dataFilter(url,stations,startDate,endDate){
   // Mapping station to sensor
   var sensors = stations.map(station => station.properties.idsensore);
 
+  // Getting the data
   let promise =  new Promise(function(resolve, reject) {
     var data = [];
     sensors.forEach((item, i) => {
@@ -66,11 +68,12 @@ export async function dataFilter(url,stations,startDate,endDate){
     });
   });
 
+  // Awaiting the promise
   var data = await promise;
-
+  // Preparing the returning array
   var toReturn = [];
 
-  // Looping on date
+  // Looping on data to applay the filter
   data.forEach((item,i) => {
     // Checking validity of the datum and the date
     var date = new Date(item.data);
