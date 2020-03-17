@@ -214,7 +214,6 @@ export default {
 .textListTitleElement {
   padding-left: 10;
   font-size: 17;
-  font-weight: 600;
 }
 .textListLightTitleElement {
   padding-left: 10;
@@ -224,6 +223,7 @@ export default {
   padding-right: 5;
   font-size: 17;
   text-align: right;
+  color: grey;
 }
 .circle {
    margin-right: 5;

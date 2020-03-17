@@ -6,8 +6,8 @@
     <!-- Station picker -->
     <touchable-opacity class="listElement" v-for="station in stations" :key="stations.indexOf(station)" :on-press="() => {pinHandler(stations.indexOf(station))}">
       <view class="textListContainer">
-        <text class="textListTitleElement" style="font-weight: normal;" >{{station.properties.nomestazione}}</text>
-        <text class="textListSubtitleElement" style="font-weight: normal;" >{{station.properties.nometiposensore}}</text>
+        <text class="textListTitleElement" >{{station.properties.nomestazione}}</text>
+        <text class="textListSubtitleElement" >{{station.properties.nometiposensore}}</text>
       </view>
       <icon class="toggle" name="check" size="35" color="black" v-if="pinned.includes(stations.indexOf(station))"/>
     </touchable-opacity>
@@ -83,7 +83,6 @@ export default {
 .textListTitleElement {
   padding-left: 10;
   font-size: 17;
-  font-weight: 600;
 }
 .textListSubtitleElement {
   padding-left: 10;
@@ -91,9 +90,9 @@ export default {
   font-weight: normal;
   color: grey;
 }
-
 .toggle {
   padding-right: 5;
+  color: rgba(0,122,255,1);
 }
 .subComponent{
   background-color: white;

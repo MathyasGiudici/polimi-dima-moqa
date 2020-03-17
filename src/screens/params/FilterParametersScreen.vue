@@ -151,14 +151,15 @@ export default {
 .textListTitleElement {
   padding-left: 10;
   font-size: 17;
-  font-weight: 600;
 }
 .textListElement {
   padding-right: 5;
   font-size: 17;
+  color: grey;
 }
 .toggle {
   padding-right: 5;
+  color: rgba(0,122,255,1);
 }
 .subComponent{
   background-color: white;
