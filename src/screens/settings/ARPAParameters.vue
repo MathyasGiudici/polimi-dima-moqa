@@ -29,7 +29,7 @@
 
     <!-- Pick Stations -->
     <touchable-opacity class="listElement" :on-press="pickStations" v-if="stationsAvailable">
-      <text class="textListLightTitleElement">Pick Stations</text>
+      <text class="textListTitleElement">Pick Stations</text>
       <icon name="chevron-right" size="35" color="lightgrey"/>
     </touchable-opacity>
 
@@ -115,6 +115,7 @@ export default {
       this.dataUrl = text;
     },
     checkStationConnection: function(){
+      // Showing loading animation
       this.isLoading = true;
 
       getHandler(this.stationsUrl,'', 'json').then((value) => {
@@ -137,10 +138,12 @@ export default {
       });
     },
     checkDataConnection: function(){
+      // Showing loading animation
       this.isLoading = true;
 
+      // Checking connection
       getHandler(this.dataUrl,'', 'json').then((value) => {
-        // Stop loading motion
+        // Stop loading animation
         this.isLoading = false;
 
         // Exploit result
@@ -157,25 +160,34 @@ export default {
       });
     },
     stationsUrlChange: function(){
+      // Hiding confirmation button
       this.changingStations = false;
+      // Hiding button to pin stations
       this.stationsAvailable = false;
+      // Changing state
       store.commit('changeArpaStationsUrl', { targetMeasure: this.navigation.state.params.option.prop,
         url: this.stationsUrl });
+      // Saving local new stations
       store.commit('blobMutation',
           {key:'arpa_'+ this.navigation.state.params.option.prop +'Stations', value: null });
+      // Persistence station
       store.commit('SAVE');
+      // Checking connection
       this.checkStationConnection();
     },
     dataUrlChange: function(){
+      // Hiding confirmation button
       this.changingData = false;
+      // Changing state
       store.commit('changeArpaDataUrl', { targetMeasure: this.navigation.state.params.option.prop,
         url: this.dataUrl });
-      store.commit('blobMutation',
-        {key:'arpa_'+ this.navigation.state.params.option.prop +'Data', value: null });
+      // Persistence station
       store.commit('SAVE');
+      // Checking connection
       this.checkDataConnection();
     },
     pickStations: function(){
+      // Calling navigator passing parameters+
       this.navigation.navigate("StationsPicker",{ option: this.navigation.state.params.option,
         stations: this.stations });
     }
@@ -212,10 +224,6 @@ export default {
   padding-top: 20;
 }
 .textListTitleElement {
-  padding-left: 10;
-  font-size: 17;
-}
-.textListLightTitleElement {
   padding-left: 10;
   font-size: 17;
 }

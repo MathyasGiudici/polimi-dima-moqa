@@ -103,12 +103,19 @@ export default {
       });
     },
     changeConnection: function(){
+      // Hiding confirmation button
       this.changingConnection=false;
+      // Changing state
       store.commit('changeSettingParameter', {targetParameter: this.navigation.state.params.option.prop, host: this.host, port: this.port});
-      if(this.navigation.state.params.option.prop == 'server'){
-        store.commit('blobMutation', {key: 'arduinoData', value: null });
-      }
+      // // If are the data from arduino
+      // if(this.navigation.state.params.option.prop == 'server'){
+      //   // Loading the data
+      //   store.commit('blobMutation', {key: 'arduinoData', value: null });
+      // }
+
+      // Persistence station
       store.commit('SAVE');
+      // Checking connection
       this.checkConnection();
     }
   }
