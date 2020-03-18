@@ -20,7 +20,7 @@ export function getDefaultState() {
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
-        pinnedStation: 127,
+        pinnedStation: 114,
       }
     },
     settings: {

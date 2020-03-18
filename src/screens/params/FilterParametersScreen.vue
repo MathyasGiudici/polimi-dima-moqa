@@ -18,7 +18,7 @@
       <text class="textListElement">{{startDate.string}}</text>
     </touchable-opacity>
     <view class="subComponent" v-if="isStartDateVisible">
-      <DateTimePicker :value="startDate.date" mode="datetime" display="default" timeZoneOffsetInMinutes="60"
+      <DateTimePicker :value="startDate.date" mode="datetime" display="default"
             :onChange="setStartDate" />
     </view>
     <!-- End Date Picker -->
@@ -27,7 +27,7 @@
       <text class="textListElement">{{endDate.string}}</text>
     </touchable-opacity>
     <view class="subComponent" v-if="isEndDateVisible">
-      <DateTimePicker :value="endDate.date" mode="datetime" display="default" timeZoneOffsetInMinutes="60"
+      <DateTimePicker :value="endDate.date" mode="datetime" display="default"
             :onChange="setEndDate" />
     </view>
 
@@ -100,12 +100,14 @@ export default {
       if(this.startDate.date > today){
         this.startDate = dateObjectCreator(yesterday);
         alert('Start date could not be in the future!');
+        this.saveFilter();
         return;
       }
 
       if(this.endDate.date > today){
         this.endDate = dateObjectCreator(today);
         alert('End date could not be in the future!');
+        this.saveFilter();
         return;
       }
 
@@ -113,10 +115,9 @@ export default {
         this.startDate = dateObjectCreator(yesterday);
         this.endDate = dateObjectCreator(today);
         alert('Start date could not be greater than end date!');
+        this.saveFilter();
         return;
       }
-
-      this.saveFilter();
     },
     changeArpaValue: function(){
       this.arpaEnabled = !this.arpaEnabled;
@@ -131,6 +132,7 @@ export default {
       this.saveFilter();
     },
     saveFilter: function(){
+
       store.commit('changeFilterParameters', {targetFilter: this.navigation.state.params.option,
         newParameters:{
           pinnedMeasure: this.pinnedMeasure,

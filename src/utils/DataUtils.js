@@ -46,33 +46,36 @@ export function stationsFilter(stations,targets){
 
 import {getHandler} from './Network';
 // Given a set of stations returns the data of their sensor (only valid)
-export async function dataFilter(url,stations,startDate,endDate){
+export async function dataFilter(url,station,startDate,endDate){
   // Mapping station to sensor
-  var sensors = stations.map(station => station.properties.idsensore);
+  var sensor = station.properties.idsensore;
 
   // Getting the data
   let promise =  new Promise(function(resolve, reject) {
     var data = [];
-    sensors.forEach((item, i) => {
-      getHandler(url+'?idsensore='+item,'', 'json').then((value) => {
-        // Exploit result
-        switch (value) {
-          case 'End Race':
-            break;
-          case 'Connection problems':
-            break;
-          default:
-            data = data.concat(value);
-            if(i == (sensors.length-1)){
-              resolve(data);
-            }
-        }
-      });
+    getHandler(url+'?idsensore='+sensor,'', 'json').then((value) => {
+      // Exploit result
+      switch (value) {
+        case 'End Race':
+          break;
+        case 'Connection problems':
+          break;
+        default:
+          data = data.concat(value);
+          resolve(data);
+      }
     });
   });
 
   // Awaiting the promise
   var data = await promise;
+
+  if(data.length == 0){
+    return [ { idsensore: sensor,
+              data:"1970-01-01T00:00:00.000",
+              valore: "0"} ];
+  }
+
   // Preparing the returning array
   var toReturn = [];
 
