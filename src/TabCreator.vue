@@ -24,6 +24,7 @@ import ChartsScreen from "./screens/ChartsScreen.vue";
 import SettingsScreen from "./screens/SettingsScreen.vue";
 
 import FilterParametersScreen from "./screens/params/FilterParametersScreen.vue";
+import FilterStationsPicker from "./screens/params/FilterStationsPicker.vue";
 
 // Settings screens
 import GeneralParameters from "./screens/settings/GeneralParameters.vue";
@@ -57,6 +58,14 @@ const BottomTabs = createBottomTabNavigator(
               title: "Maps Parameters",
             },
           },
+          FilterStationsPicker: {
+            screen: FilterStationsPicker,
+            navigationOptions: ({navigation}) => {
+              return {
+                title: "Stations Picker",
+              };
+            },
+          },
         }),
         navigationOptions: {
           tabBarLabel: 'Maps',
@@ -76,6 +85,14 @@ const BottomTabs = createBottomTabNavigator(
             screen: FilterParametersScreen,
             navigationOptions: {
               title: "Chart Parameters",
+            },
+          },
+          FilterStationsPicker: {
+            screen: FilterStationsPicker,
+            navigationOptions: ({navigation}) => {
+              return {
+                title: "Stations Picker",
+              };
             },
           },
         }),

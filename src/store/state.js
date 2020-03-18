@@ -13,12 +13,14 @@ export function getDefaultState() {
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
+        pinnedStation: 28,
       },
       charts: {
         pinnedMeasure: "PM10",
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
+        pinnedStation: 127,
       }
     },
     settings: {

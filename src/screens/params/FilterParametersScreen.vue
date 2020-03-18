@@ -9,6 +9,7 @@
       <icon class="toggle" name="check" size="35" color="black" v-if="pinnedMeasure == mea "/>
     </touchable-opacity>
 
+    <!-- Space -->
     <view class="paddingElement"></view>
 
     <!-- Start Date Picker -->
@@ -17,7 +18,7 @@
       <text class="textListElement">{{startDate.string}}</text>
     </touchable-opacity>
     <view class="subComponent" v-if="isStartDateVisible">
-      <DateTimePicker :value="startDate.date" mode="date" display="default"
+      <DateTimePicker :value="startDate.date" mode="datetime" display="default" timeZoneOffsetInMinutes="60"
             :onChange="setStartDate" />
     </view>
     <!-- End Date Picker -->
@@ -26,15 +27,25 @@
       <text class="textListElement">{{endDate.string}}</text>
     </touchable-opacity>
     <view class="subComponent" v-if="isEndDateVisible">
-      <DateTimePicker :value="endDate.date" mode="date" display="default"
+      <DateTimePicker :value="endDate.date" mode="datetime" display="default" timeZoneOffsetInMinutes="60"
             :onChange="setEndDate" />
     </view>
+
     <!-- ARPA toggle -->
     <touchable-opacity class="listElement">
       <text class="textListTitleElement">ARPA data</text>
       <view class="toggle">
         <switch :on-value-change = "changeArpaValue" :value = "arpaEnabled"/>
       </view>
+    </touchable-opacity>
+
+    <!-- Space -->
+    <view class="paddingElement"></view>
+
+    <!-- Pick Stations -->
+    <touchable-opacity class="listElement" :on-press="changeStation" v-if="arpaEnabled">
+      <text class="textListTitleElement">Pick Stations</text>
+      <icon name="chevron-right" size="35" color="lightgrey"/>
     </touchable-opacity>
 
   </scroll-view>
@@ -62,7 +73,7 @@ export default {
     return {
       //Parameters related to measures
       pinnedMeasure: store.state.filter[this.navigation.state.params.option].pinnedMeasure,
-      measures: ["Temperature","Pressure", "Humidity", "CO2", "PM10"],
+      measures: ["Temperature", "Humidity", "CO2", "PM10"],
       // Parameters related to date pickers
       isStartDateVisible: false,
       startDate: store.state.filter[this.navigation.state.params.option].startDate,
@@ -70,13 +81,14 @@ export default {
       endDate: store.state.filter[this.navigation.state.params.option].endDate,
       //Arpa parameter
       arpaEnabled : store.state.filter[this.navigation.state.params.option].arpaEnabled,
+      pinnedStation: store.state.filter[this.navigation.state.params.option].pinnedStation,
     };
   },
   methods: {
     measuredPinned: function(mea){
       this.pinnedMeasure = mea;
-
-      this.saveFilter();
+      this.pinnedStation = -1;
+      this.changeStation();
     },
     setStartDate: function(event,date){
       this.startDate = dateObjectCreator(date);
@@ -110,6 +122,14 @@ export default {
       this.arpaEnabled = !this.arpaEnabled;
       this.saveFilter();
     },
+    changeStation: function(){
+      this.navigation.navigate('FilterStationsPicker',{ pinnedMeasure: this.pinnedMeasure,
+        pinnedStation: this.pinnedStation, onGoBack: (index) => this.returnFromChangeStation(index),});
+    },
+    returnFromChangeStation: function(index){
+      this.pinnedStation = index;
+      this.saveFilter();
+    },
     saveFilter: function(){
       store.commit('changeFilterParameters', {targetFilter: this.navigation.state.params.option,
         newParameters:{
@@ -117,6 +137,7 @@ export default {
           startDate: this.startDate,
           endDate: this.endDate,
           arpaEnabled : this.arpaEnabled,
+          pinnedStation: this.pinnedStation,
         }});
       store.commit('SAVE');
       this.navigation.state.params.onGoBack();

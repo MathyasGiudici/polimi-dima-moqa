@@ -26,10 +26,12 @@ export function getMilanStations(responseObject){
   return returned;
 }
 
-import {getHandler} from './Network';
 // Given a set of indexes (targets) return the stations
 export function stationsFilter(stations,targets){
   var toReturn = [];
+
+  if(stations == undefined)
+    return [];
 
   stations.forEach((item, i) => {
     if(targets.includes(i)){
@@ -42,6 +44,7 @@ export function stationsFilter(stations,targets){
   return toReturn;
 }
 
+import {getHandler} from './Network';
 // Given a set of stations returns the data of their sensor (only valid)
 export async function dataFilter(url,stations,startDate,endDate){
   // Mapping station to sensor

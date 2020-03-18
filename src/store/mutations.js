@@ -26,6 +26,7 @@ export function changeFilterParameters(state, {targetFilter, newParameters}){
   state.filter[targetFilter].startDate = newParameters.startDate;
   state.filter[targetFilter].endDate = newParameters.endDate ;
   state.filter[targetFilter].arpaEnabled = newParameters.arpaEnabled;
+  state.filter[targetFilter].pinnedStation = newParameters.pinnedStation;
 }
 
 export function changeSettingParameter(state, {targetParameter, host, port}){
