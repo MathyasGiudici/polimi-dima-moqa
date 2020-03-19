@@ -1,3 +1,7 @@
+// Needed scripts
+import store from '../store';
+import {getHandler} from './Network';
+
 // From the response of the openAPI of Regione Lombardia returns the Stations
 export function getMilanStations(responseObject){
   var features = responseObject.features;
@@ -30,13 +34,12 @@ export function getMilanStations(responseObject){
 export function stationsFilter(stations,targets){
   var toReturn = [];
 
-  if(stations == undefined)
+  if(stations == undefined || targets == undefined || targets.length == 0)
     return [];
 
-  stations.forEach((item, i) => {
-    if(targets.includes(i)){
-      toReturn.push(item);
-    }
+  targets.forEach((item, i) => {
+    if(stations[item] != undefined)
+      toReturn.push(stations[item]);
   });
 
   // console.log("stations size",toReturn.length);
@@ -44,9 +47,8 @@ export function stationsFilter(stations,targets){
   return toReturn;
 }
 
-import {getHandler} from './Network';
 // Given a set of stations returns the data of their sensor (only valid)
-export async function dataFilter(url,station,startDate,endDate){
+async function dataFilter(url,station,startDate,endDate){
   // Mapping station to sensor
   var sensor = station.properties.idsensore;
 
@@ -99,4 +101,25 @@ export async function dataFilter(url,station,startDate,endDate){
 
   // console.log("data size",toReturn.length);
   return toReturn;
+}
+
+// Get data from ARPA dataset
+// @param: arpaType means weather or air
+// @param: filter used to select data
+export async function getArpaData(arpaType,filter){
+
+  let generalPromise = new Promise(function(resolve,reject){
+    // Getting pinned station
+    resolve(store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation]);
+  })
+  .then((result)=>{
+    // Getting relative data
+    return new Promise(function(resolve,reject){
+      resolve(dataFilter(store.state.settings.arpa[arpaType].dataUrl, result,
+        filter.startDate, filter.endDate));
+    });
+  });
+
+  let data = await generalPromise;
+  return data;
 }

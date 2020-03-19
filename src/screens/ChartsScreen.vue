@@ -102,7 +102,7 @@ export default {
       this.isLoading = true;
       // New chart data
       let generalPromise = new Promise(function(resolve,reject){
-        resolve(utils.getChartData(store.state.filter.charts.pinnedMeasure, store.state.filter.charts.pinnedStation));
+        resolve(utils.getChartData(store.state.filter.charts));
       });
 
       let array = await generalPromise;

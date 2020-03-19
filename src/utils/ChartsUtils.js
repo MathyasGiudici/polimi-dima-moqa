@@ -1,7 +1,6 @@
-// Store
-import store from '../store';
+// Needed scripts
 import {testDataSet} from './ChartsConstants';
-import {stationsFilter, dataFilter} from './DataUtils';
+import {getArpaData} from './DataUtils';
 import {dateObjectCreator,minimalDate} from './Utils';
 
 const timerPromise = () => {
@@ -9,22 +8,21 @@ const timerPromise = () => {
     setTimeout(resolve, 5000, 'End Race');});
 };
 
-export async function getChartData(pinnedMeasure,pinnedStation){
-  //TODO: TEST
+export async function getChartData(filter){
   let dataPromise = new Promise(function(resolve,reject){
       let toReturn = testDataSet;
-      switch (pinnedMeasure) {
+      switch (filter.pinnedMeasure) {
         case 'Temperature':
-          toReturn = getArpaWeatherData(pinnedStation);
+          toReturn = generalGet('weather',filter);
           break;
         case 'Humidity':
-          toReturn = getArpaWeatherData(pinnedStation);
+          toReturn = generalGet('weather',filter);
           break;
         case 'CO2':
           toReturn = testDataSet;
           break;
         case 'PM10':
-          toReturn = getArpaAirData(pinnedStation);
+          toReturn = generalGet('air',filter);
           break;
         default:
           toReturn = testDataSet;
@@ -43,57 +41,23 @@ export async function getChartData(pinnedMeasure,pinnedStation){
   }
 }
 
-// Get PM10 data from ARPA dataset
-async function getArpaWeatherData(pinnedStation){
-  var dataBlob = null;
+// Get weather data from ARPA dataset
+async function generalGet(arpaType,filter){
 
   let generalPromise = new Promise(function(resolve,reject){
-    resolve(store.state.blob.arpa_weatherStations[pinnedStation]);
-  })
-  .then((result)=>{
-    // Setting result
-    return new Promise(function(resolve,reject){
-      resolve(dataFilter(store.state.settings.arpa.weather.dataUrl, result,
-        store.state.filter.charts.startDate, store.state.filter.charts.endDate));
-    });
-  })
-  .then((result)=>{
-    // Setting data
-    dataBlob = result;
+    // Getting pinned station
+    resolve(getArpaData(arpaType,filter));
   });
 
-  await generalPromise;
+  let result = await generalPromise;
 
   //Setting data for the graph
-  return prepareToChart(null,dataBlob);
+  return prepareToChart(null,result);
 }
 
-// Get PM10 data from ARPA dataset
-async function getArpaAirData(pinnedStation){
-  var dataBlob = null;
-
-  let generalPromise = new Promise(function(resolve,reject){
-    resolve(store.state.blob.arpa_airStations[pinnedStation]);
-  })
-  .then((result)=>{
-    // Setting result
-    return new Promise(function(resolve,reject){
-      resolve(dataFilter(store.state.settings.arpa.air.dataUrl, result,
-        store.state.filter.charts.startDate, store.state.filter.charts.endDate));
-    });
-  })
-  .then((result)=>{
-    // Setting data
-    dataBlob = result;
-  });
-
-  await generalPromise;
-
-  //Setting data for the graph
-  return prepareToChart(null,dataBlob);
-}
-
+// Preparing the chart object of data
 function prepareToChart(arduino,arpa){
+  // Starting object empty
   var chart = {
     labels: [],
     datasets: [{
@@ -120,11 +84,13 @@ function prepareToChart(arduino,arpa){
     }
   });
 
+  // Adding percentile for the response
   var toRet = [chart];
   toRet = toRet.concat(prepareToPercentile(chart));
   return toRet;
 }
 
+// Deviation computation
 function prepareToPercentile(chartData){
   var arduino = [];
   var arpa = [];
