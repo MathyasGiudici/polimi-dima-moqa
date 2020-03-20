@@ -45,7 +45,7 @@ export async function getChartData(filter){
 async function generalGet(arpaType,filter){
 
   let generalPromise = new Promise(function(resolve,reject){
-    // Getting pinned station
+    // Getting arpa data
     resolve(getArpaData(arpaType,filter));
   });
 

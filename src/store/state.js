@@ -9,11 +9,11 @@ export function getDefaultState() {
   return {
     filter: {
       maps: {
-        pinnedMeasure: "Temperature",
+        pinnedMeasure: "PM10",
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
-        pinnedStation: 28,
+        pinnedStation: 114,
       },
       charts: {
         pinnedMeasure: "PM10",

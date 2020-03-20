@@ -1,23 +1,33 @@
 <template>
-  <map-view class="maps" :initial-region="coordinates" >
-      <Circle :center="circle.center" :radius="circle.radius"
-        fillColor="rgba(255, 0, 0, .5)" strokeColor="rgba(0,0,0,.2)"
-        zIndex="2" strokeWidth="2"/>
+  <map-view class="maps" :initial-region="initialCoordinates" >
+    <!-- Arduino data -->
+    <Circle v-for="circle in arduinoData" :center="circle.center" :radius="circle.radius"
+      fillColor="rgba(0, 0, 255, .5)" strokeColor="rgba(0,0,0,.2)"
+      zIndex="2" strokeWidth="2"/>
 
-        <!-- Filter Button -->
-        <view class="buttonContainer">
-          <touchable-opacity class="bubbleBotton" :on-press="showDetails">
-            <icon name="filter-outline" color="white" size="25"/>
-            <text class="buttonText">Filter</text>
-          </touchable-opacity>
-        </view>
+    <!-- Arpa data -->
+    <Circle v-for="circle in arpaData" :center="circle.center" :radius="circle.radius"
+      fillColor="rgba(255, 0, 0, .5)" strokeColor="rgba(0,0,0,.2)"
+      zIndex="2" strokeWidth="2"/>
+
+    <!-- Filter Button -->
+    <view class="buttonContainer">
+      <touchable-opacity class="bubbleBotton" :on-press="showDetails">
+        <icon name="filter-outline" color="white" size="25"/>
+        <text class="buttonText">Filter</text>
+      </touchable-opacity>
+    </view>
   </map-view>
 </template>
 
 <script>
 import MapView, {Circle} from "react-native-maps";
 import * as React from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import * as utils from '../utils/MapsUtils';
+
+import store from '../store';
 
 export default {
     props: {
@@ -28,28 +38,34 @@ export default {
     },
     data: function() {
     return {
-      coordinates: {
+      arduinoData: [{center: {latitude: 45.476099205566400,longitude: 9.2387804115844600,},radius: 100,}],
+      arpaData: [],
+      initialCoordinates: {
         latitude: 45.474098205566399,
         longitude: 9.2347803115844709,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-      circle: {
-        center: {
-          latitude: 45.474098205566399,
-          longitude: 9.2347803115844709,
-        },
-        radius: 1000,
-
-      },
     };
+  },
+  beforeMount: async function(){
+    this.refresh();
   },
   methods: {
     showDetails: function(){
       this.navigation.navigate('FilterParametersScreen',{ option: 'maps', onGoBack: () => this.refresh(),});
     },
-    refresh: function(){
-      // Callback from navigator
+    refresh: async function(){
+      // New chart data
+      let generalPromise = new Promise(function(resolve,reject){
+        resolve(utils.getMapData(store.state.filter.maps));
+      });
+
+      let returnedObject = await generalPromise;
+
+      // Data for the map
+      this.arduinoData = returnedObject.arduino;
+      this.arpaData = returnedObject.arpa;
     }
   }
 };
