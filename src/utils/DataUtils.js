@@ -113,6 +113,8 @@ export async function getArpaData(arpaType,filter){
     resolve(store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation]);
   })
   .then((result)=>{
+    if (result == null)
+      console.log('Something is not working');
     // Getting relative data
     return new Promise(function(resolve,reject){
       resolve(dataFilter(store.state.settings.arpa[arpaType].dataUrl, result,

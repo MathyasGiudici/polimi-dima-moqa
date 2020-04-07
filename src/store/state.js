@@ -25,7 +25,7 @@ export function getDefaultState() {
     },
     settings: {
       wifi: {
-        ip: 'http://192.168.1.173',
+        ip: 'http://127.0.0.1',
         port: '3000'
       },
       server:{
@@ -40,7 +40,7 @@ export function getDefaultState() {
         weather: {
           stationsUrl: 'https://www.dati.lombardia.it/resource/nf78-nj6b.geojson',
           pinnedStations: [28,43,44,47],
-          dataUrl: 'https://www.dati.lombardia.it/resource/647i-nhxk.json',
+          dataUrl: 'https://www.dati.lombardia.it/resource/nf78-nj6b.json',
         },
         air: {
           stationsUrl: 'https://www.dati.lombardia.it/resource/ib47-atvt.geojson',

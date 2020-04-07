@@ -38,8 +38,8 @@ const BottomTabs = createBottomTabNavigator(
     Home: {
       screen: HomeScreen,
       navigationOptions: {
-        tabBarLabel: 'Home',
-        tabBarIcon: ({tintColor}) => <Icon name="home-outline" color={tintColor} size={25}/>
+        tabBarLabel: 'Arduino',
+        tabBarIcon: ({tintColor}) => <Icon name="chip" color={tintColor} size={25}/>
       },
     },
     Maps :
