@@ -25,6 +25,7 @@ import SettingsScreen from "./screens/SettingsScreen.vue";
 
 import FilterParametersScreen from "./screens/params/FilterParametersScreen.vue";
 import FilterStationsPicker from "./screens/params/FilterStationsPicker.vue";
+import FilterMeasuresPicker from "./screens/params/FilterMeasuresPicker.vue";
 
 // Settings screens
 import GeneralParameters from "./screens/settings/GeneralParameters.vue";
@@ -66,6 +67,14 @@ const BottomTabs = createBottomTabNavigator(
               };
             },
           },
+          FilterMeasuresPicker: {
+            screen: FilterMeasuresPicker,
+            navigationOptions: ({navigation}) => {
+              return {
+                title: "Measures Picker",
+              };
+            },
+          },
         }),
         navigationOptions: {
           tabBarLabel: 'Maps',
@@ -92,6 +101,14 @@ const BottomTabs = createBottomTabNavigator(
             navigationOptions: ({navigation}) => {
               return {
                 title: "Stations Picker",
+              };
+            },
+          },
+          FilterMeasuresPicker: {
+            screen: FilterMeasuresPicker,
+            navigationOptions: ({navigation}) => {
+              return {
+                title: "Measures Picker",
               };
             },
           },

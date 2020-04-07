@@ -3,10 +3,10 @@
     <!-- Initial padding -->
     <view class="paddingElement"></view>
 
-    <!-- Measure picker -->
-    <touchable-opacity class="listElement" v-for="mea in measures" :key="mea" :on-press="() => {measuredPinned(mea)}">
-      <text class="textListTitleElement" style="font-weight: normal;">{{mea}}</text>
-      <icon class="toggle" name="check" size="35" color="black" v-if="pinnedMeasure == mea "/>
+    <!-- Pick Measures -->
+    <touchable-opacity class="listElement" :on-press="changeMeasure">
+      <text class="textListTitleElement">Pick Measure</text>
+      <icon name="chevron-right" size="35" color="lightgrey"/>
     </touchable-opacity>
 
     <!-- Space -->
@@ -44,7 +44,7 @@
 
     <!-- Pick Stations -->
     <touchable-opacity class="listElement" :on-press="changeStation" v-if="arpaEnabled">
-      <text class="textListTitleElement">Pick Stations</text>
+      <text class="textListTitleElement">Pick Station</text>
       <icon name="chevron-right" size="35" color="lightgrey"/>
     </touchable-opacity>
 
@@ -73,7 +73,6 @@ export default {
     return {
       //Parameters related to measures
       pinnedMeasure: store.state.filter[this.navigation.state.params.option].pinnedMeasure,
-      measures: ["Temperature", "Humidity", "CO2", "PM10"],
       // Parameters related to date pickers
       isStartDateVisible: false,
       startDate: store.state.filter[this.navigation.state.params.option].startDate,
@@ -85,6 +84,10 @@ export default {
     };
   },
   methods: {
+    changeMeasure: function(){
+      this.navigation.navigate('FilterMeasuresPicker',{ pinnedMeasure: this.pinnedMeasure,
+        onGoBack: (mea) => this.measuredPinned(mea),});
+    },
     measuredPinned: function(mea){
       this.pinnedMeasure = mea;
       this.pinnedStation = -1;

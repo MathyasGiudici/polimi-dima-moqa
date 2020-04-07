@@ -3,6 +3,11 @@
     <!-- Space -->
     <view class="paddingElement"></view>
 
+    <!-- Warning -->
+    <view class="subComponent" v-if="stations.length == 0">
+      <text class="textSubComponent">Sorry there are not ARPA data available for the pinned measure</text>
+    </view>
+
     <!-- Station picker -->
     <touchable-opacity class="listElement" v-for="station in stations" :key="stations.indexOf(station)" :on-press="() => {pinHandler(stations.indexOf(station))}">
       <view class="textListContainer">
@@ -35,7 +40,7 @@ export default {
       //Parameters related to measures
       pinned: 0,
       stations: [],
-      stations_blob: null,
+      stations_blob: null
     };
   },
   mounted: function(){
@@ -43,7 +48,7 @@ export default {
   },
   methods: {
     loader: function(){
-      let stations = null;
+      let stations = [];
 
       switch (this.navigation.state.params.pinnedMeasure) {
         case 'Temperature':
@@ -143,6 +148,24 @@ export default {
   color: rgba(0,122,255,1);
 }
 .subComponent{
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
   background-color: white;
+  borderStyle: solid;
+  borderTopWidth: .3;
+  borderTopColor: lightgrey;
+  borderBottomWidth: .3;
+  borderBottomColor: lightgrey;
+  padding-top: 20;
+  padding-bottom: 20;
+  padding-left: 5;
+  padding-right: 5;
+}
+.textSubComponent{
+  padding-left: 5;
+  padding-right: 5;
+  font-size: 17;
+  text-align: left;
 }
 </style>

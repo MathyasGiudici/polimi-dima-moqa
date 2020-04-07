@@ -1,7 +1,10 @@
 <template>
   <view class="container">
     <status-bar bar-style="dark-content" />
-    <view class="container">
+    <scroll-view class="scroll-container" :content-container-style="{contentContainer: {paddingVertical: 20}}">
+      <!-- Big Space -->
+      <view class="paddingElementBig"></view>
+      <view class="paddingElementSmall"></view>
       <!-- Title -->
       <text class="heading">Arduino Data</text>
 
@@ -85,7 +88,7 @@
         <text class="toggle">auto-fetch data</text>
       </view>
 
-    </view>
+    </scroll-view>
   </view>
 </template>
 
@@ -145,10 +148,13 @@ export default {
   justify-content: center;
   flex: 1;
 }
+.scroll-container {
+}
 .heading {
   font-size: 34;
   font-weight: bold;
   margin: 20;
+  align-self: center;
 }
 .paddingElementBig {
   height: 40;
@@ -157,6 +163,7 @@ export default {
   height: 10;
 }
 .row {
+  align-self: center;
   flex-direction: row;
   justify-content: center;
   padding-top: 7;
@@ -176,6 +183,7 @@ export default {
   text-align: left;
 }
 .bubbleBotton{
+  align-self: center;
   flex-direction: row;
   background-color: rgba(0,122,255,1);
   padding-horizontal: 15;
