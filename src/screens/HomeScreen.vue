@@ -69,11 +69,11 @@
       <!-- Little space -->
       <view class="paddingElementSmall"></view>
       <!-- Download latest data -->
-      <touchable-opacity class="bubbleBotton" :on-press="fetchData" v-if="!autoFetch">
+      <touchable-opacity class="bubbleBotton" :on-press="fetchData" v-if="!isInAutoFetch">
         <icon name="download" color="white" size="25" style="padding-right:3;"/>
         <text class="buttonText" style="padding-left:3;">Fetch data</text>
       </touchable-opacity>
-      <view class="bubbleBotton" style="background-color: grey;" v-if="autoFetch">
+      <view class="bubbleBotton" style="background-color: grey;" v-if="isInAutoFetch">
         <icon name="download" color="white" size="25" style="padding-right:3;"/>
         <text class="buttonText" style="padding-left:3;">Fetch data</text>
       </view>
@@ -83,7 +83,7 @@
       <!-- Toggle -->
       <view class="row">
         <view class="toggle">
-          <switch :on-value-change = "autoFetchHandler" :value = "autoFetch"/>
+          <switch :on-value-change = "isInAutoFetchHandler" :value = "isInAutoFetch"/>
         </view>
         <text class="toggle">auto-fetch data</text>
       </view>
@@ -96,6 +96,9 @@
 import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import store from '../store';
+import {getHandler} from '../utils/Network';
+
 export default {
   components: {
     Icon
@@ -103,39 +106,104 @@ export default {
   data: function() {
     return {
       data: {
-        temperature: '0',
-        humidity: '0',
-        pressure: '0',
-        altitude: '0',
-        tvocs: '0',
-        eco2: '0',
-        pm05: '0',
-        pm1: '0',
-        pm25: '0',
-        pm4: '0',
-        pm10: '0',
+        temperature: '--',
+        humidity: '--',
+        pressure: '--',
+        altitude: '--',
+        tvocs: '--',
+        eco2: '--',
+        pm05: '--',
+        pm1: '--',
+        pm25: '--',
+        pm4: '--',
+        pm10: '--',
       },
       isRecording: false,
-      autoFetch: false,
+      isInAutoFetch: false,
+      autoFetchRoutine: null,
     };
   },
   methods:{
     startRecording: function(){
-      // Change of the status
-      this.isRecording = !this.isRecording;
+      getHandler(store.state.settings.server.ip, store.state.settings.server.port, 'text').then((value) => {
+        // Exploit result
+        switch (value) {
+          case 'End Race':
+            alert('There are some problems in the connection with the server.\nThe recording could not start!');
+            break;
+          case 'Connection problems':
+            alert('There are some problems in the connection with the server.\nThe recording could not start!');
+            break;
+          default:
+            this.isRecording = !this.isRecording;
+        }
+      });
     },
     stopRecording: function(){
       // Change of the status
       this.isRecording = !this.isRecording;
     },
-    fetchData: function(){
+    isInAutoFetchHandler: async function(){
+      if(this.isInAutoFetch){
+        if(this.autoFetchRoutine != null) {
+          // Clearing the auto fetch routine routine
+          clearInterval(this.autoFetchRoutine);
+          this.autoFetchRoutine = null;
+        }
+      } else {
+        // Trying first time with the board
+        let result = await this.fetchData();
 
+        // Checking if the board is connected
+        if(result == 1)
+          return;
+
+        // Starting the routine to get the data
+        this.autoFetchRoutine = setInterval(() => {
+  	       this.fetchData();
+         }, 1000);
+      }
+      // Changing the toggle status
+      this.isInAutoFetch = !this.isInAutoFetch;
     },
-    autoFetchHandler: function(){
-      // Change of the status
-      this.autoFetch = !this.autoFetch;
+    fetchData: async function(){
+      return getHandler(store.state.settings.wifi.ip, store.state.settings.wifi.port, 'text').then((value) => {
+        var status = 1;
+        // Exploit result
+        switch (value) {
+          case 'End Race':
+            alert('There are some problems in the connection with the board.');
+            break;
+          case 'Connection problems':
+            alert('There are some problems in the connection with the board.');
+            break;
+          default:
+            // Real update of values
+            this.updateValues(value);
+            // Changing returned value
+            status = 0;
+        }
+        return status;
+      });
+    },
+    updateValues: function(response){
+      console.log(response);
+      // Splitting response
+      let array = response.split(';');
+      // Creating data object keys
+      var keys = Object.keys(this.data);
 
+      // Looping on keys to update the values
+      keys.forEach((item, i) => {
+        this.data[item] = array[i];
+      });
 
+      // If we have to send to the server
+      if(this.isRecording)
+        sendToServer(response);
+    },
+    sendToServer: function(){
+      // TODO: implement server
     },
   }
 }
