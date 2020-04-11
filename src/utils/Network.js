@@ -42,36 +42,3 @@ export async function getHandler(url, port, responseType) {
     return toReturn;
   }) ]);
 }
-
-// Function to apply a POST to the web
-export function postHandler(url, port, contentType, body) {
-  return Promise.race([timerPromise(), fetch(createAddress(url,port), {
-    method: "post",
-    headers: new Headers({
-      "Content-Type": contentType
-    }),
-    body: body,
-  }).then((response) => {
-    switch (responseType) {
-      case 'text':
-        return response.text();
-        break;
-      case 'json':
-        return response.json();
-        break;
-      default:
-        return response.text();
-    }
-  }).catch((error) => {
-    switch (responseType) {
-      case 'text':
-        return 'Connection problems';
-        break;
-      case 'json':
-        return {message: 'Connection problems'};
-        break;
-      default:
-        return 'Connection problems';
-    }
-  }) ]);
-}

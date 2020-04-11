@@ -13,7 +13,7 @@
     <view class="paddingElement"></view>
 
     <!-- Start Date Picker -->
-    <touchable-opacity class="listElement" :on-press="()=>{isStartDateVisible=!isStartDateVisible; checkDateConsistency();}">
+    <touchable-opacity class="listElement" :on-press="()=>{isStartDateVisible=!isStartDateVisible;}">
       <text class="textListTitleElement">Starting Date</text>
       <text class="textListElement">{{startDate.string}}</text>
     </touchable-opacity>
@@ -22,7 +22,7 @@
             :onChange="setStartDate" />
     </view>
     <!-- End Date Picker -->
-    <touchable-opacity class="listElement" :on-press="()=>{isEndDateVisible=!isEndDateVisible; checkDateConsistency();}">
+    <touchable-opacity class="listElement" :on-press="()=>{isEndDateVisible=!isEndDateVisible;}">
       <text class="textListTitleElement">End Date</text>
       <text class="textListElement">{{endDate.string}}</text>
     </touchable-opacity>
@@ -61,8 +61,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePicker from '@react-native-community/datetimepicker'
 import {dateObjectCreator} from '../../utils/Utils';
 var today = new Date();
-var yesterday = new Date(); // Today!
-yesterday.setDate(today.getDate() - 1); // Yesterday!
 
 export default {
   props: {
@@ -94,33 +92,42 @@ export default {
       this.changeStation();
     },
     setStartDate: function(event,date){
-      this.startDate = dateObjectCreator(date);
+      this.changeDate("startDate",date);
     },
     setEndDate: function(event,date){
-      this.endDate = dateObjectCreator(date);
+      this.changeDate("endDate",date);
+    },
+    changeDate: function(target,date) {
+      // Storing old value
+      var stored = this[target];
+      // Updating the value
+      this[target] = dateObjectCreator(date);
+      // Checking consistency
+      let result = this.checkDateConsistency();
+
+      if(result){
+          this.saveFilter();
+      } else{
+        this[target] = stored;
+      }
     },
     checkDateConsistency: function(){
       if(this.startDate.date > today){
-        this.startDate = dateObjectCreator(yesterday);
         alert('Start date could not be in the future!');
-        this.saveFilter();
-        return;
+        return false;
       }
 
       if(this.endDate.date > today){
-        this.endDate = dateObjectCreator(today);
         alert('End date could not be in the future!');
-        this.saveFilter();
-        return;
+        return false;
       }
 
       if(this.startDate.date > this.endDate.date){
-        this.startDate = dateObjectCreator(yesterday);
-        this.endDate = dateObjectCreator(today);
         alert('Start date could not be greater than end date!');
-        this.saveFilter();
-        return;
+        return false;
       }
+
+      return true;
     },
     changeArpaValue: function(){
       this.arpaEnabled = !this.arpaEnabled;

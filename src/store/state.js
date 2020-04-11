@@ -29,7 +29,7 @@ export function getDefaultState() {
         port: '3000'
       },
       server:{
-        ip: '',
+        ip: 'https://polimi-dima-server.herokuapp.com',
         port: ''
       },
       rtk: {
@@ -49,12 +49,18 @@ export function getDefaultState() {
         },
       },
     },
+    user: {
+      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoie1wiZW1haWxcIjpcImFkbWluQGRpbWFwcm9qZWN0Lml0XCIsXCJmaXJzdE5hbWVcIjpcIkFkbWluXCIsXCJsYXN0TmFtZVwiOlwiRGltYSBQcm9qZWN0XCIsXCJnZW5kZXJcIjpcImZlbWFsZVwiLFwiYmlydGhEYXlcIjpcIjE5OTAtMDctMjFUMDA6MDA6MDAuMDAwWlwifSIsImlhdCI6MTU4NjUzODQ1OCwiZXhwIjoxNTg2NzExMjU4fQ.AvkKvx1gUov0onk0FmXpRsyIwl7EQxbN5xxVdPEczbk',
+      email: '',
+      firstName: '',
+      lastName: '',
+      gender: '',
+      birthDay: ''
+    },
     blob : {
       arduinoData: null,
       arpa_weatherStations: null,
-      //arpa_weatherData: null,
       arpa_airStations: null,
-      //arpa_airData: null,
     }
   };
 };
