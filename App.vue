@@ -1,10 +1,10 @@
 <template>
-<tab-creator></tab-creator>
+  <navigation-creator />
 </template>
 
 <script>
-import TabCreator from "./src/TabCreator.vue";
+import NavigationCreator from "./src/NavigationCreator.vue";
 export default {
-components: { TabCreator }
+  components: { NavigationCreator }
 };
 </script>

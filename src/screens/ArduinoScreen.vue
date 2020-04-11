@@ -5,6 +5,7 @@
       <!-- Big Space -->
       <view class="paddingElementBig"></view>
       <view class="paddingElementSmall"></view>
+      
       <!-- Title -->
       <text class="heading">Arduino Data</text>
 

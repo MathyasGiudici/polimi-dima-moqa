@@ -28,9 +28,10 @@ export async function putUser(user) {
   const url = baseUrl + "user/me";
   return Promise.race([timerPromise(), fetch(url, {
         method: "put",
-        headers: new Headers({
-          "Authorization": 'Bearer ' + store.state.user.token
-        }),
+        headers: {
+          'Authorization': 'Bearer ' + store.state.user.token,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(user),
       }).then((response) =>{
         return response.json();

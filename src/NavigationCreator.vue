@@ -1,5 +1,5 @@
 <template>
-  <app-navigator></app-navigator>
+  <app-navigator />
 </template>
 
 <script>
@@ -8,7 +8,7 @@
 import {
   createAppContainer,
   createBottomTabNavigator,
-  createMaterialTopTabNavigator,
+  createSwitchNavigator,
   createStackNavigator
 } from "vue-native-router";
 
@@ -16,13 +16,16 @@ import {
 import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+// Login and registration
+import LoginScreen from "./screens/LoginScreen.vue";
 
 // Basic 4 screens
-import HomeScreen from "./screens/HomeScreen.vue";
+import ArduinoScreen from "./screens/ArduinoScreen.vue";
 import MapsScreen from "./screens/MapsScreen.vue";
 import ChartsScreen from "./screens/ChartsScreen.vue";
 import SettingsScreen from "./screens/SettingsScreen.vue";
 
+// Filter screens
 import FilterParametersScreen from "./screens/params/FilterParametersScreen.vue";
 import FilterStationsPicker from "./screens/params/FilterStationsPicker.vue";
 import FilterMeasuresPicker from "./screens/params/FilterMeasuresPicker.vue";
@@ -38,7 +41,7 @@ import StationsPicker from "./screens/settings/StationsPicker.vue";
 const BottomTabs = createBottomTabNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: ArduinoScreen,
       navigationOptions: {
         tabBarLabel: 'Arduino',
         tabBarIcon: ({tintColor}) => <Icon name="chip" color={tintColor} size={25}/>
@@ -169,7 +172,17 @@ const BottomTabs = createBottomTabNavigator(
   }
 );
 
-const AppNavigator = createAppContainer(BottomTabs);
+const switchNavigator = createSwitchNavigator(
+  {
+    LoginScreen: LoginScreen,
+    BottomTabs: BottomTabs,
+  },
+  {
+    initialRouteName: 'LoginScreen',
+  },
+);
+
+const AppNavigator = createAppContainer(switchNavigator);
 
 import store from './store';
 import {loadData} from './utils/Utils';
@@ -177,7 +190,9 @@ import {loadData} from './utils/Utils';
 export default {
   components: { AppNavigator },
   beforeCreate: function(){
+    // Loading past state from AsyncStorage
     store.commit("RESTORE");
+    // Loading ARPA data from remote
     loadData();
   }
 }
