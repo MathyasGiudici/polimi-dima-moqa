@@ -8,6 +8,39 @@ const timerPromise = () => {
 
 const baseUrl = store.state.settings.server.ip + "/api/";
 
+export async function login(authReq) {
+  const url = baseUrl + "user/login";
+  return Promise.race([timerPromise(), fetch(url, {
+        method: "post",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(authReq),
+      }).then((response) =>{
+        return response.json();
+    }).catch((error) => {
+      return 'Connection problems';
+    })
+  ]);
+}
+
+export async function logout(authReq) {
+  const url = baseUrl + "user/logout";
+  return Promise.race([timerPromise(), fetch(url, {
+        method: "post",
+        headers: {
+          'Authorization': 'Bearer ' + store.state.user.token,
+        },
+      }).then((response) =>{
+        return response.json();
+    }).catch((error) => {
+      return 'Connection problems';
+    })
+  ]);
+}
+
+
+
 export async function getUser() {
   const url = baseUrl + "user/me";
   return Promise.race([timerPromise(), fetch(url, {

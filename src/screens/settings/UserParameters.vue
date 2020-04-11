@@ -78,7 +78,7 @@
 
 <script>
 import store from '../../store';
-import {getUser, putUser} from '../../utils/Network4Server';
+import {logout, getUser, putUser} from '../../utils/Network4Server';
 
 // Utils for the date picker
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -140,7 +140,26 @@ export default {
       this.changingPassword = false;
     },
     logout: function(){
+      // Running request
+      return logout(this.authReq).then((value) => {
+          // Exploit result
+          if(value == 'End Race' || value == 'Connection problems'){
+            alert('Connection problems');
+            return;
+          }
+          // Exploit response
+          if(value.response && value.response != 'Successful logout'){
+            alert(value.response);
+            return;
+          }
 
+          // Storing user information
+          store.commit('changeUserData', { token: '' });
+          // Persistence
+          store.commit('SAVE');
+          // Go to login page
+          this.navigation.navigate('LoginScreen');
+        });
     },
     checkDateConsistency: function(newDate){
       // Checking if the date will not be in the future

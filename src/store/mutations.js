@@ -46,6 +46,15 @@ export function changeArpaDataUrl(state, {targetMeasure, url}){
   state.settings.arpa[targetMeasure].dataUrl = url;
 }
 
+export function changeUserData(state,user){
+  var keys = Object.keys(user);
+
+  // Looping on keys to update the values
+  keys.forEach((item, i) => {
+    state.user[item] = user[item];
+  });
+}
+
 export function blobMutation(state, {key, value}){
   state.blob[key] = value;
 }

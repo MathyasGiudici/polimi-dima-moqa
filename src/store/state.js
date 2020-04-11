@@ -50,8 +50,9 @@ export function getDefaultState() {
       },
     },
     user: {
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoie1wiZW1haWxcIjpcImFkbWluQGRpbWFwcm9qZWN0Lml0XCIsXCJmaXJzdE5hbWVcIjpcIkFkbWluXCIsXCJsYXN0TmFtZVwiOlwiRGltYSBQcm9qZWN0XCIsXCJnZW5kZXJcIjpcImZlbWFsZVwiLFwiYmlydGhEYXlcIjpcIjE5OTAtMDctMjFUMDA6MDA6MDAuMDAwWlwifSIsImlhdCI6MTU4NjUzODQ1OCwiZXhwIjoxNTg2NzExMjU4fQ.AvkKvx1gUov0onk0FmXpRsyIwl7EQxbN5xxVdPEczbk',
-      email: '',
+      token: '',
+      email: 'admin@dimaproject.it',
+      password: 'passwordSegret@130',
       firstName: '',
       lastName: '',
       gender: '',
