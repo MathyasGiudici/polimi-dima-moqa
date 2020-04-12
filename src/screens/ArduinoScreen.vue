@@ -101,6 +101,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import store from '../store';
 import {getHandler} from '../utils/Network';
+import {sendData} from '../utils/Network4Server';
 
 export default {
   components: {
@@ -190,7 +191,6 @@ export default {
       });
     },
     updateValues: function(response){
-      console.log(response);
       // Splitting response
       let array = response.split(';');
       // Creating data object keys
@@ -203,10 +203,11 @@ export default {
 
       // If we have to send to the server
       if(this.isRecording)
-        sendToServer(response);
+        this.sendToServer(response);
     },
-    sendToServer: function(){
-      // TODO: implement server
+    sendToServer: function(arduinoString){
+      console.log(arduinoString)
+      sendData(arduinoString);
     },
   }
 }

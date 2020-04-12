@@ -136,6 +136,9 @@ export default {
             });
             // Adjusting date type
             this.birthDay_obj = dateObjectCreator(new Date(this.user.birthDay));
+
+            this.navigation.state.params.option.title = this.user.firstName +
+              " " + this.user.lastName;
           }
         });
     },
@@ -224,22 +227,66 @@ export default {
         });
     },
     sendNewParameters: function(){
+      // Hide button
       this.changingParameters = false;
+
+      // Checking consistency of the email
+      if(this.user.email == "" ){
+        alert('email could not be empty');
+        return;
+      }
+
+      // Saving new parameters
+      this.saveParameters('');
     },
     sendNewPassword: function(){
+      console.log(this.new_password,this.confirm_password)
+      // Hide button
       this.changingPassword = false;
-    },
-    saveParameters: function(){
-      return;
-      // Hiding confirmation button
-      this.changingParameters=false;
-      // Changing state
-      //store.commit('changeSettingParameter', {targetParameter: this.navigation.state.params.option.prop, host: this.host, port: this.port});
 
-      // Persistence station
-      store.commit('SAVE');
-      // Checking connection
-      this.refresh();
+      // Checking consistency of the password
+      if(this.new_password == "" || this.confirm_password == ""){
+        alert('Password could not be empty');
+        return;
+      }
+      if(this.new_password != this.confirm_password){
+        alert('Passwords do not match');
+        return;
+      }
+
+      // Saving new parameters
+      this.saveParameters(this.new_password);
+    },
+    saveParameters: function(password){
+      var newUser = this.user;
+      newUser.password = password;
+      newUser.birthDay = this.birthDay_obj.date.getFullYear() + '-' +
+        ("0" + (this.birthDay_obj.date.getMonth() + 1)).slice(-2) + '-' +
+        ("0" + this.birthDay_obj.date.getDate()).slice(-2) ;
+
+        // Running request
+        return putUser(newUser).then((value) => {
+            // Stop loading
+            this.isLoading = false;
+            // Exploit result
+            if(value == 'End Race' || value == 'Connection problems'){
+              alert('Connection problems');
+              return;
+            }
+            // Exploit response
+            if(value.email != newUser.email){
+              alert('Some problems in the sing up with the server');
+              return;
+            }
+
+            if(password == '')
+              delete newUser.password;
+
+            // Storing user information
+            store.commit('changeUserData', newUser);
+            // Persistence
+            store.commit('SAVE');
+          });
     }
   }
 };

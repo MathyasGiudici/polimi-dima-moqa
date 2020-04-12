@@ -69,6 +69,10 @@
       <view class="paddingElementSmall"></view>
       <!-- Back Login Button -->
       <button title="Already registered? Login" :on-press="login" />
+
+      <!-- Space -->
+      <view class="paddingElementBig"></view>
+      <view class="paddingElementBig"></view>
     </scroll-view>
   </view>
 </template>

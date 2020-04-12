@@ -1,5 +1,5 @@
 <template>
-    <scroll-view class="mainContainer" :content-container-style="{contentContainer: {paddingVertical: 20}}">
+    <scroll-view class="mainContainer" :content-container-style="{contentContainer: {paddingVertical: 20}}" :onScrollEndDrag="refresh">
       <view class="paddingElement"></view>
 
       <!-- User setting -->
@@ -82,6 +82,11 @@ export default{
     };
   },
   methods:{
+    refresh: function(){
+      this.user.name = store.state.user.firstName;
+      this.user.surname = store.state.user.lastName;
+      this.user.email = store.state.user.email;
+    },
     userSetting: function(){
       const option = {
         title: this.user.name + " " + this.user.surname,
