@@ -39,7 +39,21 @@ export async function logout(authReq) {
   ]);
 }
 
-
+export async function register(user) {
+  const url = baseUrl + "user/register";
+  return Promise.race([timerPromise(), fetch(url, {
+        method: "post",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      }).then((response) =>{
+        return response.json();
+    }).catch((error) => {
+      return 'Connection problems';
+    })
+  ]);
+}
 
 export async function getUser() {
   const url = baseUrl + "user/me";
@@ -66,6 +80,21 @@ export async function putUser(user) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
+      }).then((response) =>{
+        return response.json();
+    }).catch((error) => {
+      return 'Connection problems';
+    })
+  ]);
+}
+
+export async function deleteAccount(authReq) {
+  const url = baseUrl + "user/me";
+  return Promise.race([timerPromise(), fetch(url, {
+        method: "delete",
+        headers: {
+          'Authorization': 'Bearer ' + store.state.user.token,
+        },
       }).then((response) =>{
         return response.json();
     }).catch((error) => {

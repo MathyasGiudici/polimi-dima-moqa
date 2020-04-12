@@ -1,11 +1,13 @@
 <template>
   <view class="container">
+    <!-- Status bar -->
     <status-bar bar-style="dark-content" />
+    <!-- Scroll Container -->
     <scroll-view class="scroll-container" :content-container-style="{contentContainer: {paddingVertical: 20}}">
       <!-- Big Space -->
       <view class="paddingElementBig"></view>
       <view class="paddingElementSmall"></view>
-      
+
       <!-- Title -->
       <text class="heading">Arduino Data</text>
 

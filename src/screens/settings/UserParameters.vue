@@ -64,10 +64,15 @@
 
     <!-- Space -->
     <view class="paddingElement"></view>
-
     <!-- Logout Button -->
     <view class="listElement" >
       <button title="Logout" :on-press="logout" />
+    </view>
+    <!-- Space -->
+    <view class="paddingElement"></view>
+    <!-- Delete Button -->
+    <view class="listElement" >
+      <button title="Delete Account" :on-press="deleteAccount" color="rgb(255,59,48)" />
     </view>
 
     <!-- Space -->
@@ -78,7 +83,7 @@
 
 <script>
 import store from '../../store';
-import {logout, getUser, putUser} from '../../utils/Network4Server';
+import {logout, deleteAccount, getUser, putUser} from '../../utils/Network4Server';
 
 // Utils for the date picker
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -112,65 +117,8 @@ export default {
     this.refresh();
   },
   methods: {
-    changeParameter: function(parameter,text){
-      if(parameter == "new_password" || parameter == "confirm_password" ){
-        this.changingPassword = true;
-      } else{
-        this.changingParameters = true;
-      }
-      this.user[parameter] = text;
-    },
-    showDate: function(){
-      let array = this.birthDay_obj.string.split(" ");
-      return array[0] + " " + array[1] + " " + array[2];
-    },
-    setDate: function(event,date){
-      let result = this.checkDateConsistency(date);
-      if(result){
-          this.birthDay_obj = dateObjectCreator(date);
-          this.saveParameters();
-      } else{
-        this.birthDay_obj = dateObjectCreator(this.birthDay_obj.date);
-      }
-    },
-    sendNewParameters: function(){
-      this.changingParameters = false;
-    },
-    sendNewPassword: function(){
-      this.changingPassword = false;
-    },
-    logout: function(){
-      // Running request
-      return logout(this.authReq).then((value) => {
-          // Exploit result
-          if(value == 'End Race' || value == 'Connection problems'){
-            alert('Connection problems');
-            return;
-          }
-          // Exploit response
-          if(value.response && value.response != 'Successful logout'){
-            alert(value.response);
-            return;
-          }
-
-          // Storing user information
-          store.commit('changeUserData', { token: '' });
-          // Persistence
-          store.commit('SAVE');
-          // Go to login page
-          this.navigation.navigate('LoginScreen');
-        });
-    },
-    checkDateConsistency: function(newDate){
-      // Checking if the date will not be in the future
-      if(newDate > today){
-        alert('Birthday could not be in the future!');
-        return false;
-      }
-      // If i'm here there is consistency
-      return true;
-    },
     refresh: function(){
+      // Starting loading motion
       this.isLoading = true;
 
       return getUser().then((value) => {
@@ -190,6 +138,96 @@ export default {
             this.birthDay_obj = dateObjectCreator(new Date(this.user.birthDay));
           }
         });
+    },
+    changeParameter: function(parameter,text){
+      if(parameter == "new_password" || parameter == "confirm_password" ){
+        this.changingPassword = true;
+      } else{
+        this.changingParameters = true;
+      }
+      this.user[parameter] = text;
+    },
+    showDate: function(){
+      let array = this.birthDay_obj.string.split(" ");
+      return array[0] + " " + array[1] + " " + array[2];
+    },
+    setDate: function(event,date){
+      let result = this.checkDateConsistency(date);
+      if(result){
+          this.birthDay_obj = dateObjectCreator(date);
+          this.changingParameters = true;
+      } else{
+        this.birthDay_obj = dateObjectCreator(this.birthDay_obj.date);
+      }
+    },
+    checkDateConsistency: function(newDate){
+      // Checking if the date will not be in the future
+      if(newDate > today){
+        alert('Birthday could not be in the future!');
+        return false;
+      }
+      // If i'm here there is consistency
+      return true;
+    },
+    logout: function(){
+      // Starting loading motion
+      this.isLoading = true;
+
+      // Running request
+      return logout(this.authReq).then((value) => {
+        // Stop loading motion
+        this.isLoading = false;
+
+        // Exploit result
+        if(value == 'End Race' || value == 'Connection problems'){
+          alert('Connection problems');
+          return;
+        }
+        // Exploit response
+        if(value.response && value.response != 'Successful logout'){
+          alert(value.response);
+          return;
+        }
+
+        // Storing user information
+        store.commit('changeUserData', { token: '' });
+        // Persistence
+        store.commit('SAVE');
+        // Go to login page
+        this.navigation.navigate('LoginScreen');
+      });
+    },
+    deleteAccount: function(){
+      // Start loading motion
+      this.isLoading = true;
+
+      // Running request
+      return deleteAccount().then((value) => {
+          // Stop loading motion
+          this.isLoading = false;
+
+          // Exploit result
+          if(value == 'End Race' || value == 'Connection problems'){
+            alert('Connection problems');
+            return;
+          }
+          // Exploit response
+          if(this.user.email != value.response){
+            alert(value.response);
+            return;
+          }
+          // Storing user information
+          store.commit('clearUserData');
+          // Persistence
+          store.commit('SAVE');
+          this.navigation.navigate('LoginScreen');
+        });
+    },
+    sendNewParameters: function(){
+      this.changingParameters = false;
+    },
+    sendNewPassword: function(){
+      this.changingPassword = false;
     },
     saveParameters: function(){
       return;
@@ -246,7 +284,6 @@ export default {
   color: grey;
 }
 .subComponent{
-  background-color: white;
   background-color: white;
   borderStyle: solid;
   borderTopWidth: .3;

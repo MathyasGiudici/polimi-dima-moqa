@@ -55,6 +55,15 @@ export function changeUserData(state,user){
   });
 }
 
+export function clearUserData(state){
+  var keys = Object.keys(state.user);
+
+  // Looping on keys to update the values
+  keys.forEach((item, i) => {
+    state.user[item] = '';
+  });
+}
+
 export function blobMutation(state, {key, value}){
   state.blob[key] = value;
 }

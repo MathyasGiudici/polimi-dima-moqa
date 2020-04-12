@@ -96,6 +96,7 @@ export default{
     resetParameters: function(){
       store.commit("DELETE");
       store.commit("REPLACE", getDefaultState());
+      this.navigation.navigate('LoginScreen');
       alert("Initial state restored");
     }
   }

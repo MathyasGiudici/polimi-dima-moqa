@@ -1,5 +1,8 @@
 <template>
   <view class="container">
+    <!-- Status bar -->
+    <status-bar bar-style="dark-content" />
+
     <!-- Logo image -->
     <image :source="require('../../assets/header.png')" :style="{width: '70%',height:'20%'}"
       resizeMode="contain" />
@@ -7,7 +10,7 @@
     <view class="paddingElementBig"></view>
 
     <!-- Email -->
-    <text-input class="inputElement" placeholder="address@email.com" v-model="authReq.email"
+    <text-input class="inputElement" placeholder="email" v-model="authReq.email"
       :onChangeText="text => changeParameter('email',text)" />
     <!-- Space -->
     <view class="paddingElementBig"></view>
@@ -16,10 +19,6 @@
       :onChangeText="text => changeParameter('password',text)" secureTextEntry="true" />
     <!-- Space -->
     <view class="paddingElementBig"></view>
-
-    <view class="warning" v-if="showWarning">
-      <text style="color:white;font-size:20;">{{warningText}}</text>
-    </view>
 
     <!-- Login Button -->
     <touchable-opacity class="bubbleBotton" :on-press="login" v-if="!isLoading">
@@ -57,17 +56,17 @@ export default {
         email: store.state.user.email,
         password: store.state.user.password
       },
-      showWarning: false,
-      warningText: '',
       isLoading: false,
     };
   },
   mounted: function(){
+    // Start Loading
     this.isLoading = true;
 
     // Checking if there is a previous session
     if(store.state.user.token != ""){
       return getUser().then((value) => {
+        // Stop loading
         this.isLoading = false;
         // Exploit result
         if(value != 'End Race' && value != 'Connection problems' &&
@@ -77,7 +76,7 @@ export default {
           }
         });
     }
-    
+    // Stop loading
     this.isLoading = false;
   },
   methods: {
@@ -85,34 +84,33 @@ export default {
       this.authReq[key] = value;
     },
     login: function(){
-      this.showWarning = false;
+      // Start Loading
       this.isLoading = true;
 
       // Running request
       return login(this.authReq).then((value) => {
+          // Stop loading
+          this.isLoading = false;
           // Exploit result
           if(value == 'End Race' || value == 'Connection problems'){
-            this.warningText = 'Connection problems';
-            this.showWarning = true;
+            alert('Connection problems');
             return;
           }
           // Exploit response
-          if(value.response && value.response == 'Password is wrong'){
-            this.warningText = value.response;
-            this.showWarning = true;
+          if(value.response && value.response != 'Successful login'){
+            alert(value.response);
             return;
           }
 
           // Saving new user information
           var toSave = value.user;
+          toSave.password = this.authReq.password;
           toSave.token = value.token;
 
           // Storing user information
           store.commit('changeUserData', toSave);
           // Persistence
           store.commit('SAVE');
-          // Go to application
-          this.isLoading = false;
           this.navigation.navigate('BottomTabs');
         });
     },
@@ -126,7 +124,6 @@ export default {
 <style>
 .container {
   flex: 1;
-  background-color: white;
   align-items: center;
   justify-content: center;
 }
@@ -142,17 +139,6 @@ export default {
   width: 80%;
   font-size: 20;
   text-align: center;
-}
-.warning{
-  align-self: center;
-  background-color: rgba(255,149,0,.75);
-  padding-horizontal: 15;
-  padding-vertical: 15;
-  border-radius: 15;
-  width: 80%;
-  margin-bottom: 40;
-  align-items: center;
-  justify-content: center;
 }
 .bubbleBotton{
   align-self: center;
