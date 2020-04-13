@@ -1,7 +1,7 @@
 // Needed scripts
 import store from '../store';
 import {timerPromise} from './Utils';
-import {getArpaData} from './DataUtils';
+import {getArduinoData, getArpaData} from './DataUtils';
 
 //["Temperature", "Humidity", "Pressure", "Altitude", "TVOCs", "eCO2", "PM0.5", "PM1", "PM2.5", "PM4", "PM10"]
 
@@ -14,9 +14,6 @@ export async function getMapData(filter){
           break;
         case 'Humidity':
           toReturn = generalGet('weather',filter);
-          break;
-        case 'CO2':
-          toReturn = { arduino: [], arpa: [],};
           break;
         case 'PM10':
           toReturn = generalGet('air',filter);
@@ -41,42 +38,64 @@ export async function getMapData(filter){
 // Get weather data from ARPA dataset
 async function generalGet(arpaType,filter){
 
-  let generalPromise = new Promise(function(resolve,reject){
+  let generalPromise = new Promise(async function(resolve,reject){
+    // Getting arduino data
+    let arduino = await getArduinoData(arpaType,filter);
     // Getting arpa data
-    resolve(getArpaData(arpaType,filter));
+    let arpa = [];
+    if(filter.arpaEnabled)
+      arpa = await getArpaData(arpaType,filter);
+
+    resolve([arduino,arpa]);
   });
 
   let result = await generalPromise;
 
+  console.log(result);
+
   //Setting data for the graph
-  return prepareToMap(null,result,arpaType,filter);
+  return prepareToMap(result[0],result[1],arpaType,filter);
 }
 
 // Preparing the chart object of data
 async function prepareToMap(arduinoData,arpaData,arpaType,filter){
-  // Starting searching the station
-  let generalPromise = new Promise(function(resolve,reject){
-    // Getting pinned station
-    resolve(store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation]);
-  });
-
-  let station = await generalPromise;
-
   // Preparing return object
   var toReturn = {
-    arduino: [{center: {latitude: 45.476099205566400,longitude: 9.2387804115844600,},radius: 100,}],
+    arduino: [],
     arpa: [],
   };
 
-  // Populating arpa array
-  arpaData.forEach((item, i) => {
-    toReturn.arpa.push({ center:
-      { latitude: station.properties.lat,
-        longitude: station.properties.lng,
+  // Checking if
+  if(filter.arpaEnabled) {
+    // Starting searching the station
+    let generalPromise = new Promise(async function(resolve,reject){
+      // Getting pinned station
+      let ret = await store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation];
+      resolve(ret);
+    });
+
+    let station = await generalPromise;
+
+    // Populating arpa array with stations
+    arpaData.forEach((item, i) => {
+      toReturn.arpa.push({ center:
+        { latitude: station.properties.lat,
+          longitude: station.properties.lng,
+        },
+        radius: adjustValue(item.valore),
+      });
+    });
+  }
+
+  arduinoData.forEach((item, i) => {
+    toReturn.arduino.push({ center:
+      { latitude: item.latitude,
+        longitude: item.longitude,
       },
-      radius: adjustValue(item.valore),
+      radius: adjustValue(item[filter.pinnedMeasure.toLowerCase()]),
     });
   });
+
 
   return toReturn;
 }
@@ -92,5 +111,5 @@ function adjustValue(string){
       stringAlpha.concat("0");
   }
 
-  return parseInt(string)*parseInt(stringAlpha);
+  return parseInt(string)*parseInt(stringAlpha)/2;
 }

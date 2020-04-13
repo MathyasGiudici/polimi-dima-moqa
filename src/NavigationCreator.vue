@@ -203,7 +203,6 @@ export default {
 
     // Awaiting loading promise
     let result = await loadingPromise;
-    console.log(result);
   }
 }
 </script>

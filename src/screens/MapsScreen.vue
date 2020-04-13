@@ -38,7 +38,7 @@ export default {
     },
     data: function() {
     return {
-      arduinoData: [{center: {latitude: 45.476099205566400,longitude: 9.2387804115844600,},radius: 100,}],
+      arduinoData: [],
       arpaData: [],
       initialCoordinates: {
         latitude: 45.474098205566399,
@@ -57,8 +57,9 @@ export default {
     },
     refresh: async function(){
       // New chart data
-      let generalPromise = new Promise(function(resolve,reject){
-        resolve(utils.getMapData(store.state.filter.maps));
+      let generalPromise = new Promise(async function(resolve,reject){
+        let result = await utils.getMapData(store.state.filter.maps);
+        resolve(result);
       });
 
       let returnedObject = await generalPromise;

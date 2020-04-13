@@ -1,37 +1,52 @@
 // Needed scripts
 import store from '../store';
 import {getHandler} from './Network';
+import {getData, getDataFiltered} from './Network4Server';
 
 // Function to load the data of weather and air quality
-function loadData(){
+async function loadData(){
 
-  if(store.state.blob.arpa_weatherStations == null){
-    getHandler(store.state.settings.arpa.weather.stationsUrl,'', 'json').then((value) => {
-      // Exploit result
-      switch (value) {
-        case 'End Race':
-          break;
-        case 'Connection problems':
-          break;
-        default:
-          store.commit('blobMutation', {key:'arpa_weatherStations', value: getMilanStations(value) });
-      }
-    });
-  }
+  let weatherPromise = new Promise(async function(resolve, reject){
+    if(store.state.blob.arpa_weatherStations == null){
+      getHandler(store.state.settings.arpa.weather.stationsUrl,'', 'json').then((value) => {
+        // Exploit result
+        switch (value) {
+          case 'End Race':
+            break;
+          case 'Connection problems':
+            break;
+          default:
+            store.commit('blobMutation', {key:'arpa_weatherStations', value: getMilanStations(value) });
+            resolve();
+        }
+      });
+    }
+    else{
+      resolve();
+    }
+  });
 
-  if(store.state.blob.arpa_airStations == null){
-    getHandler(store.state.settings.arpa.air.stationsUrl,'', 'json').then((value) => {
-      // Exploit result
-      switch (value) {
-        case 'End Race':
-          break;
-        case 'Connection problems':
-          break;
-        default:
-          store.commit('blobMutation', {key:'arpa_airStations', value: getMilanStations(value) });
-      }
-    });
-  }
+  let airPromise = new Promise(function(resolve, reject){
+    if(store.state.blob.arpa_airStations == null){
+      getHandler(store.state.settings.arpa.air.stationsUrl,'', 'json').then((value) => {
+        // Exploit result
+        switch (value) {
+          case 'End Race':
+            break;
+          case 'Connection problems':
+            break;
+          default:
+            store.commit('blobMutation', {key:'arpa_airStations', value: getMilanStations(value) });
+            resolve();
+        }
+      });
+    }
+    else{
+      resolve();
+    }
+  });
+
+  await Promise.all([weatherPromise, airPromise]);
 }
 
 // From the response of the openAPI of Regione Lombardia returns the Stations
@@ -116,16 +131,18 @@ async function dataFilter(url,station,startDate,endDate){
   // Looping on data to applay the filter
   data.forEach((item,i) => {
     // Checking validity of the datum and the date
-    var date = new Date(item.data);
-    if((item.stato == 'VA') && (startDate.date.getTime() <= date.getTime()) && (date.getTime() <= endDate.date.getTime())) {
+    var start = new Date(startDate.date);
+    var end = new Date(endDate.date);
+    var current = new Date(item.data);
+    if((item.stato == 'VA') && (start.getTime() <= current.getTime()) && (current.getTime() <= end.getTime())) {
         toReturn.push(item);
     }
   });
 
   // Auto sort by Date
   toReturn.sort(function(a, b){
-    a_date = new Date(a.data);
-    b_date = new Date(b.data);
+    let a_date = new Date(a.data);
+    let b_date = new Date(b.data);
     if(a_date.getTime() < b_date.getTime()) { return -1; }
     if(a_date.getTime() > b_date.getTime()) { return 1; }
     return 0;
@@ -140,17 +157,22 @@ async function dataFilter(url,station,startDate,endDate){
 // @param: filter used to select data
 async function getArpaData(arpaType,filter){
 
-  let generalPromise = new Promise(function(resolve,reject){
+  let generalPromise = new Promise(async function(resolve,reject){
+    if(store.state.blob['arpa_' + arpaType + 'Stations'] == null){
+      await loadData();
+    }
     // Getting pinned station
-    resolve(store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation]);
+    let ret = await store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation];
+    resolve(ret);
   })
   .then((result)=>{
     if (result == null)
       console.log('Something is not working');
     // Getting relative data
-    return new Promise(function(resolve,reject){
-      resolve(dataFilter(store.state.settings.arpa[arpaType].dataUrl, result,
-        filter.startDate, filter.endDate));
+    return new Promise(async function(resolve,reject){
+      let data = await dataFilter(store.state.settings.arpa[arpaType].dataUrl, result,
+        filter.startDate, filter.endDate);
+      resolve(data);
     });
   });
 
@@ -158,4 +180,27 @@ async function getArpaData(arpaType,filter){
   return data;
 }
 
-export{ loadData, getMilanStations, stationsFilter, getArpaData }
+async function getArduinoData(arpaType,filter){
+  // Getting the data
+  let promise =  new Promise(function(resolve, reject) {
+    var data = [];
+    getData("","").then((value) => {
+      // Exploit result
+      switch (value) {
+        case 'End Race':
+          break;
+        case 'Connection problems':
+          break;
+        default:
+          data = data.concat(value);
+          resolve(data);
+      }
+    });
+  });
+
+  let result = await promise;
+
+  return result;
+}
+
+export{ loadData, getMilanStations, stationsFilter, getArpaData, getArduinoData }
