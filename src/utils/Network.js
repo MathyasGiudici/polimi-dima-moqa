@@ -1,3 +1,5 @@
+import {timerPromise} from './Utils';
+
 // Creation of the url:port
 const createAddress = (url,port) => {
   if (port != '')
@@ -5,12 +7,6 @@ const createAddress = (url,port) => {
   else
     return url;
 }
-
-// Timer for the Promise.race
-const timerPromise = () => {
-  return new Promise(function(resolve, reject) {
-    setTimeout(resolve, 5000, 'End Race');});
-};
 
 // Function to apply a GET from web
 export async function getHandler(url, port, responseType) {

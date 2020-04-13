@@ -1,12 +1,50 @@
+// Imports
 import store from '../store';
-
-// Timer for the Promise.race
-const timerPromise = () => {
-  return new Promise(function(resolve, reject) {
-    setTimeout(resolve, 5000, 'End Race');});
-};
+import {timerPromise} from './Utils';
 
 const baseUrl = store.state.settings.server.ip + "/api/";
+
+export async function getData(limit,offset) {
+  var url = new URL(baseUrl + "data");
+
+  if(limit != "" && offset != ""){
+    params = {limit:limit, offset:offset};
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+  }
+
+  return Promise.race([timerPromise(), fetch(url, {
+        method: "get",
+        headers: {
+          'Authorization': 'Bearer ' + store.state.user.token,
+        },
+      }).then((response) =>{
+        return response.json();
+    }).catch((error) => {
+      return 'Connection problems';
+    })
+  ]);
+}
+
+export async function getDataFiltered(startDate,endDate) {
+  var url = new URL(baseUrl + "data/findByDate");
+
+  if(startDate != "" && endDate != ""){
+    params = {startDate:startDate, endDate:endDate};
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+  }
+
+  return Promise.race([timerPromise(), fetch(url, {
+        method: "get",
+        headers: {
+          'Authorization': 'Bearer ' + store.state.user.token,
+        },
+      }).then((response) =>{
+        return response.json();
+    }).catch((error) => {
+      return 'Connection problems';
+    })
+  ]);
+}
 
 export async function sendData(arduinoString) {
   const url = baseUrl + "data";

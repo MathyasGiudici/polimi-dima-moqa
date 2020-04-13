@@ -1,8 +1,14 @@
 // Months list
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+function timerPromise(){
+  return new Promise(function(resolve, reject) {
+    setTimeout(resolve, 5000, 'End Race');});
+};
+
+
 // Function to create a specific object used in FilterParametersScreen.vue to manage the dates
-export function dateObjectCreator(date){
+function dateObjectCreator(date){
   var obj = {
     date: date,
   }
@@ -12,44 +18,11 @@ export function dateObjectCreator(date){
   return obj;
 };
 
-export function minimalDate(date){
+function minimalDate(date){
   let d = date.date;
   var toRet = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() +
     " " + ("0" + d.getHours()).slice(-2)  + ":" + ("0" + d.getMinutes()).slice(-2) ;
   return toRet;
 }
 
-import store from '../store';
-import {getHandler} from './Network';
-import {getMilanStations} from './DataUtils';
-// Function to load the data of weather and air quality
-export function loadData(){
-
-  if(store.state.blob.arpa_weatherStations == null){
-    getHandler(store.state.settings.arpa.weather.stationsUrl,'', 'json').then((value) => {
-      // Exploit result
-      switch (value) {
-        case 'End Race':
-          break;
-        case 'Connection problems':
-          break;
-        default:
-          store.commit('blobMutation', {key:'arpa_weatherStations', value: getMilanStations(value) });
-      }
-    });
-  }
-
-  if(store.state.blob.arpa_airStations == null){
-    getHandler(store.state.settings.arpa.air.stationsUrl,'', 'json').then((value) => {
-      // Exploit result
-      switch (value) {
-        case 'End Race':
-          break;
-        case 'Connection problems':
-          break;
-        default:
-          store.commit('blobMutation', {key:'arpa_airStations', value: getMilanStations(value) });
-      }
-    });
-  }
-}
+export {dateObjectCreator, minimalDate, timerPromise}

@@ -1,12 +1,7 @@
 // Needed scripts
 import {testDataSet} from './ChartsConstants';
 import {getArpaData} from './DataUtils';
-import {dateObjectCreator,minimalDate} from './Utils';
-
-const timerPromise = () => {
-  return new Promise(function(resolve, reject) {
-    setTimeout(resolve, 5000, 'End Race');});
-};
+import {dateObjectCreator,minimalDate, timerPromise} from './Utils';
 
 export async function getChartData(filter){
   let dataPromise = new Promise(function(resolve,reject){

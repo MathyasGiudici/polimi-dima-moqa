@@ -187,15 +187,23 @@ const switchNavigator = createSwitchNavigator(
 const AppNavigator = createAppContainer(switchNavigator);
 
 import store from './store';
-import {loadData} from './utils/Utils';
+import {loadData} from './utils/DataUtils';
 
 export default {
   components: { AppNavigator },
-  beforeCreate: function(){
-    // Loading past state from AsyncStorage
-    store.commit("RESTORE");
-    // Loading ARPA data from remote
-    loadData();
+  beforeCreate: async function(){
+    let loadingPromise = new Promise(async function(resolve,reject){
+        // Loading past state from AsyncStorage
+        await store.commit("RESTORE");
+        // Loading ARPA data from remote
+        await loadData();
+
+        resolve("NavigatorCreator finished loading process");
+    });
+
+    // Awaiting loading promise
+    let result = await loadingPromise;
+    console.log(result);
   }
 }
 </script>

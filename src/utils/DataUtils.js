@@ -2,8 +2,40 @@
 import store from '../store';
 import {getHandler} from './Network';
 
+// Function to load the data of weather and air quality
+function loadData(){
+
+  if(store.state.blob.arpa_weatherStations == null){
+    getHandler(store.state.settings.arpa.weather.stationsUrl,'', 'json').then((value) => {
+      // Exploit result
+      switch (value) {
+        case 'End Race':
+          break;
+        case 'Connection problems':
+          break;
+        default:
+          store.commit('blobMutation', {key:'arpa_weatherStations', value: getMilanStations(value) });
+      }
+    });
+  }
+
+  if(store.state.blob.arpa_airStations == null){
+    getHandler(store.state.settings.arpa.air.stationsUrl,'', 'json').then((value) => {
+      // Exploit result
+      switch (value) {
+        case 'End Race':
+          break;
+        case 'Connection problems':
+          break;
+        default:
+          store.commit('blobMutation', {key:'arpa_airStations', value: getMilanStations(value) });
+      }
+    });
+  }
+}
+
 // From the response of the openAPI of Regione Lombardia returns the Stations
-export function getMilanStations(responseObject){
+function getMilanStations(responseObject){
   var features = responseObject.features;
   var returned = [];
 
@@ -31,7 +63,7 @@ export function getMilanStations(responseObject){
 }
 
 // Given a set of indexes (targets) return the stations
-export function stationsFilter(stations,targets){
+function stationsFilter(stations,targets){
   var toReturn = [];
 
   if(stations == undefined || targets == undefined || targets.length == 0)
@@ -106,7 +138,7 @@ async function dataFilter(url,station,startDate,endDate){
 // Get data from ARPA dataset
 // @param: arpaType means weather or air
 // @param: filter used to select data
-export async function getArpaData(arpaType,filter){
+async function getArpaData(arpaType,filter){
 
   let generalPromise = new Promise(function(resolve,reject){
     // Getting pinned station
@@ -125,3 +157,5 @@ export async function getArpaData(arpaType,filter){
   let data = await generalPromise;
   return data;
 }
+
+export{ loadData, getMilanStations, stationsFilter, getArpaData }

@@ -1,11 +1,9 @@
 // Needed scripts
-import {getArpaData} from './DataUtils';
 import store from '../store';
+import {timerPromise} from './Utils';
+import {getArpaData} from './DataUtils';
 
-const timerPromise = () => {
-  return new Promise(function(resolve, reject) {
-    setTimeout(resolve, 5000, 'End Race');});
-};
+//["Temperature", "Humidity", "Pressure", "Altitude", "TVOCs", "eCO2", "PM0.5", "PM1", "PM2.5", "PM4", "PM10"]
 
 export async function getMapData(filter){
   let dataPromise = new Promise(function(resolve,reject){
