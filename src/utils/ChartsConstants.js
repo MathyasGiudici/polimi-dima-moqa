@@ -1,25 +1,11 @@
 // Mock data object used for LineChart and BarChart
 
 export const testDataSet = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+  labels: [],
   datasets: [{
-    data: [
-      20,
-      80,
-      55,
-      56,
-      87,
-      90
-    ],
+    data: [0],
   },{
-    data: [
-      30,
-      90,
-      67,
-      54,
-      50,
-      44
-    ],
+    data: [0],
     color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})` // optional
   }]
 }

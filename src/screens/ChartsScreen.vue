@@ -16,19 +16,22 @@
           :chartConfig="chartConfig" bezier/>
       </view>
       <!-- Keys of the Graph -->
-      <view class="textContainer">
-        <icon name="circle" color="grey" size="20"/>
-        <text style="font-size: 17;"> Arduino Data</text>
-      </view>
-      <view class="textContainer">
-        <icon name="circle" color="red" size="20"/>
-        <text style="font-size: 17;"> ARPA Data </text>
+      <view class="row">
+        <view class="textContainer">
+          <icon name="circle" color="grey" size="20"/>
+          <text style="font-size: 17;"> Arduino Data</text>
+        </view>
+        <view class="textContainer">
+          <icon name="circle" color="red" size="20"/>
+          <text style="font-size: 17;"> ARPA Data </text>
+        </view>
       </view>
 
       <!-- Space -->
       <view class="paddingElement"></view>
 
       <!-- Table -->
+      <text class="tableTitle">{{tableMeasure}}'s deviation</text>
       <view class="container">
         <Table :borderStyle="{borderWidth: 1, borderColor: 'lightgrey'}" >
           <Row :data="tableHead" :style="{ height: 40, backgroundColor: 'lightgrey',}"
@@ -64,7 +67,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // Charts constants
 import {getChartConfigs, testDataSet} from '../utils/ChartsConstants';
 import * as utils from '../utils/ChartsUtils';
+const measures = ["Temperature", "Humidity", "Pressure", "Altitude", "TVOCs", "eCO2", "PM0.5", "PM1", "PM2.5", "PM4", "PM10"];
+const units = ["°C", "%", "Pa", "m", "ppb", "ppm", "μm", "μm", "μm", "μm", "μm"];
 
+// import of the store
 import store from '../store';
 
 export default {
@@ -83,7 +89,8 @@ export default {
         chartConfig: getChartConfigs(),
         chartData: testDataSet,
         // Parameters
-        tableHead: ["Quartiles", store.state.filter.charts.pinnedMeasure, "ARPA" ],
+        tableMeasure: store.state.filter.charts.pinnedMeasure,
+        tableHead: ["Quartiles", "Arduino", "ARPA" ],
         tableData: [
           ['1st Quartile', "-", "-"],
           ['2nd Quartile', "-", "-"],
@@ -92,7 +99,7 @@ export default {
       };
   },
   beforeMount: async function(){
-    this.refresh();
+    //this.refresh();
   },
   methods: {
     showDetails: function(){
@@ -102,7 +109,8 @@ export default {
       this.isLoading = true;
       // New chart data
       var generalPromise = new Promise(function(resolve,reject){
-        resolve(utils.getChartData(store.state.filter.charts));
+        var data = utils.getChartData(store.state.filter.charts);
+        resolve(data);
       });
 
       var array = await generalPromise;
@@ -110,16 +118,18 @@ export default {
       this.chartData = array[0];
 
       // Header of quartiles table
-      this.tableHead = ["Quartiles", store.state.filter.charts.pinnedMeasure, "ARPA" ];
+      this.tableMeasure = store.state.filter.charts.pinnedMeasure;
+
+      var targetMeasure = units[measures.indexOf(store.state.filter.charts.pinnedMeasure)];
 
       // Data of quartiles table
       // Arduino
       array[1].forEach((item, i) => {
-        this.tableData[i][1] = item.toString();
+        this.tableData[i][1] = item.toString() + targetMeasure;
       });
       // ARPA
       array[2].forEach((item, i) => {
-        this.tableData[i][2] = item.toString();
+        this.tableData[i][2] = item.toString() + targetMeasure;
       });
 
       this.isLoading = false;
@@ -133,9 +143,15 @@ export default {
 .container {
   margin: 10;
 }
+.row{
+  flex-direction: row;
+  justify-content: center;
+}
 .textContainer {
   flex-direction: row;
   justify-content: center;
+  padding-left: 10;
+  padding-right: 10;
 }
 .paddingElement {
   height: 20;
@@ -160,5 +176,12 @@ export default {
   text-align: center;
   font-size: 20;
   color: white;
+}
+.tableTitle{
+  font-size: 24;
+  font-weight: 500;
+  margin-top: 10;
+  align-self: center;
+
 }
 </style>

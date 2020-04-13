@@ -1,7 +1,8 @@
 // Needed scripts
 import {testDataSet} from './ChartsConstants';
-import {getArpaData} from './DataUtils';
 import {dateObjectCreator,minimalDate, timerPromise} from './Utils';
+import {getArduinoData, getArpaData} from './DataUtils';
+import {prepareToChart_arraySplitter} from './ChartsFunctionUtils';
 
 export async function getChartData(filter){
   var dataPromise = new Promise(function(resolve,reject){
@@ -12,9 +13,6 @@ export async function getChartData(filter){
           break;
         case 'Humidity':
           toReturn = generalGet('weather',filter);
-          break;
-        case 'CO2':
-          toReturn = testDataSet;
           break;
         case 'PM10':
           toReturn = generalGet('air',filter);
@@ -39,19 +37,25 @@ export async function getChartData(filter){
 // Get weather data from ARPA dataset
 async function generalGet(arpaType,filter){
 
-  var generalPromise = new Promise(function(resolve,reject){
+  var generalPromise = new Promise(async function(resolve,reject){
+    // Getting arduino data
+    var arduino = await getArduinoData(arpaType,filter);
     // Getting arpa data
-    resolve(getArpaData(arpaType,filter));
+    var arpa = [];
+    if(filter.arpaEnabled)
+      arpa = await getArpaData(arpaType,filter);
+
+    resolve([arduino,arpa]);
   });
 
   var result = await generalPromise;
 
   //Setting data for the graph
-  return prepareToChart(null,result);
+  return prepareToChart(result[0],result[1],filter);
 }
 
 // Preparing the chart object of data
-function prepareToChart(arduino,arpa){
+function prepareToChart(arduino,arpa,filter){
   // Starting object empty
   var chart = {
     labels: [],
@@ -65,12 +69,71 @@ function prepareToChart(arduino,arpa){
     }],
   };
 
-  // Picking up Arpa data
-  arpa.forEach((item, i) => {
-    chart.labels.push(minimalDate(dateObjectCreator(new Date(item.data))));
-    chart.datasets[0].data.push(0);
-    chart.datasets[1].data.push(parseInt(item.valore));
+  // Some array to arrange data before creating the
+  // dataset for the chart
+  var arduino_arranged = [];
+  var arpa_arranged = [];
+
+  // Arranging arduino data
+  arduino.forEach((item, i) => {
+    // New object
+    var obj = {
+      date: null,
+      value: 0
+    };
+    // Getting data
+    obj.date = new Date(item.timestamp);
+    obj.value = parseFloat(item[filter.pinnedMeasure.toLowerCase()]);
+    // Pushing in the array
+    arduino_arranged.push(obj);
   });
+
+  arpa.forEach((item, i) => {
+    // New object
+    var obj = {
+      date: null,
+      value: 0
+    };
+    // Getting data
+    obj.date = new Date(item.data);
+    obj.value = parseFloat(item.valore);
+    // Pushing in the array
+    arpa_arranged.push(obj);
+  });
+
+  // Checking the size of the arduino data array
+  if(arduino_arranged.length != 0){
+    // Checking if the arpa data are available
+    if(filter.arpaEnabled && arpa_arranged.length != 0) {
+      // Putting arpa value in the graph
+      prepareToChart_arraySplitter(arduino_arranged,arpa_arranged,
+        chart.datasets[0].data, chart.datasets[1].data, chart.labels);
+    } else {
+      // Putting a value to chart library problem error
+      chart.datasets[1].data.push(0);
+
+      // Putting arduino data
+      arduino_arranged.forEach((item, i) => {
+        chart.labels.push(minimalDate(dateObjectCreator(item.date)));
+        chart.datasets[0].data.push(item.value);
+      });
+    }
+  } else {
+    // Putting a value to chart library problem error
+    chart.datasets[0].data.push(0);
+
+    // Checking if the arpa data are available
+    if(filter.arpaEnabled && arpa_arranged.length != 0) {
+      // Putting arpa value in the graph
+      arpa_arranged.forEach((item, i) => {
+        chart.labels.push(minimalDate(dateObjectCreator(item.date)));
+        chart.datasets[1].data.push(item.value);
+      });
+    } else {
+      // Putting a value to chart library problem error
+      chart.datasets[1].data.push(0);
+    }
+  }
 
   // Deleting some labels to better view
   chart.labels.forEach((item, i) => {

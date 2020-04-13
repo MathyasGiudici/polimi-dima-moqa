@@ -19,7 +19,7 @@ function magic(a, b, a_values, b_values, labels){
         if( b_ix >= 1)
           b_values.push( (b[b_ix-1]+b[b_ix]) /2 );
         else
-          b_values.push(b[b_ix]);
+          b_values.push('-');
 
         a_ix ++;
 
@@ -31,7 +31,7 @@ function magic(a, b, a_values, b_values, labels){
           if( a_ix >= 1)
             a_values.push( (a[a_ix-1]+a[a_ix]) /2 );
           else
-            a_values.push(a[a_ix]);
+            a_values.push('-');
 
           b_ix ++;
 
@@ -50,7 +50,7 @@ function magic(a, b, a_values, b_values, labels){
         labels.push(a[a_ix]);
         a_ix ++;
 
-        b_values.push(b[b.length - 1]);
+        b_values.push('-');
       }
 
       if(b_ix < b.length){
@@ -58,7 +58,7 @@ function magic(a, b, a_values, b_values, labels){
         labels.push(b[b_ix]);
         b_ix ++;
 
-        a_values.push(a[a.length - 1]);
+        a_values.push('-');
       }
     }
   }

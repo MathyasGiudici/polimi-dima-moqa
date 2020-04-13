@@ -119,9 +119,7 @@ async function dataFilter(url,station,startDate,endDate){
   var data = await promise;
 
   if(data == "End Race" || data == "Connection problems"){
-    return [ { idsensore: sensor,
-              data:"1970-01-01T00:00:00.000",
-              valore: "0"} ];
+    return [];
   }
 
   // Preparing the returning array
@@ -199,6 +197,14 @@ async function getArduinoData(arpaType,filter){
   });
 
   var result = await promise;
+
+  result.sort(function(a, b){
+    var a_date = new Date(a.timestamp);
+    var b_date = new Date(b.timestamp);
+    if(a_date.getTime() < b_date.getTime()) { return -1; }
+    if(a_date.getTime() > b_date.getTime()) { return 1; }
+    return 0;
+  });
 
   return result;
 }
