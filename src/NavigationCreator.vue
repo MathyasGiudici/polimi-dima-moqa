@@ -192,7 +192,7 @@ import {loadData} from './utils/DataUtils';
 export default {
   components: { AppNavigator },
   beforeCreate: async function(){
-    let loadingPromise = new Promise(async function(resolve,reject){
+    var loadingPromise = new Promise(async function(resolve,reject){
         // Loading past state from AsyncStorage
         await store.commit("RESTORE");
         // Loading ARPA data from remote
@@ -202,7 +202,7 @@ export default {
     });
 
     // Awaiting loading promise
-    let result = await loadingPromise;
+    var result = await loadingPromise;
   }
 }
 </script>

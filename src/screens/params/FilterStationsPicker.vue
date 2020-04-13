@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     loader: function(){
-      let stations = [];
+      var stations = [];
 
       switch (this.navigation.state.params.pinnedMeasure) {
         case 'Temperature':
@@ -104,7 +104,7 @@ export default {
       this.pinned = index;
 
       // Finding the index in the array
-      for(let i=0; i < this.stations_blob.length; i++ ){
+      for(var i=0; i < this.stations_blob.length; i++ ){
         if (this.stations_blob[i].properties.idsensore == this.stations[index].properties.idsensore)
           this.navigation.state.params.onGoBack(i);
       }

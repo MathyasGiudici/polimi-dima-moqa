@@ -1,12 +1,13 @@
 // Needed scripts
 import store from '../store';
+import {dateToTimeStamp} from './Utils';
 import {getHandler} from './Network';
 import {getData, getDataFiltered} from './Network4Server';
 
 // Function to load the data of weather and air quality
 async function loadData(){
 
-  let weatherPromise = new Promise(async function(resolve, reject){
+  var weatherPromise = new Promise(async function(resolve, reject){
     if(store.state.blob.arpa_weatherStations == null){
       getHandler(store.state.settings.arpa.weather.stationsUrl,'', 'json').then((value) => {
         // Exploit result
@@ -26,7 +27,7 @@ async function loadData(){
     }
   });
 
-  let airPromise = new Promise(function(resolve, reject){
+  var airPromise = new Promise(function(resolve, reject){
     if(store.state.blob.arpa_airStations == null){
       getHandler(store.state.settings.arpa.air.stationsUrl,'', 'json').then((value) => {
         // Exploit result
@@ -89,8 +90,6 @@ function stationsFilter(stations,targets){
       toReturn.push(stations[item]);
   });
 
-  // console.log("stations size",toReturn.length);
-  // console.log("stations",toReturn);
   return toReturn;
 }
 
@@ -100,7 +99,7 @@ async function dataFilter(url,station,startDate,endDate){
   var sensor = station.properties.idsensore;
 
   // Getting the data
-  let promise =  new Promise(function(resolve, reject) {
+  var promise =  new Promise(function(resolve, reject) {
     var data = [];
     getHandler(url+'?idsensore='+sensor,'', 'json').then((value) => {
       // Exploit result
@@ -119,7 +118,7 @@ async function dataFilter(url,station,startDate,endDate){
   // Awaiting the promise
   var data = await promise;
 
-  if(data.length == 0){
+  if(data == "End Race" || data == "Connection problems"){
     return [ { idsensore: sensor,
               data:"1970-01-01T00:00:00.000",
               valore: "0"} ];
@@ -128,11 +127,11 @@ async function dataFilter(url,station,startDate,endDate){
   // Preparing the returning array
   var toReturn = [];
 
+  var start = new Date(startDate.date);
+  var end = new Date(endDate.date);
   // Looping on data to applay the filter
   data.forEach((item,i) => {
     // Checking validity of the datum and the date
-    var start = new Date(startDate.date);
-    var end = new Date(endDate.date);
     var current = new Date(item.data);
     if((item.stato == 'VA') && (start.getTime() <= current.getTime()) && (current.getTime() <= end.getTime())) {
         toReturn.push(item);
@@ -141,8 +140,8 @@ async function dataFilter(url,station,startDate,endDate){
 
   // Auto sort by Date
   toReturn.sort(function(a, b){
-    let a_date = new Date(a.data);
-    let b_date = new Date(b.data);
+    var a_date = new Date(a.data);
+    var b_date = new Date(b.data);
     if(a_date.getTime() < b_date.getTime()) { return -1; }
     if(a_date.getTime() > b_date.getTime()) { return 1; }
     return 0;
@@ -157,12 +156,12 @@ async function dataFilter(url,station,startDate,endDate){
 // @param: filter used to select data
 async function getArpaData(arpaType,filter){
 
-  let generalPromise = new Promise(async function(resolve,reject){
+  var generalPromise = new Promise(async function(resolve,reject){
     if(store.state.blob['arpa_' + arpaType + 'Stations'] == null){
       await loadData();
     }
     // Getting pinned station
-    let ret = await store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation];
+    var ret = await store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation];
     resolve(ret);
   })
   .then((result)=>{
@@ -170,20 +169,21 @@ async function getArpaData(arpaType,filter){
       console.log('Something is not working');
     // Getting relative data
     return new Promise(async function(resolve,reject){
-      let data = await dataFilter(store.state.settings.arpa[arpaType].dataUrl, result,
+      var data = await dataFilter(store.state.settings.arpa[arpaType].dataUrl, result,
         filter.startDate, filter.endDate);
       resolve(data);
     });
   });
 
-  let data = await generalPromise;
+  var data = await generalPromise;
   return data;
 }
 
 async function getArduinoData(arpaType,filter){
   // Getting the data
-  let promise =  new Promise(function(resolve, reject) {
+  var promise =  new Promise(function(resolve, reject) {
     var data = [];
+    // getDataFiltered(dateToTimeStamp(filter.startDate.date),dateToTimeStamp(filter.endDate.date)).then((value) => {
     getData("","").then((value) => {
       // Exploit result
       switch (value) {
@@ -198,7 +198,7 @@ async function getArduinoData(arpaType,filter){
     });
   });
 
-  let result = await promise;
+  var result = await promise;
 
   return result;
 }

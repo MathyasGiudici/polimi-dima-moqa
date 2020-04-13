@@ -103,7 +103,7 @@ export default {
       // Updating the value
       this[target] = dateObjectCreator(date);
       // Checking consistency
-      let result = this.checkDateConsistency();
+      var result = this.checkDateConsistency();
 
       if(result){
           this.saveFilter();

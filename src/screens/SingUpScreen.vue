@@ -121,11 +121,11 @@ export default {
       this.user[key] = value;
     },
     showDate: function(){
-      let array = this.birthDay_obj.string.split(" ");
+      var array = this.birthDay_obj.string.split(" ");
       return array[0] + " " + array[1] + " " + array[2];
     },
     setDate: function(event,date){
-      let result = this.checkDateConsistency(date);
+      var result = this.checkDateConsistency(date);
       if(result){
           this.birthDay_obj = dateObjectCreator(date);
       } else{

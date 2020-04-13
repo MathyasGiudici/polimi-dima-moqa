@@ -4,8 +4,8 @@ import {getArpaData} from './DataUtils';
 import {dateObjectCreator,minimalDate, timerPromise} from './Utils';
 
 export async function getChartData(filter){
-  let dataPromise = new Promise(function(resolve,reject){
-      let toReturn = testDataSet;
+  var dataPromise = new Promise(function(resolve,reject){
+      var toReturn = testDataSet;
       switch (filter.pinnedMeasure) {
         case 'Temperature':
           toReturn = generalGet('weather',filter);
@@ -26,7 +26,7 @@ export async function getChartData(filter){
       resolve(toReturn);
     });
 
-  let chartData = Promise.race([timerPromise(), dataPromise]);
+  var chartData = Promise.race([timerPromise(), dataPromise]);
 
   if(chartData == 'End Race') {
     return testDataSet;
@@ -39,12 +39,12 @@ export async function getChartData(filter){
 // Get weather data from ARPA dataset
 async function generalGet(arpaType,filter){
 
-  let generalPromise = new Promise(function(resolve,reject){
+  var generalPromise = new Promise(function(resolve,reject){
     // Getting arpa data
     resolve(getArpaData(arpaType,filter));
   });
 
-  let result = await generalPromise;
+  var result = await generalPromise;
 
   //Setting data for the graph
   return prepareToChart(null,result);

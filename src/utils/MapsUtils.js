@@ -6,8 +6,8 @@ import {getArduinoData, getArpaData} from './DataUtils';
 //["Temperature", "Humidity", "Pressure", "Altitude", "TVOCs", "eCO2", "PM0.5", "PM1", "PM2.5", "PM4", "PM10"]
 
 export async function getMapData(filter){
-  let dataPromise = new Promise(function(resolve,reject){
-      let toReturn = { arduino: [], arpa: [],};
+  var dataPromise = new Promise(function(resolve,reject){
+      var toReturn = { arduino: [], arpa: [],};
       switch (filter.pinnedMeasure) {
         case 'Temperature':
           toReturn = generalGet('weather',filter);
@@ -25,7 +25,7 @@ export async function getMapData(filter){
       resolve(toReturn);
     });
 
-  let data = Promise.race([timerPromise(), dataPromise]);
+  var data = await Promise.race([timerPromise(), dataPromise]);
 
   if(data == 'End Race') {
     return [];
@@ -38,20 +38,18 @@ export async function getMapData(filter){
 // Get weather data from ARPA dataset
 async function generalGet(arpaType,filter){
 
-  let generalPromise = new Promise(async function(resolve,reject){
+  var generalPromise = new Promise(async function(resolve,reject){
     // Getting arduino data
-    let arduino = await getArduinoData(arpaType,filter);
+    var arduino = await getArduinoData(arpaType,filter);
     // Getting arpa data
-    let arpa = [];
+    var arpa = [];
     if(filter.arpaEnabled)
       arpa = await getArpaData(arpaType,filter);
 
     resolve([arduino,arpa]);
   });
 
-  let result = await generalPromise;
-
-  console.log(result);
+  var result = await generalPromise;
 
   //Setting data for the graph
   return prepareToMap(result[0],result[1],arpaType,filter);
@@ -68,13 +66,13 @@ async function prepareToMap(arduinoData,arpaData,arpaType,filter){
   // Checking if
   if(filter.arpaEnabled) {
     // Starting searching the station
-    let generalPromise = new Promise(async function(resolve,reject){
+    var generalPromise = new Promise(async function(resolve,reject){
       // Getting pinned station
-      let ret = await store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation];
+      var ret = await store.state.blob['arpa_' + arpaType + 'Stations'][filter.pinnedStation];
       resolve(ret);
     });
 
-    let station = await generalPromise;
+    var station = await generalPromise;
 
     // Populating arpa array with stations
     arpaData.forEach((item, i) => {
@@ -102,12 +100,12 @@ async function prepareToMap(arduinoData,arpaData,arpaType,filter){
 
 // Creating correct radius for the circle
 function adjustValue(string){
-  let len = string.length;
-  let toAdd = 3 - len;
-  let stringAlpha = "1";
+  var len = string.length;
+  var toAdd = 3 - len;
+  var stringAlpha = "1";
 
   if(toAdd > 0){
-    for(let i=0; i < toAdd; i++)
+    for(var i=0; i < toAdd; i++)
       stringAlpha.concat("0");
   }
 

@@ -57,12 +57,12 @@ export default {
     },
     refresh: async function(){
       // New chart data
-      let generalPromise = new Promise(async function(resolve,reject){
-        let result = await utils.getMapData(store.state.filter.maps);
+      var generalPromise = new Promise(async function(resolve,reject){
+        var result = await utils.getMapData(store.state.filter.maps);
         resolve(result);
       });
 
-      let returnedObject = await generalPromise;
+      var returnedObject = await generalPromise;
 
       // Data for the map
       this.arduinoData = returnedObject.arduino;

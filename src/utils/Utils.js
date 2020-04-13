@@ -19,10 +19,19 @@ function dateObjectCreator(date){
 };
 
 function minimalDate(date){
-  let d = date.date;
+  var d = date.date;
   var toRet = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() +
     " " + ("0" + d.getHours()).slice(-2)  + ":" + ("0" + d.getMinutes()).slice(-2) ;
   return toRet;
 }
 
-export {dateObjectCreator, minimalDate, timerPromise}
+function dateToTimeStamp(date){
+  var string = date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2)
+  + '-' + ("0" + date.getDate()).slice(-2) + 'T';
+  // Fixing a given hour
+  string += ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
+  + ":00Z";
+  return string;
+}
+
+export {dateObjectCreator, minimalDate, dateToTimeStamp, timerPromise}

@@ -156,7 +156,7 @@ export default {
         }
       } else {
         // Trying first time with the board
-        let result = await this.fetchData();
+        var result = await this.fetchData();
 
         // Checking if the board is connected
         if(result == 1)
@@ -192,7 +192,7 @@ export default {
     },
     updateValues: function(response){
       // Splitting response
-      let array = response.split(';');
+      var array = response.split(';');
       // Creating data object keys
       var keys = Object.keys(this.data);
 
