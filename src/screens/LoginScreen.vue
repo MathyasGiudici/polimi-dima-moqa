@@ -137,6 +137,7 @@ export default {
   borderBottomWidth: .3;
   borderBottomColor: lightgrey;
   width: 80%;
+  max-width: 450px;
   font-size: 20;
   text-align: center;
 }
@@ -149,6 +150,7 @@ export default {
   border-radius: 15;
   height: 60;
   width: 50%;
+  max-width: 350px;
   align-items: center;
   justify-content: center;
 }

@@ -99,7 +99,7 @@ export default {
       };
   },
   beforeMount: async function(){
-    //this.refresh();
+    this.refresh();
   },
   methods: {
     showDetails: function(){
