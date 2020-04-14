@@ -120,7 +120,7 @@ export default {
       // Header of quartiles table
       this.tableMeasure = store.state.filter.charts.pinnedMeasure;
 
-      var targetMeasure = units[measures.indexOf(store.state.filter.charts.pinnedMeasure)];
+      var targetMeasure = " " + units[measures.indexOf(store.state.filter.charts.pinnedMeasure)];
 
       // Data of quartiles table
       // Arduino

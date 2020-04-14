@@ -1,14 +1,16 @@
 <template>
-  <map-view class="maps" :initial-region="initialCoordinates" >
-    <!-- Arduino data -->
-    <Circle v-for="circle in arduinoData" :center="circle.center" :radius="circle.radius"
-      fillColor="rgba(0, 0, 255, .5)" strokeColor="rgba(0,0,0,.2)"
-      zIndex="2" strokeWidth="2"/>
+  <view class="container">
+    <map-view class="maps" :initial-region="initialCoordinates" >
+      <!-- Arduino data -->
+      <Circle v-for="circle in arduinoData" :center="circle.center" :radius="circle.radius"
+        fillColor="rgba(0, 0, 255, .5)" strokeColor="rgba(0,0,0,.2)"
+        zIndex="2" strokeWidth="2"/>
 
-    <!-- Arpa data -->
-    <Circle v-for="circle in arpaData" :center="circle.center" :radius="circle.radius"
-      fillColor="rgba(255, 0, 0, .5)" strokeColor="rgba(0,0,0,.2)"
-      zIndex="2" strokeWidth="2"/>
+      <!-- Arpa data -->
+      <Circle v-for="circle in arpaData" :center="circle.center" :radius="circle.radius"
+        fillColor="rgba(255, 0, 0, .5)" strokeColor="rgba(0,0,0,.2)"
+        zIndex="2" strokeWidth="2"/>
+    </map-view>
 
     <!-- Filter Button -->
     <view class="buttonContainer">
@@ -17,7 +19,7 @@
         <text class="buttonText">Filter</text>
       </touchable-opacity>
     </view>
-  </map-view>
+  </view>
 </template>
 
 <script>
@@ -83,9 +85,10 @@ export default {
 }
 
 .buttonContainer{
+  margin: 5;
   flex-direction: row;
-  margin-vertical: 20;
   background-color: transparent;
+  align-self: center;
 }
 
 .bubbleBotton{
