@@ -1,6 +1,6 @@
 // Date Generator
-var testDate = new Date('2020-03-11T00:00:00');
-var dayBefore = new Date('2020-03-10T00:00:00'); // Today!
+var testDate = new Date('2020-04-14T00:00:00');
+var dayBefore = new Date('2020-04-13T00:00:00'); // Today!
 
 import { dateObjectCreator } from '../utils/Utils';
 
@@ -9,18 +9,18 @@ export function getDefaultState() {
   return {
     filter: {
       maps: {
-        pinnedMeasure: "PM10",
+        pinnedMeasure: "Temperature",
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
-        pinnedStation: 114,
+        pinnedStation: 47,
       },
       charts: {
-        pinnedMeasure: "PM10",
+        pinnedMeasure: "Temperature",
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(testDate),
         arpaEnabled : true,
-        pinnedStation: 114,
+        pinnedStation: 47,
       }
     },
     settings: {

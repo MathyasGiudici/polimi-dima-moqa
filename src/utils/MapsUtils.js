@@ -10,16 +10,16 @@ export async function getMapData(filter){
       var toReturn = { arduino: [], arpa: [],};
       switch (filter.pinnedMeasure) {
         case 'Temperature':
-          toReturn = generalGet('weather',filter);
+          toReturn = generalGet(true,'weather',filter);
           break;
         case 'Humidity':
-          toReturn = generalGet('weather',filter);
+          toReturn = generalGet(true,'weather',filter);
           break;
         case 'PM10':
-          toReturn = generalGet('air',filter);
+          toReturn = generalGet(true,'air',filter);
           break;
         default:
-          toReturn = { arduino: [], arpa: [],};
+          toReturn = generalGet(false,'',filter);
       }
 
       resolve(toReturn);
@@ -36,14 +36,14 @@ export async function getMapData(filter){
 }
 
 // Get weather data from ARPA dataset
-async function generalGet(arpaType,filter){
+async function generalGet(arpaDataAvailable,arpaType,filter){
 
   var generalPromise = new Promise(async function(resolve,reject){
     // Getting arduino data
     var arduino = await getArduinoData(arpaType,filter);
     // Getting arpa data
     var arpa = [];
-    if(filter.arpaEnabled)
+    if(arpaDataAvailable && filter.arpaEnabled)
       arpa = await getArpaData(arpaType,filter);
 
     resolve([arduino,arpa]);
@@ -52,11 +52,11 @@ async function generalGet(arpaType,filter){
   var result = await generalPromise;
 
   //Setting data for the graph
-  return prepareToMap(result[0],result[1],arpaType,filter);
+  return prepareToMap(result[0],result[1],arpaDataAvailable, arpaType,filter);
 }
 
 // Preparing the chart object of data
-async function prepareToMap(arduinoData,arpaData,arpaType,filter){
+async function prepareToMap(arduinoData,arpaData,arpaDataAvailable,arpaType,filter){
   // Preparing return object
   var toReturn = {
     arduino: [],
@@ -64,7 +64,7 @@ async function prepareToMap(arduinoData,arpaData,arpaType,filter){
   };
 
   // Checking if
-  if(filter.arpaEnabled) {
+  if(arpaDataAvailable && filter.arpaEnabled) {
     // Starting searching the station
     var generalPromise = new Promise(async function(resolve,reject){
       // Getting pinned station
@@ -80,7 +80,7 @@ async function prepareToMap(arduinoData,arpaData,arpaType,filter){
         { latitude: station.properties.lat,
           longitude: station.properties.lng,
         },
-        radius: adjustValue(item.valore),
+        radius: adjustValue(filter.pinnedMeasure,item.valore),
       });
     });
   }
@@ -90,7 +90,7 @@ async function prepareToMap(arduinoData,arpaData,arpaType,filter){
       { latitude: item.latitude,
         longitude: item.longitude,
       },
-      radius: adjustValue(item[filter.pinnedMeasure.toLowerCase()]),
+      radius: adjustValue(filter.pinnedMeasure,item[filter.pinnedMeasure.replace(".","").toLowerCase()]),
     });
   });
 
@@ -98,16 +98,19 @@ async function prepareToMap(arduinoData,arpaData,arpaType,filter){
   return toReturn;
 }
 
+
+const measures = ["Temperature", "Humidity", "Pressure", "Altitude", "TVOCs", "eCO2", "PM0.5", "PM1", "PM2.5", "PM4", "PM10"];
+const max_v_mea = [   50,           100,       10000,       2000,     1187,    8192,    .5,      1,     2.5,     4,      10 ];
+const min_v_mea = [  -25,             0,       90000,          0,        0,     400,    .3,     .3,      .3,    .3,      .3 ];
+
 // Creating correct radius for the circle
-function adjustValue(string){
-  var len = string.length;
-  var toAdd = 3 - len;
-  var stringAlpha = "1";
+function adjustValue(pinned, string){
+  // Checking if there are some issue with the data
+  if(string == null || string == undefined)
+    return 0;
 
-  if(toAdd > 0){
-    for(var i=0; i < toAdd; i++)
-      stringAlpha.concat("0");
-  }
+  var value = (parseFloat(string) - min_v_mea[measures.indexOf(pinned)])
+    /(max_v_mea[measures.indexOf(pinned)] - min_v_mea[measures.indexOf(pinned)]);
 
-  return parseInt(string)*parseInt(stringAlpha)/2;
+  return Math.abs(value) * 10;
 }

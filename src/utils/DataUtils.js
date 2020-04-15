@@ -182,7 +182,8 @@ async function getArduinoData(arpaType,filter){
   var promise =  new Promise(function(resolve, reject) {
     var data = [];
     // getDataFiltered(dateToTimeStamp(filter.startDate.date),dateToTimeStamp(filter.endDate.date)).then((value) => {
-    getData("","").then((value) => {
+    //getData("","").then((value) => {
+    getDataFiltered("2020-04-15T00:00:00.000Z","2020-04-16T00:00:00.000Z").then((value) => {
       // Exploit result
       switch (value) {
         case 'End Race':

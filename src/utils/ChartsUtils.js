@@ -9,16 +9,16 @@ export async function getChartData(filter){
       var toReturn = testDataSet;
       switch (filter.pinnedMeasure) {
         case 'Temperature':
-          toReturn = generalGet('weather',filter);
+          toReturn = generalGet(true,'weather',filter);
           break;
         case 'Humidity':
-          toReturn = generalGet('weather',filter);
+          toReturn = generalGet(true,'weather',filter);
           break;
         case 'PM10':
-          toReturn = generalGet('air',filter);
+          toReturn = generalGet(true,'air',filter);
           break;
         default:
-          toReturn = testDataSet;
+          toReturn = generalGet(false,'',filter);
       }
 
       resolve(toReturn);
@@ -35,14 +35,14 @@ export async function getChartData(filter){
 }
 
 // Get weather data from ARPA dataset
-async function generalGet(arpaType,filter){
+async function generalGet(arpaDataAvailable,arpaType,filter){
 
   var generalPromise = new Promise(async function(resolve,reject){
     // Getting arduino data
     var arduino = await getArduinoData(arpaType,filter);
     // Getting arpa data
     var arpa = [];
-    if(filter.arpaEnabled)
+    if(arpaDataAvailable && filter.arpaEnabled)
       arpa = await getArpaData(arpaType,filter);
 
     resolve([arduino,arpa]);
@@ -51,11 +51,11 @@ async function generalGet(arpaType,filter){
   var result = await generalPromise;
 
   //Setting data for the graph
-  return prepareToChart(result[0],result[1],filter);
+  return prepareToChart(result[0],result[1],arpaDataAvailable,filter);
 }
 
 // Preparing the chart object of data
-function prepareToChart(arduino,arpa,filter){
+function prepareToChart(arduino,arpa,arpaDataAvailable,filter){
   // Starting object empty
   var chart = {
     labels: [],
@@ -83,7 +83,7 @@ function prepareToChart(arduino,arpa,filter){
     };
     // Getting data
     obj.date = new Date(item.timestamp);
-    obj.value = parseFloat(item[filter.pinnedMeasure.toLowerCase()]);
+    obj.value = parseFloat(item[filter.pinnedMeasure.replace(".","").toLowerCase()]);
     // Pushing in the array
     arduino_arranged.push(obj);
   });
@@ -104,7 +104,7 @@ function prepareToChart(arduino,arpa,filter){
   // Checking the size of the arduino data array
   if(arduino_arranged.length != 0){
     // Checking if the arpa data are available
-    if(filter.arpaEnabled && arpa_arranged.length != 0) {
+    if(arpaDataAvailable && filter.arpaEnabled && arpa_arranged.length != 0) {
       // Putting arpa value in the graph
       prepareToChart_arraySplitter(arduino_arranged,arpa_arranged,
         chart.datasets[0].data, chart.datasets[1].data, chart.labels);
@@ -123,7 +123,7 @@ function prepareToChart(arduino,arpa,filter){
     chart.datasets[0].data.push(0);
 
     // Checking if the arpa data are available
-    if(filter.arpaEnabled && arpa_arranged.length != 0) {
+    if(arpaDataAvailable && filter.arpaEnabled && arpa_arranged.length != 0) {
       // Putting arpa value in the graph
       arpa_arranged.forEach((item, i) => {
         chart.labels.push(minimalDate(dateObjectCreator(item.date)));
@@ -144,12 +144,12 @@ function prepareToChart(arduino,arpa,filter){
 
   // Adding percentile for the response
   var toRet = [chart];
-  toRet = toRet.concat(prepareToPercentile(chart));
+  toRet = toRet.concat(prepareToPercentile(arpaDataAvailable,chart));
   return toRet;
 }
 
 // Deviation computation
-function prepareToPercentile(chartData){
+function prepareToPercentile(arpaDataAvailable,chartData){
   var arduino = [];
   var arpa = [];
 
@@ -170,8 +170,17 @@ function prepareToPercentile(chartData){
   var arduinoRet = [ arduino[Math.round((0.25 * arduino.length)-1) < 0 ? 0 : Math.round((0.25 * arduino.length)-1)],    // First quartile
                      arduino[Math.round((0.5 * arduino.length)-1)],     // Second quartile
                      arduino[Math.round((0.75 * arduino.length)-1)], ]; // Third quartile
-  var arpaRet = [ arpa[Math.round((0.25 * arpa.length)-1) < 0 ? 0 : Math.round((0.25 * arpa.length)-1)],    // First quartile
-                  arpa[Math.round((0.5 * arpa.length)-1)],     // Second quartile
-                  arpa[Math.round((0.75 * arpa.length)-1)], ]; // Third quartile
+
+  var arpaRet;
+  if(arpaDataAvailable){
+    arpaRet = [ arpa[Math.round((0.25 * arpa.length)-1) < 0 ? 0 : Math.round((0.25 * arpa.length)-1)],    // First quartile
+                arpa[Math.round((0.5 * arpa.length)-1)],     // Second quartile
+                arpa[Math.round((0.75 * arpa.length)-1)], ]; // Third quartile
+  } else{
+    arpaRet = [ '-',  // First quartile
+                '-', // Second quartile
+                '-', ]; // Third quartile
+  }
+
   return [arduinoRet, arpaRet];
 }

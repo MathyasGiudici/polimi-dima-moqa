@@ -71,9 +71,6 @@ export default {
           });
           this.stations_blob = store.state.blob.arpa_weatherStations;
           break;
-        case 'CO2':
-
-          break;
         case 'PM10':
           // Getting weather or air stations
           stations = stationsFilter(store.state.blob.arpa_airStations,store.state.settings.arpa.air.pinnedStations);
@@ -86,6 +83,7 @@ export default {
           break;
         default:
          this.stations_blob = [];
+         this.navigation.state.params.onGoBack(0);
       }
 
       if(this.navigation.state.params.pinnedStation == -1){
