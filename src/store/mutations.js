@@ -20,6 +20,10 @@ export function REPLACE(state, obj){
   });
 }
 
+export function changeTrackVisualization(state,value){
+  state.arduino.trackVisualization = value;
+}
+
 // STATE "REAL" MUTATIONS
 export function changeFilterParameters(state, {targetFilter, newParameters}){
   state.filter[targetFilter].pinnedMeasure = newParameters.pinnedMeasure;
@@ -66,4 +70,12 @@ export function clearUserData(state){
 
 export function blobMutation(state, {key, value}){
   state.blob[key] = value;
+}
+
+export function blobArduinoDataClear(state){
+  state.blob.arduinoData = [];
+}
+
+export function blobArduinoDataAdd(state, object){
+  state.blob.arduinoData.push(object);
 }

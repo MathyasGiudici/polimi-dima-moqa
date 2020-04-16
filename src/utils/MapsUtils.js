@@ -1,6 +1,6 @@
 // Needed scripts
 import store from '../store';
-import {timerPromise} from './Utils';
+import {timerPromise, dateObjectCreator} from './Utils';
 import {getArduinoData, getArpaData} from './DataUtils';
 
 //["Temperature", "Humidity", "Pressure", "Altitude", "TVOCs", "eCO2", "PM0.5", "PM1", "PM2.5", "PM4", "PM10"]
@@ -37,10 +37,28 @@ export async function getMapData(filter){
 
 // Get weather data from ARPA dataset
 async function generalGet(arpaDataAvailable,arpaType,filter){
+  // Creating a new filter to manage problem with live tracking
+  var localFilter = JSON.parse(JSON.stringify(filter));
+
+  // Changing automatically parametrrs to track live parameters
+  if(store.state.arduino.trackVisualization){
+    var midnight = new Date();
+    midnight.setHours(0,0,0);
+    localFilter.startDate = dateObjectCreator(midnight);
+    localFilter.endDate = dateObjectCreator(new Date());
+  }
 
   var generalPromise = new Promise(async function(resolve,reject){
     // Getting arduino data
-    var arduino = await getArduinoData(arpaType,filter);
+    var arduino;
+
+    // Mananging correct retrieve of live data
+    if(store.state.arduino.trackVisualization){
+      arduino = await store.state.blob.arduinoData;
+    } else {
+      arduino = await getArduinoData(arpaType,filter);
+    }
+
     // Getting arpa data
     var arpa = [];
     if(arpaDataAvailable && filter.arpaEnabled)
@@ -93,7 +111,6 @@ async function prepareToMap(arduinoData,arpaData,arpaDataAvailable,arpaType,filt
       radius: adjustValue(filter.pinnedMeasure,item[filter.pinnedMeasure.replace(".","").toLowerCase()]),
     });
   });
-
 
   return toReturn;
 }

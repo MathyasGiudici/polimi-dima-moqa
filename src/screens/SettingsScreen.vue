@@ -87,7 +87,7 @@ export default{
           surname: store.state.user.lastName,
           email: store.state.user.email
         },
-        testButtonVisible: true,
+        testButtonVisible: false,
     };
   },
   methods:{
@@ -120,7 +120,8 @@ export default{
       alert("Initial state restored");
     },
     test: function () {
-      console.log(store.state.blob.arduinoGetterRoutine);
+      console.log(store.state.arduino.trackVisualization);
+      console.log(store.state.blob.arduinoData);
     }
   }
 }

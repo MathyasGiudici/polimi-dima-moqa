@@ -7,6 +7,9 @@ import { dateObjectCreator } from '../utils/Utils';
 // Default state object
 export function getDefaultState() {
   return {
+    arduino: {
+      trackVisualization: false,
+    },
     filter: {
       maps: {
         pinnedMeasure: "Temperature",
@@ -59,7 +62,7 @@ export function getDefaultState() {
       birthDay: ''
     },
     blob : {
-      arduinoData: null,
+      arduinoData: [],
       arpa_weatherStations: null,
       arpa_airStations: null,
       arduinoGetterRoutine: null,

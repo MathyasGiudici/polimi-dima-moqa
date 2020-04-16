@@ -246,7 +246,6 @@ export default {
       this.saveParameters('');
     },
     sendNewPassword: function(){
-      console.log(this.new_password,this.confirm_password)
       // Hide button
       this.changingPassword = false;
 

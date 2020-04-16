@@ -13,7 +13,7 @@
     <view class="paddingElement"></view>
 
     <!-- Start Date Picker -->
-    <touchable-opacity class="listElement" :on-press="()=>{isStartDateVisible=!isStartDateVisible;}">
+    <touchable-opacity class="listElement" :on-press="()=>{isStartDateVisible=!isStartDateVisible;}" v-if="!trackVisualization">
       <text class="textListTitleElement">Starting Date</text>
       <text class="textListElement">{{startDate.string}}</text>
     </touchable-opacity>
@@ -22,13 +22,18 @@
             :onChange="setStartDate" locale="gb-GB" />
     </view>
     <!-- End Date Picker -->
-    <touchable-opacity class="listElement" :on-press="()=>{isEndDateVisible=!isEndDateVisible;}">
+    <touchable-opacity class="listElement" :on-press="()=>{isEndDateVisible=!isEndDateVisible;}" v-if="!trackVisualization">
       <text class="textListTitleElement">End Date</text>
       <text class="textListElement">{{endDate.string}}</text>
     </touchable-opacity>
     <view class="subComponent" v-if="isEndDateVisible">
       <DateTimePicker :value="endDate.date" mode="datetime" display="default"
             :onChange="setEndDate" locale="gb-GB"/>
+    </view>
+
+    <!-- Warning -->
+    <view class="warning" v-if="trackVisualization">
+      <text class="textWarning">Starting Date and End Date are not available because you select to keep track of the data from the board</text>
     </view>
 
     <!-- ARPA toggle -->
@@ -69,6 +74,7 @@ export default {
   components: { Icon, DateTimePicker },
   data: function(){
     return {
+      trackVisualization: store.state.arduino.trackVisualization,
       //Parameters related to measures
       pinnedMeasure: store.state.filter[this.navigation.state.params.option].pinnedMeasure,
       // Parameters related to date pickers
@@ -196,5 +202,26 @@ export default {
 }
 .subComponent{
   background-color: white;
+}
+.warning{
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: white;
+  borderStyle: solid;
+  borderTopWidth: .3;
+  borderTopColor: lightgrey;
+  borderBottomWidth: .3;
+  borderBottomColor: lightgrey;
+  padding-top: 20;
+  padding-bottom: 20;
+  padding-left: 5;
+  padding-right: 5;
+}
+.textWarning{
+  padding-left: 5;
+  padding-right: 5;
+  font-size: 17;
+  text-align: left;
 }
 </style>

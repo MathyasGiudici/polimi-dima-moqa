@@ -72,7 +72,7 @@
       <!-- Little space -->
       <view class="paddingElementSmall"></view>
       <!-- Download latest data -->
-      <touchable-opacity class="bubbleBotton" :on-press="fetchData" v-if="!isInAutoFetch">
+      <touchable-opacity class="bubbleBotton" :on-press="fetchDataHandler" v-if="!isInAutoFetch">
         <icon name="download" color="white" size="25" style="padding-right:3;"/>
         <text class="buttonText" style="padding-left:3;">Fetch data</text>
       </touchable-opacity>
@@ -90,6 +90,13 @@
         </view>
         <text class="toggle">auto-fetch data</text>
       </view>
+      <!-- Toggle -->
+      <view class="row">
+        <view class="toggle">
+          <switch :on-value-change = "trackVisualizationHanler" :value = "trackVisualization"/>
+        </view>
+        <text class="toggle">visualize current data</text>
+      </view>
 
     </scroll-view>
   </view>
@@ -100,6 +107,7 @@ import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import store from '../store';
+import {arduinoDataParser} from '../utils/Utils'
 import {getHandler} from '../utils/Network';
 import {sendData} from '../utils/Network4Server';
 
@@ -124,6 +132,7 @@ export default {
       },
       isRecording: false,
       isInAutoFetch: false,
+      trackVisualization: store.state.arduino.trackVisualization,
       autoFetchRoutine: null,
     };
   },
@@ -163,19 +172,26 @@ export default {
         if(result == 1)
           return;
 
+        // Cleaning the data in the local array
+        store.commit('blobArduinoDataClear');
+
         // Starting the routine to get the data
         this.autoFetchRoutine = setInterval(() => {
   	       this.fetchData();
          }, 1000);
       }
 
-      console.log(this.autoFetchRoutine);
-
       // Saving the reference
       store.commit('blobMutation', {key:'arduinoGetterRoutine', value: this.autoFetchRoutine });
 
       // Changing the toggle status
       this.isInAutoFetch = !this.isInAutoFetch;
+    },
+    fetchDataHandler: function(){
+      // Cleaning the data in the local array
+      store.commit('blobArduinoDataClear');
+      // Calling the fetch function
+      this.fetchData();
     },
     fetchData: async function(){
       return getHandler(store.state.settings.wifi.ip, store.state.settings.wifi.port, 'text').then((value) => {
@@ -198,24 +214,31 @@ export default {
       });
     },
     updateValues: function(response){
-      // Splitting response
-      var array = response.split(';');
+      // Onject
+      var sample = arduinoDataParser(response);
       // Creating data object keys
       var keys = Object.keys(this.data);
 
       // Looping on keys to update the values
       keys.forEach((item, i) => {
-        this.data[item] = array[i];
+        this.data[item] = sample[item];
       });
+
+      // If need add to local array
+      if(this.trackVisualization)
+        store.commit('blobArduinoDataAdd',sample);
 
       // If we have to send to the server
       if(this.isRecording)
         this.sendToServer(response);
     },
     sendToServer: function(arduinoString){
-      console.log(arduinoString)
       sendData(arduinoString);
     },
+    trackVisualizationHanler: function(){
+      this.trackVisualization = !this.trackVisualization;
+      store.commit('changeTrackVisualization',this.trackVisualization);
+    }
   }
 }
 
