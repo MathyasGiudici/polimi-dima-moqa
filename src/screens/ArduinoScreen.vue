@@ -153,6 +153,7 @@ export default {
           // Clearing the auto fetch routine routine
           clearInterval(this.autoFetchRoutine);
           this.autoFetchRoutine = null;
+          store.commit('blobMutation', {key:'arduinoGetterRoutine', value: null });
         }
       } else {
         // Trying first time with the board
@@ -167,6 +168,12 @@ export default {
   	       this.fetchData();
          }, 1000);
       }
+
+      console.log(this.autoFetchRoutine);
+
+      // Saving the reference
+      store.commit('blobMutation', {key:'arduinoGetterRoutine', value: this.autoFetchRoutine });
+
       // Changing the toggle status
       this.isInAutoFetch = !this.isInAutoFetch;
     },

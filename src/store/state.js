@@ -25,7 +25,7 @@ export function getDefaultState() {
     },
     settings: {
       wifi: {
-        ip: 'http://127.0.0.1',
+        ip: 'http://192.168.1.173',
         port: '3000'
       },
       server:{
@@ -62,6 +62,7 @@ export function getDefaultState() {
       arduinoData: null,
       arpa_weatherStations: null,
       arpa_airStations: null,
+      arduinoGetterRoutine: null,
     }
   };
 };

@@ -192,6 +192,12 @@ export default {
           return;
         }
 
+        // Checking if there is a data getter routine
+        if(store.state.blob.arduinoGetterRoutine != null){
+            clearInterval(store.state.blob.arduinoGetterRoutine);
+            store.commit('blobMutation', {key:'arduinoGetterRoutine', value: null });
+        }
+
         // Storing user information
         store.commit('changeUserData', { token: '' });
         // Persistence

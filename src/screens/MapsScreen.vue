@@ -18,6 +18,12 @@
         <icon name="filter-outline" color="white" size="25"/>
         <text class="buttonText">Filter</text>
       </touchable-opacity>
+      <touchable-opacity class="bubbleBotton-small" :on-press="refresh" v-if="!isLoading">
+        <icon name="refresh" color="white" size="25"/>
+      </touchable-opacity>
+      <view class="bubbleBotton-small" v-if="isLoading">
+        <activity-indicator size="small" color="white" />
+      </view>
     </view>
   </view>
 </template>
@@ -40,6 +46,7 @@ export default {
     },
     data: function() {
     return {
+      isLoading: false,
       arduinoData: [],
       arpaData: [],
       initialCoordinates: {
@@ -58,6 +65,7 @@ export default {
       this.navigation.navigate('FilterParametersScreen',{ option: 'maps', onGoBack: () => this.refresh(),});
     },
     refresh: async function(){
+      this.isLoading = true;
       // New chart data
       var generalPromise = new Promise(async function(resolve,reject){
         var result = await utils.getMapData(store.state.filter.maps);
@@ -69,6 +77,7 @@ export default {
       // Data for the map
       this.arduinoData = returnedObject.arduino;
       this.arpaData = returnedObject.arpa;
+      this.isLoading = false;
     }
   }
 };
@@ -94,6 +103,7 @@ export default {
 .bubbleBotton{
   flex-direction: row;
   background-color: rgba(0,122,255,1);
+  margin-horizontal: 5;
   padding-horizontal: 15;
   padding-vertical: 15;
   border-radius: 20;
@@ -102,6 +112,15 @@ export default {
   justify-content: center;
 }
 
+.bubbleBotton-small{
+  flex-direction: row;
+  background-color: rgba(0,122,255,1);
+  margin-horizontal: 5;
+  border-radius: 60;
+  width: 50;
+  align-items: center;
+  justify-content: center;
+}
 .buttonText{
   text-align: center;
   font-size: 20;

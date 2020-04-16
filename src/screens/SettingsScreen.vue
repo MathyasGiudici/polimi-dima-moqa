@@ -26,6 +26,14 @@
       <view class="listElement" >
         <button title="Reset Parameters" :on-press="resetParameters" />
       </view>
+
+      <!-- Space -->
+      <view class="paddingElement"></view>
+
+      <!-- Reset Button -->
+      <view class="listElement" v-if="testButtonVisible">
+        <button title="Test Button" :on-press="test" />
+      </view>
     </scroll-view>
 </template>
 
@@ -59,11 +67,11 @@ export default{
           route: 'GeneralParameters',
           prop:  'server'
         },
-        {
-          title: 'RTK Connection',
-          route: 'GeneralParameters',
-          prop:  'rtk'
-        },
+        // {
+        //   title: 'RTK Connection',
+        //   route: 'GeneralParameters',
+        //   prop:  'rtk'
+        // },
         {
           title: 'ARPA Weather Data Connection',
           route: 'ARPAParameters',
@@ -78,7 +86,8 @@ export default{
           name: store.state.user.firstName,
           surname: store.state.user.lastName,
           email: store.state.user.email
-        }
+        },
+        testButtonVisible: true,
     };
   },
   methods:{
@@ -99,10 +108,19 @@ export default{
       this.navigation.navigate(option.route,{ option: option });
     },
     resetParameters: function(){
+      // Checking if there is a data getter routine
+      if(store.state.blob.arduinoGetterRoutine != null){
+          clearInterval(store.state.blob.arduinoGetterRoutine);
+          store.commit('blobMutation', {key:'arduinoGetterRoutine', value: null });
+      }
+
       store.commit("DELETE");
       store.commit("REPLACE", getDefaultState());
       this.navigation.navigate('LoginScreen');
       alert("Initial state restored");
+    },
+    test: function () {
+      console.log(store.state.blob.arduinoGetterRoutine);
     }
   }
 }
