@@ -19,7 +19,7 @@
     </touchable-opacity>
     <view class="subComponent" v-if="isStartDateVisible">
       <DateTimePicker :value="startDate.date" mode="datetime" display="default"
-            :onChange="setStartDate" />
+            :onChange="setStartDate" locale="gb-GB" />
     </view>
     <!-- End Date Picker -->
     <touchable-opacity class="listElement" :on-press="()=>{isEndDateVisible=!isEndDateVisible;}">
@@ -28,7 +28,7 @@
     </touchable-opacity>
     <view class="subComponent" v-if="isEndDateVisible">
       <DateTimePicker :value="endDate.date" mode="datetime" display="default"
-            :onChange="setEndDate" />
+            :onChange="setEndDate" locale="gb-GB"/>
     </view>
 
     <!-- ARPA toggle -->

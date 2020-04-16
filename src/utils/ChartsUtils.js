@@ -137,7 +137,7 @@ function prepareToChart(arduino,arpa,arpaDataAvailable,filter){
 
   // Deleting some labels to better view
   chart.labels.forEach((item, i) => {
-    if( (i != 0) && (i != (chart.labels.length - 1)) && (i != Math.round((chart.labels.length - 1)/2)) ){
+    if( (i != 0) && (i != Math.round((chart.labels.length - 1)*.85)) ){//&& (i != Math.round((chart.labels.length - 1)*2/3)) ){
       chart.labels[i] = '';
     }
   });
