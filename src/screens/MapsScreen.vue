@@ -1,6 +1,7 @@
 <template>
   <view class="container">
-    <map-view class="maps" :initial-region="initialCoordinates" >
+
+    <map-view class="maps" ref="map" :initial-region="currentPositionCoordinates" >
       <!-- Arduino data -->
       <Circle v-for="circle in arduinoData" :center="circle.center" :radius="circle.radius"
         fillColor="rgba(0, 0, 255, .5)" strokeColor="rgba(0,0,0,.2)"
@@ -36,6 +37,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as utils from '../utils/MapsUtils';
 
 import store from '../store';
+import { EventRegister } from 'react-native-event-listeners';
 
 export default {
     props: {
@@ -49,20 +51,42 @@ export default {
       isLoading: false,
       arduinoData: [],
       arpaData: [],
-      initialCoordinates: {
+      get currentPositionCoordinates() {
+        return {
+          latitude: this.curPos.latitude,
+          longitude: this.curPos.longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        };
+      },
+      curPos: {
         latitude: 45.474098205566399,
         longitude: 9.2347803115844709,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
       },
     };
   },
   beforeMount: async function(){
     this.refresh();
   },
+  mounted: function(){
+    this.listener = EventRegister.addEventListener('blobArduinoDataUpdate',(data)=>{
+      this.refresh();
+    });
+  },
+  beforeDestroy: function(){
+    EventRegister.removeEventListener(this.listener);
+  },
   methods: {
     showDetails: function(){
       this.navigation.navigate('FilterParametersScreen',{ option: 'maps', onGoBack: () => this.refresh(),});
+    },
+    updateMap(curPos) {
+      if(this.$refs.map == null || this.$refs.map == undefined){
+        console.log("Map attribute is null");
+      } else {
+          this.$refs.map.animateCamera({ heading: 0, center: curPos, pitch: 0 });
+          this.curPos = curPos;
+      }
     },
     refresh: async function(){
       this.isLoading = true;
@@ -77,6 +101,21 @@ export default {
       // Data for the map
       this.arduinoData = returnedObject.arduino;
       this.arpaData = returnedObject.arpa;
+
+      if(this.arduinoData.length != 0){
+        this.updateMap({
+          latitude: this.arduinoData[this.arduinoData.length - 1].center.latitude,
+          longitude: this.arduinoData[this.arduinoData.length - 1].center.longitude,
+        });
+      } else{
+        if(this.arpaData.length != 0){
+          this.updateMap({
+            latitude: this.arpaData[this.arpaData.length - 1].center.latitude,
+            longitude: this.arpaData[this.arpaData.length - 1].center.longitude,
+          });
+        }
+      }
+
       this.isLoading = false;
     }
   }

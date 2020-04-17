@@ -120,8 +120,7 @@ export default{
       alert("Initial state restored");
     },
     test: function () {
-      console.log(store.state.arduino.trackVisualization);
-      console.log(store.state.blob.arduinoData);
+      // function to debug purpose
     }
   }
 }

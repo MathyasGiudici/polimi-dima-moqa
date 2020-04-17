@@ -88,14 +88,14 @@
         <view class="toggle">
           <switch :on-value-change = "isInAutoFetchHandler" :value = "isInAutoFetch"/>
         </view>
-        <text class="toggle">auto-fetch data</text>
+        <text class="toggle-text">Auto-fetch data</text>
       </view>
       <!-- Toggle -->
       <view class="row">
         <view class="toggle">
           <switch :on-value-change = "trackVisualizationHanler" :value = "trackVisualization"/>
         </view>
-        <text class="toggle">visualize current data</text>
+        <text class="toggle-text">Visualize live data</text>
       </view>
 
     </scroll-view>
@@ -110,6 +110,8 @@ import store from '../store';
 import {arduinoDataParser} from '../utils/Utils'
 import {getHandler} from '../utils/Network';
 import {sendData} from '../utils/Network4Server';
+
+import { EventRegister } from 'react-native-event-listeners';
 
 export default {
   components: {
@@ -225,8 +227,12 @@ export default {
       });
 
       // If need add to local array
-      if(this.trackVisualization)
+      if(this.trackVisualization){
+        // Adding new element
         store.commit('blobArduinoDataAdd',sample);
+        // Emitting event to update map and chart
+        EventRegister.emit('blobArduinoDataUpdate','');
+      }
 
       // If we have to send to the server
       if(this.isRecording)
@@ -236,8 +242,12 @@ export default {
       sendData(arduinoString);
     },
     trackVisualizationHanler: function(){
+      // Updating value
       this.trackVisualization = !this.trackVisualization;
       store.commit('changeTrackVisualization',this.trackVisualization);
+
+      // Emitting event to update map and chart
+      EventRegister.emit('blobArduinoDataUpdate','');
     }
   }
 }
@@ -265,6 +275,7 @@ export default {
   height: 10;
 }
 .row {
+  width: 100%;
   align-self: center;
   flex-direction: row;
   justify-content: center;
@@ -301,6 +312,12 @@ export default {
   color: white;
 }
 .toggle {
+  align-items: flex-end;
+  width: 40%;
+  padding: 5;
+}
+.toggle-text {
+  width: 60%;
   padding: 5;
   font-size: 20;
 }
