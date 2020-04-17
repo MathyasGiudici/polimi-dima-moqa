@@ -72,6 +72,7 @@ const units = ["°C", "%", "Pa", "m", "ppb", "ppm", "μm", "μm", "μm", "μm", 
 
 // import of the store
 import store from '../store';
+import { EventRegister } from 'react-native-event-listeners';
 
 export default {
     props: {
@@ -100,6 +101,14 @@ export default {
   },
   beforeMount: async function(){
     this.refresh();
+  },
+  mounted: function(){
+    this.listener = EventRegister.addEventListener('blobArduinoDataUpdate',(data)=>{
+      return this.refresh();
+    });
+  },
+  beforeDestroy: function(){
+    EventRegister.removeEventListener(this.listener);
   },
   methods: {
     showDetails: function(){

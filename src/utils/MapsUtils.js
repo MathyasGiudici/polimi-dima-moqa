@@ -28,7 +28,7 @@ export async function getMapData(filter){
   var data = await Promise.race([timerPromise(), dataPromise]);
 
   if(data == 'End Race') {
-    return [];
+    return { arduino: [], arpa: [],};
   }
   else {
     return data;
@@ -56,13 +56,13 @@ async function generalGet(arpaDataAvailable,arpaType,filter){
     if(store.state.arduino.trackVisualization){
       arduino = await store.state.blob.arduinoData;
     } else {
-      arduino = await getArduinoData(arpaType,filter);
+      arduino = await getArduinoData(arpaType,localFilter);
     }
 
     // Getting arpa data
     var arpa = [];
-    if(arpaDataAvailable && filter.arpaEnabled)
-      arpa = await getArpaData(arpaType,filter);
+    if(arpaDataAvailable && localFilter.arpaEnabled)
+      arpa = await getArpaData(arpaType,localFilter);
 
     resolve([arduino,arpa]);
   });
@@ -70,7 +70,7 @@ async function generalGet(arpaDataAvailable,arpaType,filter){
   var result = await generalPromise;
 
   //Setting data for the graph
-  return prepareToMap(result[0],result[1],arpaDataAvailable, arpaType,filter);
+  return prepareToMap(result[0],result[1],arpaDataAvailable, arpaType,localFilter);
 }
 
 // Preparing the chart object of data

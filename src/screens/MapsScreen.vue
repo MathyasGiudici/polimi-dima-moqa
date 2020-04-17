@@ -70,7 +70,7 @@ export default {
   },
   mounted: function(){
     this.listener = EventRegister.addEventListener('blobArduinoDataUpdate',(data)=>{
-      this.refresh();
+      return this.refresh();
     });
   },
   beforeDestroy: function(){

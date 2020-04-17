@@ -1,4 +1,5 @@
 // Needed scripts
+import store from '../store';
 import {testDataSet} from './ChartsConstants';
 import {dateObjectCreator,minimalDate, timerPromise} from './Utils';
 import {getArduinoData, getArpaData} from './DataUtils';
@@ -36,14 +37,32 @@ export async function getChartData(filter){
 
 // Get weather data from ARPA dataset
 async function generalGet(arpaDataAvailable,arpaType,filter){
+  // Creating a new filter to manage problem with live tracking
+  var localFilter = JSON.parse(JSON.stringify(filter));
+
+  // Changing automatically parametrrs to track live parameters
+  if(store.state.arduino.trackVisualization){
+    var midnight = new Date();
+    midnight.setHours(0,0,0);
+    localFilter.startDate = dateObjectCreator(midnight);
+    localFilter.endDate = dateObjectCreator(new Date());
+  }
 
   var generalPromise = new Promise(async function(resolve,reject){
     // Getting arduino data
-    var arduino = await getArduinoData(arpaType,filter);
+    var arduino;
+
+    // Mananging correct retrieve of live data
+    if(store.state.arduino.trackVisualization){
+      arduino = await store.state.blob.arduinoData;
+    } else {
+      arduino = await getArduinoData(arpaType,localFilter);
+    }
+
     // Getting arpa data
     var arpa = [];
-    if(arpaDataAvailable && filter.arpaEnabled)
-      arpa = await getArpaData(arpaType,filter);
+    if(arpaDataAvailable && localFilter.arpaEnabled)
+      arpa = await getArpaData(arpaType,localFilter);
 
     resolve([arduino,arpa]);
   });
@@ -51,7 +70,7 @@ async function generalGet(arpaDataAvailable,arpaType,filter){
   var result = await generalPromise;
 
   //Setting data for the graph
-  return prepareToChart(result[0],result[1],arpaDataAvailable,filter);
+  return prepareToChart(result[0],result[1],arpaDataAvailable,localFilter);
 }
 
 // Preparing the chart object of data
