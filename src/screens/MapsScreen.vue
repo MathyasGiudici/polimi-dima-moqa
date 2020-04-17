@@ -70,7 +70,11 @@ export default {
   },
   mounted: function(){
     this.listener = EventRegister.addEventListener('blobArduinoDataUpdate',(data)=>{
-      return this.refresh();
+      if(data == 'forceUpdate')
+        return this.refresh();
+      // Checking if the screen is isFocused to update
+      if(this.navigation.isFocused())
+        return this.refresh();
     });
   },
   beforeDestroy: function(){

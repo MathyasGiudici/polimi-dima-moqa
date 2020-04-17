@@ -1,6 +1,6 @@
 // Date Generator
-var testDate = new Date('2020-04-14T00:00:00');
-var dayBefore = new Date('2020-04-13T00:00:00'); // Today!
+var testDate = new Date('2020-04-13T22:00:00');
+var dayBefore = new Date('2020-04-12T22:00:00');
 
 import { dateObjectCreator } from '../utils/Utils';
 

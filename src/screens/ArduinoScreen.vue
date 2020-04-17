@@ -161,10 +161,13 @@ export default {
     isInAutoFetchHandler: async function(){
       if(this.isInAutoFetch){
         if(this.autoFetchRoutine != null) {
-          // Clearing the auto fetch routine routine
+          // Clearing the auto fetch routine with relative references
           clearInterval(this.autoFetchRoutine);
           this.autoFetchRoutine = null;
           store.commit('blobMutation', {key:'arduinoGetterRoutine', value: null });
+
+          // Emitting event to update map and chart
+          EventRegister.emit('blobArduinoDataUpdate','forceUpdate');
         }
       } else {
         // Trying first time with the board
@@ -231,7 +234,7 @@ export default {
         // Adding new element
         store.commit('blobArduinoDataAdd',sample);
         // Emitting event to update map and chart
-        EventRegister.emit('blobArduinoDataUpdate','');
+        EventRegister.emit('blobArduinoDataUpdate','standardUpdate');
       }
 
       // If we have to send to the server
@@ -247,7 +250,7 @@ export default {
       store.commit('changeTrackVisualization',this.trackVisualization);
 
       // Emitting event to update map and chart
-      EventRegister.emit('blobArduinoDataUpdate','');
+      EventRegister.emit('blobArduinoDataUpdate','forceUpdate');
     }
   }
 }
