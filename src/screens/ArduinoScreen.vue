@@ -165,9 +165,6 @@ export default {
           clearInterval(this.autoFetchRoutine);
           this.autoFetchRoutine = null;
           store.commit('blobMutation', {key:'arduinoGetterRoutine', value: null });
-
-          // Emitting event to update map and chart
-          EventRegister.emit('blobArduinoDataUpdate','forceUpdate');
         }
       } else {
         // Trying first time with the board
@@ -250,7 +247,7 @@ export default {
       store.commit('changeTrackVisualization',this.trackVisualization);
 
       // Emitting event to update map and chart
-      EventRegister.emit('blobArduinoDataUpdate','forceUpdate');
+      EventRegister.emit('blobArduinoDataUpdate','standardUpdate');
     }
   }
 }

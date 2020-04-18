@@ -103,15 +103,21 @@ export default {
     this.refresh();
   },
   mounted: function(){
+    // listener for the page focus
+    this.willFocusListener = this.navigation.addListener('willFocus',() =>{
+      return this.refresh();
+    });
+
+    // listener to auto-fetch
     this.listener = EventRegister.addEventListener('blobArduinoDataUpdate',(data)=>{
-      if(data == 'forceUpdate')
-        return this.refresh();
       // Checking if the screen is isFocused to update
       if(this.navigation.isFocused())
         return this.refresh();
     });
   },
   beforeDestroy: function(){
+    // Removing listeners
+    this.willFocusListener.remove();
     EventRegister.removeEventListener(this.listener);
   },
   methods: {
