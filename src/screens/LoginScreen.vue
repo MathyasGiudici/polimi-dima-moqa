@@ -32,7 +32,7 @@
     <!-- Space -->
     <view class="paddingElementSmall"></view>
     <!-- Registration Button -->
-    <button title="Sing Up" :on-press="singUp" />
+    <button title="Sign Up" :on-press="signUp" />
   </view>
 </template>
 
@@ -114,8 +114,8 @@ export default {
           this.navigation.navigate('BottomTabs');
         });
     },
-    singUp: function(){
-      this.navigation.navigate('SingUpScreen');
+    signUp: function(){
+      this.navigation.navigate('SignUpScreen');
     }
   }
 };

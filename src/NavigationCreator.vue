@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Login and registration
 import LoginScreen from "./screens/LoginScreen.vue";
-import SingUpScreen from "./screens/SingUpScreen.vue";
+import SignUpScreen from "./screens/SignUpScreen.vue";
 
 // Basic 4 screens
 import ArduinoScreen from "./screens/ArduinoScreen.vue";
@@ -176,7 +176,7 @@ const BottomTabs = createBottomTabNavigator(
 const switchNavigator = createSwitchNavigator(
   {
     LoginScreen: LoginScreen,
-    SingUpScreen: SingUpScreen,
+    SignUpScreen: SignUpScreen,
     BottomTabs: BottomTabs,
   },
   {
