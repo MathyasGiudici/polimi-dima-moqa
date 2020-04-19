@@ -57,9 +57,9 @@
       <view class="paddingElementBig"></view>
 
       <!-- Sing Up Button -->
-      <touchable-opacity class="bubbleBotton" :on-press="singUp" v-if="!isLoading">
+      <touchable-opacity class="bubbleBotton" :on-press="signUp" v-if="!isLoading">
         <icon name="account-plus" color="white" size="25" style="padding-right:3;"/>
-        <text class="buttonText" style="padding-left:3;">Sing Up</text>
+        <text class="buttonText" style="padding-left:3;">Sign Up</text>
       </touchable-opacity>
       <view class="bubbleBotton" v-if="isLoading">
         <activity-indicator size="small" color="white" />
@@ -162,7 +162,7 @@ export default {
     login: function(){
       this.navigation.navigate('LoginScreen');
     },
-    singUp: function(){
+    signUp: function(){
       this.isLoading = true;
       if(!this.checkInputs()){
         this.isLoading = false;
