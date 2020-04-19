@@ -58,7 +58,7 @@ export default{
     return {
       options : [
         {
-          title: 'Wi-Fi Connection',
+          title: 'Arduino Connection',
           route: 'GeneralParameters',
           prop:  'wifi'
         },

@@ -158,7 +158,6 @@ export default {
           pinnedStation: this.pinnedStation,
         }});
       store.commit('SAVE');
-      this.navigation.state.params.onGoBack();
     }
   }
 };

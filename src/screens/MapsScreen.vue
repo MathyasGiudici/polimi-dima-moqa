@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     showDetails: function(){
-      this.navigation.navigate('FilterParametersScreen',{ option: 'maps', onGoBack: () => this.refresh(),});
+      this.navigation.navigate('FilterParametersScreen',{ option: 'maps'});
     },
     updateMap(curPos) {
       if(this.$refs.map == null || this.$refs.map == undefined){

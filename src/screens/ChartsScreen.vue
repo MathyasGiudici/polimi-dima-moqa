@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     showDetails: function(){
-      this.navigation.navigate('FilterParametersScreen',{ option: 'charts', onGoBack: () => this.refresh(),});
+      this.navigation.navigate('FilterParametersScreen',{ option: 'charts'});
     },
     refresh: async function(){
       this.isLoading = true;
