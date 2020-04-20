@@ -8,6 +8,10 @@
       <view class="paddingElementBig"></view>
       <view class="paddingElementBig"></view>
 
+      <!-- Title -->
+      <text class="heading">User Sign Up</text>
+      <view class="paddingElementSmall"></view>
+      
       <!-- Email -->
       <text-input class="inputElement" placeholder="email" v-model="user.email"
         :onChangeText="text => changeParameter('email',text)" />
@@ -107,7 +111,7 @@ export default {
         confirm_password: '',
         firstName: '',
         lastName: '',
-        gender: '',
+        gender: 'male',
         birthDay: ''
       },
       birthDay_obj: dateObjectCreator(yesterday),
@@ -184,9 +188,16 @@ export default {
               alert('Connection problems');
               return;
             }
+
+            // Exploit response
+            if(value.response && value.response == 'You are already register'){
+              alert(value.response);
+              return;
+            }
+
             // Exploit response
             if(value.email != newUser.email){
-              alert('Some problems in the sing up with the server');
+              alert('Some problems in the sign up with the server');
               return;
             }
 
@@ -215,6 +226,12 @@ export default {
 }
 .paddingElementSmall {
   height: 10;
+}
+.heading {
+  font-size: 34;
+  font-weight: bold;
+  margin: 20;
+  align-self: center;
 }
 .inputElement {
   align-self: center;

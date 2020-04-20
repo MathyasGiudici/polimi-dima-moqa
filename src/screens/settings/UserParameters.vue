@@ -8,11 +8,11 @@
     <view class="paddingElement"></view>
 
     <!-- Email -->
-    <view class="listElement">
+    <view class="listElement" style="opacity:.5;">
       <text class="textListTitleElement">Email</text>
-      <text-input class="textListElement" placeholder="email@email.it" v-model="user.email"
-        :onChangeText="text => changeParameter('email',text)" />
+      <text class="textListElement">{{user.email}}</text>
     </view>
+    <view class="paddingElement"></view>
     <!-- First Name -->
     <view class="listElement">
       <text class="textListTitleElement">Name</text>
@@ -103,7 +103,8 @@ export default {
         firstName: store.state.user.firstName,
         lastName: store.state.user.lastName,
         gender: store.state.user.gender,
-        birthDay: store.state.user.birthDay
+        birthDay: store.state.user.birthDay,
+        token: '',
       },
       birthDay_obj: dateObjectCreator(new Date(store.state.user.birthDay)),
       isDateVisible: false,
@@ -234,6 +235,7 @@ export default {
     },
     sendNewParameters: function(){
       // Hide button
+      this.isDateVisible = false;
       this.changingParameters = false;
 
       // Checking consistency of the email
@@ -242,8 +244,14 @@ export default {
         return;
       }
 
+      var newUser = JSON.parse(JSON.stringify(this.user));
+
+      newUser.birthDay = this.birthDay_obj.date.getFullYear() + '-' +
+        ("0" + (this.birthDay_obj.date.getMonth() + 1)).slice(-2) + '-' +
+        ("0" + this.birthDay_obj.date.getDate()).slice(-2) ;
+
       // Saving new parameters
-      this.saveParameters('');
+      this.saveParameters(newUser,'');
     },
     sendNewPassword: function(){
       // Hide button
@@ -260,15 +268,12 @@ export default {
       }
 
       // Saving new parameters
-      this.saveParameters(this.new_password);
+      this.saveParameters(JSON.parse(JSON.stringify(store.state.user)),this.new_password);
     },
-    saveParameters: function(password){
-      var newUser = this.user;
+    saveParameters: function(user,password){
+      var newUser = user;
       newUser.password = password;
-      newUser.birthDay = this.birthDay_obj.date.getFullYear() + '-' +
-        ("0" + (this.birthDay_obj.date.getMonth() + 1)).slice(-2) + '-' +
-        ("0" + this.birthDay_obj.date.getDate()).slice(-2) ;
-
+      delete newUser.token;
         // Running request
         return putUser(newUser).then((value) => {
             // Stop loading
@@ -278,11 +283,14 @@ export default {
               alert('Connection problems');
               return;
             }
+
             // Exploit response
             if(value.email != newUser.email){
-              alert('Some problems in the sing up with the server');
+              alert('Some problems in the server');
               return;
             }
+
+            alert('Account updated!');
 
             if(password == '')
               delete newUser.password;
