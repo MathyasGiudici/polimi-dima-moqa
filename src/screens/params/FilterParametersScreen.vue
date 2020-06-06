@@ -94,8 +94,8 @@ export default {
     },
     measuredPinned: function(mea){
       this.pinnedMeasure = mea;
-      this.pinnedStation = -1;
-      this.changeStation();
+      if(this.arpaEnabled)
+        this.changeStation();
     },
     setStartDate: function(event,date){
       this.changeDate("startDate",date);
@@ -137,7 +137,8 @@ export default {
     },
     changeArpaValue: function(){
       this.arpaEnabled = !this.arpaEnabled;
-      this.saveFilter();
+      if(this.arpaEnabled)
+        this.changeStation();
     },
     changeStation: function(){
       this.navigation.navigate('FilterStationsPicker',{ pinnedMeasure: this.pinnedMeasure,

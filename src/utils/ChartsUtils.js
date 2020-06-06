@@ -25,7 +25,7 @@ export async function getChartData(filter){
       resolve(toReturn);
     });
 
-  var chartData = Promise.race([timerPromise(), dataPromise]);
+  var chartData = await Promise.race([timerPromise(), dataPromise]);
 
   if(chartData == 'End Race') {
     return testDataSet;
@@ -156,8 +156,11 @@ function prepareToChart(arduino,arpa,arpaDataAvailable,filter){
 
   // Deleting some labels to better view
   chart.labels.forEach((item, i) => {
-    if( (i != 0) && (i != Math.round((chart.labels.length - 1)*.85)) ){//&& (i != Math.round((chart.labels.length - 1)*2/3)) ){
+    if(i != 0){
       chart.labels[i] = '';
+    }
+    if(i == Math.round((chart.labels.length - 1)*.85)){
+      chart.labels[i] = chart.labels[chart.labels.length - 1];
     }
   });
 
