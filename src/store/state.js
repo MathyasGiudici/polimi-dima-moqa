@@ -1,6 +1,7 @@
 // Date Generator
-var testDate = new Date('2020-04-13T22:00:00');
-var dayBefore = new Date('2020-04-12T22:00:00');
+var initialDate = new Date();
+var dayBefore = new Date(initialDate.getTime());
+dayBefore.setDate(initialDate.getDate() - 1);
 
 import { dateObjectCreator } from '../utils/Utils';
 
@@ -14,14 +15,14 @@ export function getDefaultState() {
       maps: {
         pinnedMeasure: "Temperature",
         startDate: dateObjectCreator(dayBefore),
-        endDate: dateObjectCreator(testDate),
+        endDate: dateObjectCreator(initialDate),
         arpaEnabled : true,
         pinnedStation: 47,
       },
       charts: {
         pinnedMeasure: "Temperature",
         startDate: dateObjectCreator(dayBefore),
-        endDate: dateObjectCreator(testDate),
+        endDate: dateObjectCreator(initialDate),
         arpaEnabled : true,
         pinnedStation: 47,
       }
