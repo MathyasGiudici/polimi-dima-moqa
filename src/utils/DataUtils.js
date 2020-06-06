@@ -181,7 +181,7 @@ async function getArduinoData(arpaType,filter){
   // Getting the data
   var promise =  new Promise(function(resolve, reject) {
     var data = [];
-    getDataFiltered(dateToTimeStamp(filter.startDate.date),dateToTimeStamp(filter.endDate.date)).then((value) => {
+    getDataFiltered(dateToTimeStamp(new Date(filter.startDate.date)),dateToTimeStamp(new Date(filter.endDate.date))).then((value) => {
     //getData("","").then((value) => {
     //getDataFiltered("2020-04-15T00:00:00.000Z","2020-04-16T00:00:00.000Z").then((value) => {
       // Exploit result

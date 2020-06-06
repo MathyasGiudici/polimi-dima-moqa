@@ -17,14 +17,14 @@ export function getDefaultState() {
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(initialDate),
         arpaEnabled : true,
-        pinnedStation: 47,
+        pinnedStation: 28,
       },
       charts: {
         pinnedMeasure: "Temperature",
         startDate: dateObjectCreator(dayBefore),
         endDate: dateObjectCreator(initialDate),
         arpaEnabled : true,
-        pinnedStation: 47,
+        pinnedStation: 28,
       }
     },
     settings: {
