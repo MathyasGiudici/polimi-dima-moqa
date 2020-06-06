@@ -28,7 +28,7 @@ export async function getChartData(filter){
   var chartData = await Promise.race([timerPromise(), dataPromise]);
 
   if(chartData == 'End Race') {
-    return testDataSet;
+    return [testDataSet,['-','-','-'],['-','-','-']];
   }
   else {
     return chartData;

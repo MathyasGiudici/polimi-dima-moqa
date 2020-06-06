@@ -134,8 +134,6 @@ export default {
 
       var array = await generalPromise;
 
-      console.log(JSON.stringify(array));
-
       // Data for the chart
       this.chartData = array[0];
 
