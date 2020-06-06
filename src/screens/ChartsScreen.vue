@@ -143,6 +143,9 @@ export default {
 
       // Data of quartiles table
       // Arduino
+      if(array == undefined)
+        return;
+        
       array[1].forEach((item, i) => {
         this.tableData[i][1] = item.toString() + targetMeasure;
       });
