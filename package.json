@@ -11,19 +11,19 @@
     "@react-native-community/datetimepicker": "2.1.0",
     "chart.js": "^2.9.3",
     "expo": "^36.0.0",
-    "native-base": "^2.13.8",
-    "nativescript": "^6.4.0",
-    "nativescript-vue": "^2.4.0",
+    "native-base": "^2.13.12",
+    "nativescript": "^6.7.4",
+    "nativescript-vue": "^2.6.4",
     "prop-types": "^15.7.2",
     "react": "16.9.0",
     "react-dom": "16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.1.tar.gz",
-    "react-native-appearance": "~0.3.1",
+    "react-native-appearance": "^0.3.4",
     "react-native-chart-kit": "^2.6.1",
     "react-native-event-listeners": "^1.0.7",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-maps": "0.26.1",
-    "react-native-modal": "^11.5.4",
+    "react-native-modal": "^11.5.6",
     "react-native-paper": "^2.16.0",
     "react-native-reanimated": "~1.4.0",
     "react-native-screens": "2.0.0-alpha.12",
@@ -39,15 +39,15 @@
     "vue-native-core": "0.1.2",
     "vue-native-helper": "0.1.2",
     "vue-native-router": "^0.1.1",
-    "vuex": "^3.1.2",
+    "vuex": "^3.4.0",
     "vuex-persist": "^2.2.0"
   },
   "assetBundlePatterns": [
     "**/*"
   ],
   "devDependencies": {
-    "@babel/core": "^7.0.0-0",
-    "babel-preset-expo": "^8.0.0",
+    "@babel/core": "^7.10.2",
+    "babel-preset-expo": "^8.2.1",
     "vue-native-scripts": "0.1.2"
   },
   "private": true
