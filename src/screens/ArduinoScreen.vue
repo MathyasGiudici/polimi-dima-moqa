@@ -38,23 +38,23 @@
       </view>
       <view class="row">
         <text class="row-element-title">PM0.5</text>
-        <text class="row-element-text">{{data.pm05}} μm</text>
+        <text class="row-element-text">{{data.pm05}} µg/m³</text>
       </view>
       <view class="row">
         <text class="row-element-title">PM1</text>
-        <text class="row-element-text">{{data.pm1}} μm</text>
+        <text class="row-element-text">{{data.pm1}} µg/m³</text>
       </view>
       <view class="row">
         <text class="row-element-title">PM2.5</text>
-        <text class="row-element-text">{{data.pm25}} μm</text>
+        <text class="row-element-text">{{data.pm25}} µg/m³</text>
       </view>
       <view class="row">
         <text class="row-element-title">PM4</text>
-        <text class="row-element-text">{{data.pm4}} μm</text>
+        <text class="row-element-text">{{data.pm4}} µg/m³</text>
       </view>
       <view class="row">
         <text class="row-element-title">PM10</text>
-        <text class="row-element-text">{{data.pm10}} μm</text>
+        <text class="row-element-text">{{data.pm10}} µg/m³</text>
       </view>
 
       <!-- Big Space -->

@@ -68,7 +68,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {getChartConfigs, testDataSet} from '../utils/ChartsConstants';
 import * as utils from '../utils/ChartsUtils';
 const measures = ["Temperature", "Humidity", "Pressure", "Altitude", "TVOCs", "eCO2", "PM0.5", "PM1", "PM2.5", "PM4", "PM10"];
-const units = ["°C", "%", "Pa", "m", "ppb", "ppm", "μm", "μm", "μm", "μm", "μm"];
+const units = ["°C", "%", "Pa", "m", "ppb", "ppm", "µg/m³", "µg/m³", "µg/m³", "µg/m³", "µg/m³"];
 
 // import of the store
 import store from '../store';
