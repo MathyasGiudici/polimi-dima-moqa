@@ -138,8 +138,12 @@ export default {
     },
     changeArpaValue: function(){
       this.arpaEnabled = !this.arpaEnabled;
-      if(this.arpaEnabled)
+      if(this.arpaEnabled){
         this.changeStation();
+      }
+      else {
+        this.saveFilter();
+      }
     },
     changeStation: function(){
       this.navigation.navigate('FilterStationsPicker',{ pinnedMeasure: this.pinnedMeasure,
