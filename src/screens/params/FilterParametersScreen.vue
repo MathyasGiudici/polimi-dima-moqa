@@ -94,6 +94,7 @@ export default {
     },
     measuredPinned: function(mea){
       this.pinnedMeasure = mea;
+      this.saveFilter();
       if(this.arpaEnabled)
         this.changeStation();
     },
@@ -149,7 +150,6 @@ export default {
       this.saveFilter();
     },
     saveFilter: function(){
-
       store.commit('changeFilterParameters', {targetFilter: this.navigation.state.params.option,
         newParameters:{
           pinnedMeasure: this.pinnedMeasure,

@@ -28,7 +28,7 @@ import store from '../../store';
 import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {stationsFilter} from '../../utils/DataUtils';
+import {loadData, stationsFilter} from '../../utils/DataUtils';
 
 export default {
   props: {
@@ -47,8 +47,13 @@ export default {
     this.loader();
   },
   methods: {
-    loader: function(){
+    loader: async function(){
       var stations = [];
+
+      if(store.state.blob.arpa_weatherStations == null ||
+        store.state.blob.arpa_airStations == null){
+            let a = await loadData();
+        }
 
       switch (this.navigation.state.params.pinnedMeasure) {
         case 'Temperature':
