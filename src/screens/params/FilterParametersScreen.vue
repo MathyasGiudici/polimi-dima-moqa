@@ -87,6 +87,10 @@ export default {
       pinnedStation: store.state.filter[this.navigation.state.params.option].pinnedStation,
     };
   },
+  mounted: function(){
+    this.startDate = dateObjectCreator(new Date(store.state.filter[this.navigation.state.params.option].startDate.date));
+    this.endDate = dateObjectCreator(new Date(store.state.filter[this.navigation.state.params.option].endDate.date));
+  },
   methods: {
     changeMeasure: function(){
       this.navigation.navigate('FilterMeasuresPicker',{ pinnedMeasure: this.pinnedMeasure,
